@@ -28,7 +28,7 @@ class Main extends StatefulWidget {
 }
 
 class _MainState extends State<Main> {
-  final List<Site> _sites = new List<Site>();
+  static final dayF = new DateFormat('EEEE dd MMMM');
   static final dirs = {'W': 0.0*pi/180.0,
                        'WNW': 22.5*pi/180.0,
                        'NW': 45.0*pi/180.0,
@@ -46,6 +46,7 @@ class _MainState extends State<Main> {
                        'SW': 315.0*pi/180.0,
                        'WSW': 337.5*pi/180.0};
 
+  final List<Site> _sites = new List<Site>();
 
   _MainState() {
     getForcast();
@@ -155,17 +156,33 @@ class _MainState extends State<Main> {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> list = new List<Widget>();
 
-    for(Site s in _sites){
-      list.add(new ListTile(
-          title: new Text(s.title, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4)),
-          subtitle: SiteForecastListView.buildForecastRow(context, s.forecasts[0], false),
-          onTap: () {
-            Navigator.push(context, new MaterialPageRoute(builder: (context) {
-              return new SiteForcecast(site: s);
-            }));}
-      ));
+    if(_sites.length == 0)
+      return new Container();
+
+    List<Widget> pages = new List<Widget>();
+
+    for(int day = 0; day < _sites[0].forecasts.length; ++day)
+    {
+      List<Widget> list = new List<Widget>();
+      //list.add(new Text(dayF.format(_sites[0].forecasts[day].date), style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4)));
+
+      for (Site s in _sites)
+      {
+        list.add(new ListTile(
+            title: new Text(s.title, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4)),
+            subtitle: SiteForecastListView.buildForecastRow(context, s.forecasts[day], false),
+            onTap: ()
+            {
+              Navigator.push(context, new MaterialPageRoute(builder: (context)
+              {
+                return new SiteForcecast(site: s);
+              }));
+            }
+        ));
+      }
+
+      pages.add(new ListView(children: list));
     }
 
     return new Scaffold(
@@ -175,7 +192,7 @@ class _MainState extends State<Main> {
           new IconButton(icon: new Icon(Icons.sort), onPressed: _sort),
         ],
         ),
-      body: new ListView(children: list)
+      body: new PageView(children: pages)
     );
   }
 }

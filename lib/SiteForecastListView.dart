@@ -27,12 +27,11 @@ class SiteForecastListView extends StatefulWidget {
 
     if(showDay) {
       return new Row(children: <Widget>[
-        new Expanded(child: new ListTile(
-            title: new Text(dayF.format(forecast.date), style: Theme
+        new Expanded(child: new Text(dayF.format(forecast.date), style: Theme
                 .of(context)
                 .textTheme
                 .subhead
-                .apply(fontWeightDelta: 4)))),
+                .apply(fontWeightDelta: 4))),
         new Expanded(flex: 4, child: new Row(children: lts)),
       ]);
     }
