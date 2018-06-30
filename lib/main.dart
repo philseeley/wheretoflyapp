@@ -182,18 +182,19 @@ class _MainState extends State<Main> {
         ));
       }
 
-      pages.add(new ListView(children: list));
+      pages.add(new Scaffold(
+          appBar: new AppBar(
+            title: new Text(dayF.format(_sites[0].forecasts[day].date), style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4)),
+            actions: <Widget>[
+              new IconButton(icon: new Icon(Icons.sort), onPressed: _sort),
+            ],
+          ),
+          body: new ListView(children: list)
+      ));
+
     }
 
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("Sites"),
-        actions: <Widget>[
-          new IconButton(icon: new Icon(Icons.sort), onPressed: _sort),
-        ],
-        ),
-      body: new PageView(children: pages)
-    );
+    return new PageView(children: pages);
   }
 }
 
