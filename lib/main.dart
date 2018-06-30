@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'dart:io';
 import 'Site.dart';
+import 'SiteForecastListView.dart';
 import 'dart:math';
 
 void main() => runApp(new WhereToFlyApp());
@@ -158,7 +159,8 @@ class _MainState extends State<Main> {
 
     for(Site s in _sites){
       list.add(new ListTile(
-          title: new Text(s.title),
+          title: new Text(s.title, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4)),
+          subtitle: SiteForecastListView.buildForecastRow(context, s.forecasts[0], false),
           onTap: () {
             Navigator.push(context, new MaterialPageRoute(builder: (context) {
               return new SiteForcecast(site: s);
@@ -174,18 +176,6 @@ class _MainState extends State<Main> {
         ],
         ),
       body: new ListView(children: list)
-//      body: new ListView.builder(itemBuilder: (context, i) {
-//        if (i < _sites.length)
-//          return new ListTile(
-//            title: new Text(_sites[i].title),
-//            onTap: () {
-//              Navigator.push(context, new MaterialPageRoute(builder: (context) {
-//                return new SiteForcecast(site: _sites[i]);
-//              }));}
-//          );
-//
-//        return null;
-//      }),
     );
   }
 }
@@ -200,93 +190,19 @@ class SiteForcecast extends StatefulWidget {
 }
 
 class _SiteForecasteState extends State<SiteForcecast> {
-  Site site;
-  static final dateF = new DateFormat('MM-dd');
   static final dayF = new DateFormat('EEE');
 
-  _SiteForecasteState() {
-  }
+  Site site;
 
   @override
   Widget build(BuildContext context) {
     site = widget.site;
 
-    List<Widget> list = new List<Widget>();
-
-    for(Forecast f in site.forecasts){
-      String t = "";
-      List<Widget> lts = new List<Widget>();
-
-      for (Condition c in f.conditions){
-        Widget lt = Expanded(child:
-//                new Container(
-//                    child: new Text(c.dir+"\n"+c.kts.toString(), textAlign: TextAlign.center),
-//                    decoration: new BoxDecoration(color: c.colour),
-//                    padding:  const EdgeInsets.all(5.0),
-//                )
-        new Stack(alignment: AlignmentDirectional.center, children: <Widget>[
-          new Transform.rotate(angle: c.dir == null?0.0:c.dir, child: new Icon(Icons.forward, color: (c.kts==0)?Colors.white:c.colour, size: 40.0, )),
-          new Text((c.kts==0)?"":c.kts.toString(), style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4),)
-        ],)
-        );
-        lts.add(lt);
-      }
-
-      list.add(new Row(children: <Widget>[
-        new Expanded(child: new ListTile(title: new Text(dayF.format(f.date), style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4)))),
-        new Expanded(flex: 4, child: new Row(children: lts)),
-      ]));
-    }
-
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(site.title),
       ),
-      body: new ListView(children: list)
-//      body: new ListView.builder(itemCount: site.forecasts.length, itemBuilder: (context, i) {
-//        Forecast f = site.forecasts[i];
-//        Widget d = new ListTile(title: new Text(f.date.toString()));
-//
-//        List<Widget> lts = new List<Widget>();
-//        for (Condition c in site.forecasts[i].conditions){
-//          Widget lt = ListTile(title: new Text(c.kts.toString()));
-//          lts.add(lt);
-//        }
-//
-//        return new Row(children: <Widget>[
-//          d,
-//          new Expanded(flex: 0, child: new Row(children: lts))
-//        ],);
-//        }),
-//      body: new ListView.builder(itemBuilder: (context, i) {
-//        if (i < site.forecasts.length){
-//          String t = "";
-//          Forecast f = site.forecasts[i];
-//          List<Widget> lts = new List<Widget>();
-//
-//          for (Condition c in site.forecasts[i].conditions){
-//            Widget lt = Expanded(child:
-//                new Container(
-//                    child: new Text(c.dir+"\n"+c.kts.toString(), textAlign: TextAlign.center),
-//                    decoration: new BoxDecoration(color: c.colour),
-//                    padding:  const EdgeInsets.all(5.0),
-//                )
-//              new Stack(alignment: AlignmentDirectional.center, children: <Widget>[
-//                new Transform.rotate(angle: c.dir == null?0.0:c.dir, child: new Icon(Icons.forward, color: c.colour, size: 40.0, )),
-//                new Text(c.kts.toString(), style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4),)
-//              ],)
-//            );
-//            lts.add(lt);
-//          }
-//
-//          return new Row(children: <Widget>[
-//            new Expanded(child: new ListTile(title: new Text(dayF.format(f.date), style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4)))),
-//            new Expanded(flex: 4, child: new Row(children: lts)),
-//          ]);
-//        }
-//
-//        return null;
-//      }),
+      body: new SiteForecastListView(site)
     );
   }
 }
