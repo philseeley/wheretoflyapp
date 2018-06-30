@@ -15,7 +15,7 @@
          FlutterApplication and put your custom class here. -->
     <application
         android:name="io.flutter.app.FlutterApplication"
-        android:label="wheretofly_app"
+        android:label="Where To Fly"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
