@@ -51,6 +51,7 @@ class _MainState extends State<Main> {
   double latitude;
   double longitude;
   bool sortByLocation = true;
+  bool onlyShowOn = true;
 
   final List<Site> _sites = new List<Site>();
 
@@ -191,7 +192,7 @@ getForecast() async {
 
       for (Site s in _sites)
       {
-        Row forecastRow = SiteForecastListView.buildForecastRow(context, s.forecasts[day], true, false);
+        Row forecastRow = SiteForecastListView.buildForecastRow(context, s.forecasts[day], onlyShowOn, false);
 
         if(forecastRow != null)
           list.add(new ListTile(
@@ -211,9 +212,14 @@ getForecast() async {
           appBar: new AppBar(
             title: new Text(dayF.format(_sites[0].forecasts[day].date), style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4)),
             actions: <Widget>[
-              new IconButton(icon: new Icon(Icons.sort), onPressed: (){
+              new IconButton(icon: new Icon(sortByLocation?Icons.location_off:Icons.location_on), onPressed: (){
                 setState(() {
                   _sort();
+                });
+              }),
+              new IconButton(icon: new Icon(Icons.power_settings_new, color: onlyShowOn?Colors.green:Colors.white), onPressed: (){
+                setState(() {
+                  onlyShowOn = !onlyShowOn;
                 });
               }),
             ],
