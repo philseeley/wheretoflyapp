@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:great_circle_distance/great_circle_distance.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'Site.dart';
 import 'SiteForecastListView.dart';
 import 'dart:math';
@@ -247,6 +248,23 @@ class _SiteForecastState extends State<SiteForecast> {
     return new Scaffold(
       appBar: new AppBar(
         title: new Text(site.title),
+        actions: <Widget>[
+          new IconButton(icon: new Icon(Icons.info), onPressed: (){
+            setState(() {
+              launch(site.url);
+            });
+          }),
+          new IconButton(icon: new Icon(Icons.cloud), onPressed: (){
+            setState(() {
+              launch(site.weatherURL);
+            });
+          }),
+          (site.obsURL != null)?new IconButton(icon: new Icon(Icons.cloud, color: Colors.red,), onPressed: (){
+            setState(() {
+              launch(site.obsURL);
+            });
+          }):new Container(),
+        ],
       ),
       body: new SiteForecastListView(site)
     );
