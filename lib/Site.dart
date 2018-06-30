@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class Condition {
-  final String dir_str;
+  final String dirStr;
   final double dir;
   final int kts;
   final int kms;
   final Color colour;
   final Color pgColour;
 
-  Condition(this.dir_str, this.dir, this.kts, this.kms, this.colour, this.pgColour);
+  Condition(this.dirStr, this.dir, this.kts, this.kms, this.colour, this.pgColour);
 }
 
 class Forecast {
@@ -27,10 +27,10 @@ class Site {
   final double lon;
   final double dist;
   final String url;
-  final String weather_url;
-  final String obs_url;
+  final String weatherURL;
+  final String obsURL;
 
   final List<Forecast> forecasts = new List<Forecast>();
 
-  Site(this.name, this.title, this.lat, this.lon, this.dist, this.url, this.weather_url, this.obs_url);
+  Site(this.name, this.title, this.lat, this.lon, this.dist, this.url, this.weatherURL, this.obsURL);
 }

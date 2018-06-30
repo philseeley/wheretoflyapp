@@ -49,15 +49,15 @@ class _MainState extends State<Main> {
 
   double latitude;
   double longitude;
-  bool sortByName = false;
+  bool sortByLocation = true;
 
   final List<Site> _sites = new List<Site>();
 
   _MainState() {
-    getForcast();
+    getForecast();
   }
 
-getForcast() async {
+getForecast() async {
     try {
       var loc = <String, double>{};
 
@@ -102,7 +102,7 @@ getForcast() async {
                 s['obs_url'],
               );
               _sites.add(site);
-print(site.title+" "+site.dist.toString());
+
               for(var f in s['forecast']){
                 var forecast = new Forecast(DateTime.parse(f['date']), f['img'], f['imgTitle']);
                 site.forecasts.add(forecast);
@@ -112,12 +112,12 @@ print(site.title+" "+site.dist.toString());
                   try
                   {
                     kts = int.parse(c['kts']);
-                  } catch(e){};
+                  } catch(e){}
                   int kms = 0;
                   try
                   {
                     kms = int.parse(c['kms']);
-                  } catch(e){};
+                  } catch(e){}
 
                   Color colour = Colors.black26;
                   switch(c['colour'])
@@ -157,7 +157,7 @@ print(site.title+" "+site.dist.toString());
             print(s);
           }
 
-          _sort;
+          _sort();
         });
     } catch (e, s) {
       //TODO something useful to debug
@@ -167,12 +167,12 @@ print(site.title+" "+site.dist.toString());
   }
 
   _sort(){
-    if(sortByName)
-      _sites.sort((a, b){return a.title.compareTo(b.title);});
-    else
+    if(sortByLocation)
       _sites.sort((a, b){return (a.dist-b.dist).round();});
+    else
+      _sites.sort((a, b){return a.title.compareTo(b.title);});
 
-    sortByName = !sortByName;
+    sortByLocation = !sortByLocation;
   }
 
   @override
@@ -190,17 +190,20 @@ print(site.title+" "+site.dist.toString());
 
       for (Site s in _sites)
       {
-        list.add(new ListTile(
-            title: new Text(s.title, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4)),
-            subtitle: SiteForecastListView.buildForecastRow(context, s.forecasts[day], false),
-            onTap: ()
-            {
-              Navigator.push(context, new MaterialPageRoute(builder: (context)
+        Row forecastRow = SiteForecastListView.buildForecastRow(context, s.forecasts[day], true, false);
+
+        if(forecastRow != null)
+          list.add(new ListTile(
+              title: new Text(s.title, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4)),
+              subtitle: forecastRow,
+              onTap: ()
               {
-                return new SiteForcecast(site: s);
-              }));
-            }
-        ));
+                Navigator.push(context, new MaterialPageRoute(builder: (context)
+                {
+                  return new SiteForecast(site: s);
+                }));
+              }
+          ));
       }
 
       pages.add(new Scaffold(
@@ -223,16 +226,16 @@ print(site.title+" "+site.dist.toString());
   }
 }
 
-class SiteForcecast extends StatefulWidget {
+class SiteForecast extends StatefulWidget {
   final Site site;
 
-  SiteForcecast({Key key, this.site}) : super(key: key);
+  SiteForecast({Key key, this.site}) : super(key: key);
 
   @override
-  _SiteForecasteState createState() => new _SiteForecasteState();
+  _SiteForecastState createState() => new _SiteForecastState();
 }
 
-class _SiteForecasteState extends State<SiteForcecast> {
+class _SiteForecastState extends State<SiteForecast> {
   static final dayF = new DateFormat('EEE');
 
   Site site;
