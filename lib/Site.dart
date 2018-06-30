@@ -25,11 +25,12 @@ class Site {
   final String title;
   final double lat;
   final double lon;
+  final double dist;
   final String url;
   final String weather_url;
   final String obs_url;
 
   final List<Forecast> forecasts = new List<Forecast>();
 
-  Site(this.name, this.title, this.lat, this.lon, this.url, this.weather_url, this.obs_url);
+  Site(this.name, this.title, this.lat, this.lon, this.dist, this.url, this.weather_url, this.obs_url);
 }

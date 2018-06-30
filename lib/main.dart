@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
-import 'dart:io';
+import 'package:location/location.dart';
+import 'package:great_circle_distance/great_circle_distance.dart';
 import 'Site.dart';
 import 'SiteForecastListView.dart';
 import 'dart:math';
@@ -46,14 +47,24 @@ class _MainState extends State<Main> {
                        'SW': 315.0*pi/180.0,
                        'WSW': 337.5*pi/180.0};
 
+  double latitude;
+  double longitude;
+  bool sortByName = false;
+
   final List<Site> _sites = new List<Site>();
 
   _MainState() {
     getForcast();
   }
 
-  getForcast() async {
+getForcast() async {
     try {
+      var loc = <String, double>{};
+
+      loc = await new Location().getLocation;
+      latitude = loc["latitude"];
+      longitude = loc["longitude"];
+
       dynamic data;
 
       var uri = new Uri.https(
@@ -76,17 +87,22 @@ class _MainState extends State<Main> {
             for (var s in data['sites']) {
               num lat = s['lat'];
               num lon = s['lon'];
+              var gcd = new GreatCircleDistance.fromDegrees(
+                  latitude1: latitude, longitude1: longitude, latitude2: lat.toDouble(), longitude2: lon.toDouble());
+              double dist =gcd.haversineDistance();
+
               var site = new Site(
                 s['name'],
                 s['title'],
                 lat.toDouble(),
                 lon.toDouble(),
+                dist,
                 s['url'],
                 s['weather_url'],
                 s['obs_url'],
               );
               _sites.add(site);
-
+print(site.title+" "+site.dist.toString());
               for(var f in s['forecast']){
                 var forecast = new Forecast(DateTime.parse(f['date']), f['img'], f['imgTitle']);
                 site.forecasts.add(forecast);
@@ -140,6 +156,8 @@ class _MainState extends State<Main> {
             print(e);
             print(s);
           }
+
+          _sort;
         });
     } catch (e, s) {
       //TODO something useful to debug
@@ -148,10 +166,13 @@ class _MainState extends State<Main> {
     }
   }
 
-  _sort (){
-    setState(() {
-      _sites.sort((a, b) => a.title.compareTo(b.title));
-    });
+  _sort(){
+    if(sortByName)
+      _sites.sort((a, b){return a.title.compareTo(b.title);});
+    else
+      _sites.sort((a, b){return (a.dist-b.dist).round();});
+
+    sortByName = !sortByName;
   }
 
   @override
@@ -186,7 +207,11 @@ class _MainState extends State<Main> {
           appBar: new AppBar(
             title: new Text(dayF.format(_sites[0].forecasts[day].date), style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4)),
             actions: <Widget>[
-              new IconButton(icon: new Icon(Icons.sort), onPressed: _sort),
+              new IconButton(icon: new Icon(Icons.sort), onPressed: (){
+                setState(() {
+                  _sort();
+                });
+              }),
             ],
           ),
           body: new ListView(children: list)
