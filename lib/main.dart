@@ -160,7 +160,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
                   _sort();
                 });
               }),
-              new IconButton(icon: new Icon(Icons.power_settings_new, color: onlyShowOn?Colors.green:Colors.white), onPressed: (){
+              new IconButton(icon: new Icon(Icons.power_settings_new, color: onlyShowOn?Colors.red:Colors.white), onPressed: (){
                 setState(() {
                   onlyShowOn = !onlyShowOn;
                 });
@@ -223,6 +223,12 @@ class _SiteForecastState extends State<SiteForecast> {
               launch(site.obsURL);
             });
           }):new Container(),
+          new IconButton(icon: new Icon(Icons.settings), onPressed: (){
+            Navigator.push(context, new MaterialPageRoute(builder: (context)
+            {
+              return new SettingsPage(settings);
+            }));
+          }),
         ],
       ),
       body: new Column(children: <Widget>[
