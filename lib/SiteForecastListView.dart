@@ -16,10 +16,12 @@ class SiteForecastListView extends StatefulWidget {
   static Row buildForecastRow(BuildContext context, Settings settings, Forecast forecast, bool onlyIfOn, bool showDay) {
     bool on = false;
 
-    List<Widget> lts = new List<Widget>();
+    List<Widget> list = new List<Widget>();
 
     if(showDay)
-      lts.add(new Expanded(child: new Text(dayF.format(forecast.date), textAlign: TextAlign.center, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4))));
+      list.add(new Expanded(child: new Text(dayF.format(forecast.date), textAlign: TextAlign.center, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4))));
+
+    list.add(forecast.image);
 
     for (Condition c in forecast.conditions){
       Color colour = settings.showPGValues ? c.pgColour : c.colour;
@@ -30,17 +32,17 @@ class SiteForecastListView extends StatefulWidget {
 
       Widget lt = Expanded(child:
       new Stack(alignment: AlignmentDirectional.center, children: <Widget>[
-        new Transform.rotate(angle: c.dir == null?0.0:c.dir, child: new Icon(Icons.forward, color: (speed==0)?Colors.white:c.colour, size: 40.0)),
+        new Transform.rotate(angle: c.dir == null?0.0:c.dir, child: new Icon(Icons.forward, color: (speed==0)?Colors.white:colour, size: 40.0)),
         new Text((speed==0)?"":speed.toString(), style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4))
       ],)
       );
-      lts.add(lt);
+      list.add(lt);
     }
 
     if(onlyIfOn && !on)
       return null;
 
-    return new Row(children: lts);
+    return new Row(children: list);
   }
 
   static Row buildTimeRow(BuildContext context, List<String> times, bool includeDay) {
@@ -48,6 +50,8 @@ class SiteForecastListView extends StatefulWidget {
 
     if(includeDay)
       dateW.add(new Expanded(child: new Text("", textAlign: TextAlign.center, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4))));
+
+    dateW.add(new Expanded(child: new Text("", textAlign: TextAlign.center, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4))));
 
     for(String t in times)
       dateW.add(new Expanded(child: new Text(t, textAlign: TextAlign.center, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4))));

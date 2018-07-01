@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:great_circle_distance/great_circle_distance.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class Settings {
   bool showPGValues = false;
@@ -51,11 +52,16 @@ class Condition {
 
 class Forecast {
   final DateTime date;
-  final String image;
+  final String imageURL;
+  CachedNetworkImage image;
   final String imgTitle;
   final List<Condition> conditions = new List<Condition>();
 
-  Forecast(this.date, this.image, this.imgTitle);
+  Forecast(this.date, this.imageURL, this.imgTitle);
+
+  getImage(){
+    image = CachedNetworkImage(imageUrl: "https://wheretofly.info/"+imageURL);
+  }
 }
 
 class Site {
@@ -114,6 +120,8 @@ List<Site> parseSites(dynamic data, double latitude, double longitude) {
 
     for(var f in s['forecast']){
       var forecast = new Forecast(DateTime.parse(f['date']), f['img'], f['imgTitle']);
+      forecast.getImage();
+
       site.forecasts.add(forecast);
 
       for(var c in f['conditions']){

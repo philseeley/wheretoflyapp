@@ -165,6 +165,11 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
                   onlyShowOn = !onlyShowOn;
                 });
               }),
+              new IconButton(icon: new Icon(settings.showForecast?Icons.cloud:Icons.cloud_off), onPressed: (){
+                setState(() {
+                  settings.showForecast = !settings.showForecast;
+                });
+              }),
               new IconButton(icon: new Icon(Icons.settings), onPressed: (){
                 Navigator.push(context, new MaterialPageRoute(builder: (context)
                 {
@@ -206,19 +211,23 @@ class _SiteForecastState extends State<SiteForecast> {
 
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text(site.title),
         actions: <Widget>[
           new IconButton(icon: new Icon(Icons.info), onPressed: (){
             setState(() {
               launch(site.url);
             });
           }),
-          new IconButton(icon: new Icon(Icons.cloud), onPressed: (){
+          new IconButton(icon: new Icon(settings.showForecast?Icons.cloud:Icons.cloud_off), onPressed: (){
+            setState(() {
+              settings.showForecast = !settings.showForecast;
+            });
+          }),
+          new IconButton(icon: new Icon(Icons.cloud_upload), onPressed: (){
             setState(() {
               launch(site.weatherURL);
             });
           }),
-          (site.obsURL != null)?new IconButton(icon: new Icon(Icons.cloud, color: Colors.red,), onPressed: (){
+          (site.obsURL != null)?new IconButton(icon: new Icon(Icons.cloud, color: Colors.red), onPressed: (){
             setState(() {
               launch(site.obsURL);
             });
@@ -232,6 +241,7 @@ class _SiteForecastState extends State<SiteForecast> {
         ],
       ),
       body: new Column(children: <Widget>[
+        new Text(site.title, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4)),
         SiteForecastListView.buildTimeRow(context, times, true),
         new Expanded(child: new SiteForecastListView(settings, site))
         ])

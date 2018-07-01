@@ -13,6 +13,7 @@ dependencies:
   great_circle_distance:
   url_launcher:
   path_provider:
+  cached_network_image:
 
 dev_dependencies:
   flutter_test:
