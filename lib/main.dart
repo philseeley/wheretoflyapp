@@ -36,6 +36,7 @@ class _MainState extends State<Main> {
   bool onlyShowOn = true;
 
   List<Site> _sites;
+  List<String> _times;
 
   _MainState() {
     getForecast();
@@ -69,6 +70,7 @@ class _MainState extends State<Main> {
         setState(() {
           try {
             _sites = parseSites(data, latitude, longitude);
+            _times = parseTimes(data);
           } catch (e, s) {
             print(e);
             print(s);
@@ -108,19 +110,22 @@ class _MainState extends State<Main> {
       {
         Row forecastRow = SiteForecastListView.buildForecastRow(context, s.forecasts[day], onlyShowOn, false);
 
-        if(forecastRow != null)
-          list.add(new ListTile(
-              title: new Text(s.title, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4)),
-              subtitle: forecastRow,
-              onTap: ()
-              {
-                Navigator.push(context, new MaterialPageRoute(builder: (context)
-                {
-                  return new SiteForecast(site: s);
-                }));
-              }
-          ));
+        if(forecastRow != null){
+          list.add(new Text(s.title, textAlign: TextAlign.center, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4)));
+          list.add(new InkWell(child: forecastRow, onTap: (){
+            Navigator.push(context, new MaterialPageRoute(builder: (context)
+            {
+              return new SiteForecast(site: s);
+            }));
+          },));
+        }
       }
+
+      List<Widget> dateW = new List<Widget>();
+      for(String t in _times)
+        dateW.add(new Expanded(child: new Text(t, textAlign: TextAlign.center, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4))));
+
+      Row dateRow = new Row(children: dateW);
 
       pages.add(new Scaffold(
           appBar: new AppBar(
@@ -138,7 +143,10 @@ class _MainState extends State<Main> {
               }),
             ],
           ),
-          body: new ListView(children: list)
+          body: new Column(children: <Widget>[
+            dateRow,
+            new Expanded(child: new ListView(children: list))
+          ],)
       ));
 
     }

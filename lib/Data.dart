@@ -129,3 +129,20 @@ List<Site> parseSites(dynamic data, double latitude, double longitude) {
 
   return sites;
 }
+
+List<String> parseTimes(dynamic data) {
+  List<String> times = new List<String>();
+
+  NumberFormat nf = new NumberFormat("00");
+
+  for (String s in data['times']) {
+    double t = double.parse(s.substring(0, s.length-3));
+
+    if(s.substring(s.length-2) == "PM")
+      t += 12.0;
+
+    times.add(nf.format(t));
+  }
+
+  return times;
+}
