@@ -3,11 +3,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
-import 'package:great_circle_distance/great_circle_distance.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'Site.dart';
+import 'Data.dart';
 import 'SiteForecastListView.dart';
-import 'dart:math';
 
 void main() => runApp(new WhereToFlyApp());
 
@@ -31,35 +29,19 @@ class Main extends StatefulWidget {
 
 class _MainState extends State<Main> {
   static final dayF = new DateFormat('EEEE dd MMMM');
-  static final dirs = {'W': 0.0*pi/180.0,
-                       'WNW': 22.5*pi/180.0,
-                       'NW': 45.0*pi/180.0,
-                       'NNW': 67.5*pi/180.0,
-                       'N': 90.0*pi/180.0,
-                       'NNE': 112.5*pi/180.0,
-                       'NE': 135.0*pi/180.0,
-                       'ENE': 157.5*pi/180.0,
-                       'E': 180.0*pi/180.0,
-                       'ESE': 202.5*pi/180.0,
-                       'SE': 225.0*pi/180.0,
-                       'SSE': 247.5*pi/180.0,
-                       'S': 270.0*pi/180.0,
-                       'SSW': 292.5*pi/180.0,
-                       'SW': 315.0*pi/180.0,
-                       'WSW': 337.5*pi/180.0};
 
   double latitude;
   double longitude;
   bool sortByLocation = true;
   bool onlyShowOn = true;
 
-  final List<Site> _sites = new List<Site>();
+  List<Site> _sites;
 
   _MainState() {
     getForecast();
   }
 
-getForecast() async {
+  getForecast() async {
     try {
       var loc = <String, double>{};
 
@@ -86,74 +68,7 @@ getForecast() async {
       if (data != null)
         setState(() {
           try {
-            for (var s in data['sites']) {
-              num lat = s['lat'];
-              num lon = s['lon'];
-              var gcd = new GreatCircleDistance.fromDegrees(
-                  latitude1: latitude, longitude1: longitude, latitude2: lat.toDouble(), longitude2: lon.toDouble());
-              double dist =gcd.haversineDistance();
-
-              var site = new Site(
-                s['name'],
-                s['title'],
-                lat.toDouble(),
-                lon.toDouble(),
-                dist,
-                s['url'],
-                s['weather_url'],
-                s['obs_url'],
-              );
-              _sites.add(site);
-
-              for(var f in s['forecast']){
-                var forecast = new Forecast(DateTime.parse(f['date']), f['img'], f['imgTitle']);
-                site.forecasts.add(forecast);
-
-                for(var c in f['conditions']){
-                  int kts = 0;
-                  try
-                  {
-                    kts = int.parse(c['kts']);
-                  } catch(e){}
-                  int kms = 0;
-                  try
-                  {
-                    kms = int.parse(c['kms']);
-                  } catch(e){}
-
-                  Color colour = Colors.black26;
-                  switch(c['colour'])
-                  {
-                    case "Yellow":
-                      colour = Colors.yellow;
-                      break;
-                    case "LightGreen":
-                      colour = Colors.lightGreen;
-                      break;
-                    case "Orange":
-                      colour = Colors.orange;
-                      break;
-                  }
-
-                  Color pgColour = Colors.black26;
-                  switch(c['PGColour'])
-                  {
-                    case "Yellow":
-                      pgColour = Colors.yellow;
-                      break;
-                    case "LightGreen":
-                      pgColour = Colors.lightGreen;
-                      break;
-                    case "Orange":
-                      pgColour = Colors.orange;
-                      break;
-                  }
-
-                  var condition = new Condition(c['dir'], dirs[c['dir']], kts, kms, colour, pgColour);
-                  forecast.conditions.add(condition);
-                }
-              }
-            }
+            _sites = parseSites(data, latitude, longitude);
           } catch (e, s) {
             print(e);
             print(s);
@@ -180,7 +95,7 @@ getForecast() async {
   @override
   Widget build(BuildContext context) {
 
-    if(_sites.length == 0)
+    if(_sites == null || _sites.length == 0)
       return new Container();
 
     List<Widget> pages = new List<Widget>();
@@ -188,7 +103,6 @@ getForecast() async {
     for(int day = 0; day < _sites[0].forecasts.length; ++day)
     {
       List<Widget> list = new List<Widget>();
-      //list.add(new Text(dayF.format(_sites[0].forecasts[day].date), style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4)));
 
       for (Site s in _sites)
       {
