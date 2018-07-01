@@ -36,7 +36,7 @@ class _MainState extends State<Main> {
   bool onlyShowOn = true;
 
   List<Site> _sites;
-  List<String> _times;
+  List<String> times;
 
   _MainState() {
     getForecast();
@@ -70,7 +70,7 @@ class _MainState extends State<Main> {
         setState(() {
           try {
             _sites = parseSites(data, latitude, longitude);
-            _times = parseTimes(data);
+            times = parseTimes(data);
           } catch (e, s) {
             print(e);
             print(s);
@@ -115,17 +115,13 @@ class _MainState extends State<Main> {
           list.add(new InkWell(child: forecastRow, onTap: (){
             Navigator.push(context, new MaterialPageRoute(builder: (context)
             {
-              return new SiteForecast(site: s);
+              return new SiteForecast(s, times);
             }));
           },));
         }
       }
 
-      List<Widget> dateW = new List<Widget>();
-      for(String t in _times)
-        dateW.add(new Expanded(child: new Text(t, textAlign: TextAlign.center, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4))));
-
-      Row dateRow = new Row(children: dateW);
+      Row timeRow = SiteForecastListView.buildTimeRow(context, times, false);
 
       pages.add(new Scaffold(
           appBar: new AppBar(
@@ -144,7 +140,7 @@ class _MainState extends State<Main> {
             ],
           ),
           body: new Column(children: <Widget>[
-            dateRow,
+            timeRow,
             new Expanded(child: new ListView(children: list))
           ],)
       ));
@@ -157,8 +153,9 @@ class _MainState extends State<Main> {
 
 class SiteForecast extends StatefulWidget {
   final Site site;
+  List<String> times;
 
-  SiteForecast({Key key, this.site}) : super(key: key);
+  SiteForecast(this.site, this.times);
 
   @override
   _SiteForecastState createState() => new _SiteForecastState();
@@ -167,11 +164,11 @@ class SiteForecast extends StatefulWidget {
 class _SiteForecastState extends State<SiteForecast> {
   static final dayF = new DateFormat('EEE');
 
-  Site site;
 
   @override
   Widget build(BuildContext context) {
-    site = widget.site;
+    Site site = widget.site;
+    List<String> times = widget.times;
 
     return new Scaffold(
       appBar: new AppBar(
@@ -194,7 +191,11 @@ class _SiteForecastState extends State<SiteForecast> {
           }):new Container(),
         ],
       ),
-      body: new SiteForecastListView(site)
+      body: new Column(children: <Widget>[
+        SiteForecastListView.buildTimeRow(context, times, true),
+        new Expanded(child: new SiteForecastListView(site))
+        ],)
+
     );
   }
 }

@@ -17,6 +17,9 @@ class SiteForecastListView extends StatefulWidget {
 
     List<Widget> lts = new List<Widget>();
 
+    if(showDay)
+      lts.add(new Expanded(child: new Text(dayF.format(forecast.date), textAlign: TextAlign.center, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4))));
+
     for (Condition c in forecast.conditions){
       if(c.colour != Colors.black26)
         on = true;
@@ -33,15 +36,19 @@ class SiteForecastListView extends StatefulWidget {
     if(onlyIfOn && !on)
       return null;
 
-    if(showDay) {
-      return new Row(children: <Widget>[
-        new Expanded(child: new Text(" "+dayF.format(forecast.date), style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4))),
-        new Expanded(flex: 4, child: new Row(children: lts))
-      ]);
-    }
-    else {
-      return new Row(children: lts);
-    }
+    return new Row(children: lts);
+  }
+
+  static Row buildTimeRow(BuildContext context, List<String> times, bool includeDay) {
+    List<Widget> dateW = new List<Widget>();
+
+    if(includeDay)
+      dateW.add(new Expanded(child: new Text("", textAlign: TextAlign.center, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4))));
+
+    for(String t in times)
+      dateW.add(new Expanded(child: new Text(t, textAlign: TextAlign.center, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4))));
+
+    return new Row(children: dateW);
   }
 }
 
