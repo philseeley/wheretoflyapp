@@ -8,6 +8,7 @@ import 'package:great_circle_distance/great_circle_distance.dart';
 
 class Settings {
   bool showPGValues = false;
+  bool showForecast = false;
   File _store;
 
   Settings(){
@@ -16,7 +17,7 @@ class Settings {
   }
 
   Map toJson(){
-    return { 'showPGValues': showPGValues };
+    return { 'showPGValues': showPGValues, 'showForecast': showForecast };
   }
 
   load() async {
@@ -27,7 +28,8 @@ class Settings {
       String s = _store.readAsStringSync();
       dynamic data = json.decode(s);
 
-      showPGValues = data['showPGValues'];
+      if(data['showPGValues']) showPGValues = data['showPGValues'];
+      if(data['showForecast']) showForecast = data['showForecast'];
     } on FileSystemException {}
   }
 

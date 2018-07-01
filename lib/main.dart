@@ -131,7 +131,9 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
       for (Site s in _sites)
       {
-        Row forecastRow = SiteForecastListView.buildForecastRow(context, settings, s.forecasts[day], onlyShowOn, false);
+        Forecast forecast = s.forecasts[day];
+
+        Row forecastRow = SiteForecastListView.buildForecastRow(context, settings, forecast, onlyShowOn, false);
 
         if(forecastRow != null){
           list.add(new Text(s.title, textAlign: TextAlign.center, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4)));
@@ -141,6 +143,9 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
               return new SiteForecast(settings, s, times);
             }));
           }));
+
+          if(settings.showForecast && (forecast.imgTitle.length > 0))
+            list.add(new Text(forecast.imgTitle, textAlign: TextAlign.center));
         }
       }
 

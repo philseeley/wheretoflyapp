@@ -25,7 +25,12 @@ class _SettingsState extends State<SettingsPage> {
           setState(() {
             settings.showPGValues = value;
           });
-        },)
+        }),
+        new SwitchListTile(title: new Text("Show Forecast"), value: settings.showForecast, onChanged: (bool value){
+          setState(() {
+            settings.showForecast = value;
+          });
+        })
       ])
     ));
   }
