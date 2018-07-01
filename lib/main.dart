@@ -6,6 +6,7 @@ import 'package:location/location.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'Data.dart';
 import 'SiteForecastListView.dart';
+import 'SettingsPage.dart';
 
 void main() => runApp(new WhereToFlyApp());
 
@@ -27,8 +28,10 @@ class Main extends StatefulWidget {
   _MainState createState() => new _MainState();
 }
 
-class _MainState extends State<Main> {
-  static final dayF = new DateFormat('EEEE dd MMMM');
+class _MainState extends State<Main> with WidgetsBindingObserver {
+  static final dayF = new DateFormat('EEE dd MMMM');
+
+  final Settings settings = new Settings();
 
   double latitude;
   double longitude;
@@ -95,6 +98,26 @@ class _MainState extends State<Main> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch(state)
+    {
+      case AppLifecycleState.paused:
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.suspending:
+        settings.save();
+        break;
+      case AppLifecycleState.resumed:
+        break;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
 
     if(_sites == null || _sites.length == 0)
@@ -108,16 +131,16 @@ class _MainState extends State<Main> {
 
       for (Site s in _sites)
       {
-        Row forecastRow = SiteForecastListView.buildForecastRow(context, s.forecasts[day], onlyShowOn, false);
+        Row forecastRow = SiteForecastListView.buildForecastRow(context, settings, s.forecasts[day], onlyShowOn, false);
 
         if(forecastRow != null){
           list.add(new Text(s.title, textAlign: TextAlign.center, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4)));
           list.add(new InkWell(child: forecastRow, onTap: (){
             Navigator.push(context, new MaterialPageRoute(builder: (context)
             {
-              return new SiteForecast(s, times);
+              return new SiteForecast(settings, s, times);
             }));
-          },));
+          }));
         }
       }
 
@@ -125,7 +148,7 @@ class _MainState extends State<Main> {
 
       pages.add(new Scaffold(
           appBar: new AppBar(
-            title: new Text(dayF.format(_sites[0].forecasts[day].date), style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4)),
+            title: new Text(dayF.format(_sites[0].forecasts[day].date)),
             actions: <Widget>[
               new IconButton(icon: new Icon(sortByLocation?Icons.location_off:Icons.location_on), onPressed: (){
                 setState(() {
@@ -137,14 +160,19 @@ class _MainState extends State<Main> {
                   onlyShowOn = !onlyShowOn;
                 });
               }),
+              new IconButton(icon: new Icon(Icons.settings), onPressed: (){
+                Navigator.push(context, new MaterialPageRoute(builder: (context)
+                {
+                  return new SettingsPage(settings);
+                }));
+              }),
             ],
           ),
           body: new Column(children: <Widget>[
             timeRow,
             new Expanded(child: new ListView(children: list))
-          ],)
+          ])
       ));
-
     }
 
     return new PageView(children: pages);
@@ -153,9 +181,10 @@ class _MainState extends State<Main> {
 
 class SiteForecast extends StatefulWidget {
   final Site site;
-  List<String> times;
+  final List<String> times;
+  final Settings settings;
 
-  SiteForecast(this.site, this.times);
+  SiteForecast(this.settings, this.site, this.times);
 
   @override
   _SiteForecastState createState() => new _SiteForecastState();
@@ -164,9 +193,9 @@ class SiteForecast extends StatefulWidget {
 class _SiteForecastState extends State<SiteForecast> {
   static final dayF = new DateFormat('EEE');
 
-
   @override
   Widget build(BuildContext context) {
+    Settings settings = widget.settings;
     Site site = widget.site;
     List<String> times = widget.times;
 
@@ -193,9 +222,8 @@ class _SiteForecastState extends State<SiteForecast> {
       ),
       body: new Column(children: <Widget>[
         SiteForecastListView.buildTimeRow(context, times, true),
-        new Expanded(child: new SiteForecastListView(site))
-        ],)
-
+        new Expanded(child: new SiteForecastListView(settings, site))
+        ])
     );
   }
 }

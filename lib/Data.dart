@@ -1,17 +1,50 @@
 import 'dart:math';
+import 'dart:io';
+import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:great_circle_distance/great_circle_distance.dart';
+
+class Settings {
+  bool showPGValues = false;
+  File _store;
+
+  Settings(){
+    //TODO read saved values.
+    load();
+  }
+
+  Map toJson(){
+    return { 'showPGValues': showPGValues };
+  }
+
+  load() async {
+    Directory directory = await path_provider.getApplicationDocumentsDirectory();
+    _store = new File('${directory.path}/settings.json');
+
+    try {
+      String s = _store.readAsStringSync();
+      dynamic data = json.decode(s);
+
+      showPGValues = data['showPGValues'];
+    } on FileSystemException {}
+  }
+
+  save (){
+    _store.writeAsStringSync(json.encode(this));
+  }
+}
 
 class Condition {
   final String dirStr;
   final double dir;
   final int kts;
-  final int kms;
+  final int kmh;
   final Color colour;
   final Color pgColour;
 
-  Condition(this.dirStr, this.dir, this.kts, this.kms, this.colour, this.pgColour);
+  Condition(this.dirStr, this.dir, this.kts, this.kmh, this.colour, this.pgColour);
 }
 
 class Forecast {
@@ -87,10 +120,10 @@ List<Site> parseSites(dynamic data, double latitude, double longitude) {
         {
           kts = int.parse(c['kts']);
         } catch(e){}
-        int kms = 0;
+        int kmh = 0;
         try
         {
-          kms = int.parse(c['kms']);
+          kmh = int.parse(c['kmh']);
         } catch(e){}
 
         Color colour = Colors.black26;
@@ -121,7 +154,7 @@ List<Site> parseSites(dynamic data, double latitude, double longitude) {
             break;
         }
 
-        var condition = new Condition(c['dir'], _dirs[c['dir']], kts, kms, colour, pgColour);
+        var condition = new Condition(c['dir'], _dirs[c['dir']], kts, kmh, colour, pgColour);
         forecast.conditions.add(condition);
       }
     }

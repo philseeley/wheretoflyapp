@@ -12,6 +12,7 @@ dependencies:
   location:
   great_circle_distance:
   url_launcher:
+  path_provider:
 
 dev_dependencies:
   flutter_test:
