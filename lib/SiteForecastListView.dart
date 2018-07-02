@@ -21,7 +21,7 @@ class SiteForecastListView extends StatefulWidget {
     if(showDay)
       list.add(new Expanded(child: new Text(dayF.format(forecast.date), textAlign: TextAlign.center, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4))));
 
-    list.add(forecast.image);
+    list.add(new Expanded(child: forecast.image));
 
     for (Condition c in forecast.conditions){
       Color colour = settings.showPGValues ? c.pgColour : c.colour;

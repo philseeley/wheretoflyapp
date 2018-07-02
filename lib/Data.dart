@@ -60,7 +60,7 @@ class Forecast {
   Forecast(this.date, this.imageURL, this.imgTitle);
 
   getImage(){
-    image = CachedNetworkImage(imageUrl: "https://wheretofly.info/"+imageURL);
+    image = CachedNetworkImage(imageUrl: "https://wheretofly.info/"+imageURL, width: 40.0, height: 40.0);
   }
 }
 
