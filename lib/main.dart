@@ -121,7 +121,10 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
 
     if(_sites == null || _sites.length == 0)
-      return new Container();
+      return new Scaffold(
+        appBar: new AppBar(title: new Text("Where To Fly")),
+        body: new Center(child: new Text("Waiting for Location", style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4)))
+      );
 
     List<Widget> pages = new List<Widget>();
 
