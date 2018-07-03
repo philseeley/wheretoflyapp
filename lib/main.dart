@@ -37,8 +37,8 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
   final Settings settings = new Settings();
 
-  double latitude;
-  double longitude;
+  double latitude = 0.0;
+  double longitude = 0.0;
   bool sortByLocation = true;
   bool onlyShowOn = true;
 
@@ -57,6 +57,13 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
       latitude = loc["latitude"];
       longitude = loc["longitude"];
 
+    } catch (e, s) {
+      //TODO something useful to debug
+      print(e);
+      print(s);
+    }
+
+    try {
       dynamic data;
 
       var uri = new Uri.https(
