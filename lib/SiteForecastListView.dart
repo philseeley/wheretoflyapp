@@ -73,7 +73,7 @@ class _SiteForecastListViewState extends State<SiteForecastListView> {
       list.add(SiteForecastListView.buildForecastRow(context, settings, f, false, true));
 
       if(settings.showForecast && (f.imgTitle.length > 0))
-        list.add(new Text(f.imgTitle, textAlign: TextAlign.center));
+        list.add(new Text(f.imgTitle, textAlign: TextAlign.center, style: Theme.of(context).textTheme.body2));
     }
 
     return new ListView(children: list);

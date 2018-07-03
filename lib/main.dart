@@ -11,13 +11,16 @@ import 'SettingsPage.dart';
 void main() => runApp(new WhereToFlyApp());
 
 class WhereToFlyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    TextStyle ts = Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4);
+
     return new MaterialApp(
       title: 'Where To Fly',
       home: new Main(),
-      theme: ThemeData(textTheme: new TextTheme(body1: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4))),
+      theme: ThemeData(
+        textTheme: new TextTheme(body1: ts, subhead: ts)
+      ),
     );
   }
 }
@@ -149,7 +152,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
           }));
 
           if(settings.showForecast && (forecast.imgTitle.length > 0))
-            list.add(new Text(forecast.imgTitle, textAlign: TextAlign.center));
+            list.add(new Text(forecast.imgTitle, textAlign: TextAlign.center, style: Theme.of(context).textTheme.body2));
         }
       }
 
