@@ -10,15 +10,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 class Settings {
   bool showPGValues = false;
   bool showForecast = false;
+  num iconSize = 40.0;
   File _store;
 
   Settings(){
-    //TODO read saved values.
     load();
   }
 
   Map toJson(){
-    return { 'showPGValues': showPGValues, 'showForecast': showForecast };
+    return { 'showPGValues': showPGValues, 'showForecast': showForecast, 'iconSize': iconSize };
   }
 
   load() async {
@@ -31,6 +31,7 @@ class Settings {
 
       if(data['showPGValues'] != null) showPGValues = data['showPGValues'];
       if(data['showForecast'] != null) showForecast = data['showForecast'];
+      if(data['iconSize'    ] != null) iconSize = data['iconSize'];
     } on FileSystemException {}
   }
 
@@ -53,14 +54,20 @@ class Condition {
 class Forecast {
   final DateTime date;
   final String imageURL;
-  CachedNetworkImage image;
+  CachedNetworkImage _image;
+  double _imageSize;
   final String imgTitle;
   final List<Condition> conditions = new List<Condition>();
 
   Forecast(this.date, this.imageURL, this.imgTitle);
 
-  getImage(){
-    image = CachedNetworkImage(imageUrl: "https://wheretofly.info/"+imageURL, width: 40.0, height: 40.0);
+  CachedNetworkImage getImage(double imageSize) {
+    if(_image == null || (_imageSize != imageSize)){
+      _imageSize = imageSize;
+      _image = CachedNetworkImage(imageUrl: "https://wheretofly.info/"+imageURL, width: _imageSize, height: _imageSize);
+    }
+
+    return _image;
   }
 }
 
@@ -120,7 +127,6 @@ List<Site> parseSites(dynamic data, double latitude, double longitude) {
 
     for(var f in s['forecast']){
       var forecast = new Forecast(DateTime.parse(f['date']), f['img'], f['imgTitle']);
-      forecast.getImage();
 
       site.forecasts.add(forecast);
 

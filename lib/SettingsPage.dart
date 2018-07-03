@@ -30,7 +30,15 @@ class _SettingsState extends State<SettingsPage> {
           setState(() {
             settings.showForecast = value;
           });
+        }),
+        new ListTile(
+          leading: new Text("Icon Size"),
+          title: new Slider(min: 30.0, max: 60.0, divisions: 6, value: settings.iconSize, onChanged: (double value){
+            setState(() {
+              settings.iconSize = value;
+            });
         })
+        )
       ])
     ));
   }
