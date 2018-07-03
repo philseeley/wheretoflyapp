@@ -19,7 +19,7 @@ class SiteForecastListView extends StatefulWidget {
     List<Widget> list = new List<Widget>();
 
     if(showDay)
-      list.add(new Expanded(child: new Text(dayF.format(forecast.date), textAlign: TextAlign.center, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4))));
+      list.add(new Expanded(child: new Text(dayF.format(forecast.date), textAlign: TextAlign.center)));
 
     list.add(new Expanded(child: forecast.image));
 
@@ -33,7 +33,7 @@ class SiteForecastListView extends StatefulWidget {
       Widget lt = Expanded(child:
       new Stack(alignment: AlignmentDirectional.center, children: <Widget>[
         new Transform.rotate(angle: c.dir == null?0.0:c.dir, child: new Icon(Icons.forward, color: (speed==0)?Theme.of(context).canvasColor:colour, size: 40.0)),
-        new Text((speed==0)?"":speed.toString(), style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4))
+        new Text((speed==0)?"":speed.toString())
       ],)
       );
       list.add(lt);
@@ -49,12 +49,12 @@ class SiteForecastListView extends StatefulWidget {
     List<Widget> dateW = new List<Widget>();
 
     if(includeDay)
-      dateW.add(new Expanded(child: new Text("", textAlign: TextAlign.center, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4))));
+      dateW.add(new Expanded(child: new Text("", textAlign: TextAlign.center)));
 
-    dateW.add(new Expanded(child: new Text("", textAlign: TextAlign.center, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4))));
+    dateW.add(new Expanded(child: new Text("", textAlign: TextAlign.center)));
 
     for(String t in times)
-      dateW.add(new Expanded(child: new Text(t, textAlign: TextAlign.center, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4))));
+      dateW.add(new Expanded(child: new Text(t, textAlign: TextAlign.center)));
 
     return new Row(children: dateW);
   }

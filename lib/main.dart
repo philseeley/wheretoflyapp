@@ -17,6 +17,7 @@ class WhereToFlyApp extends StatelessWidget {
     return new MaterialApp(
       title: 'Where To Fly',
       home: new Main(),
+      theme: ThemeData(textTheme: new TextTheme(body1: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4))),
     );
   }
 }
@@ -123,7 +124,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
     if(_sites == null || _sites.length == 0)
       return new Scaffold(
         appBar: new AppBar(title: new Text("Where To Fly")),
-        body: new Center(child: new Text("Waiting for Location", style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4)))
+        body: new Center(child: new Text("Waiting for Location"))
       );
 
     List<Widget> pages = new List<Widget>();
@@ -139,7 +140,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
         Row forecastRow = SiteForecastListView.buildForecastRow(context, settings, forecast, onlyShowOn, false);
 
         if(forecastRow != null){
-          list.add(new Text(s.title, textAlign: TextAlign.center, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4)));
+          list.add(new Text(s.title, textAlign: TextAlign.center));
           list.add(new InkWell(child: forecastRow, onTap: (){
             Navigator.push(context, new MaterialPageRoute(builder: (context)
             {
@@ -244,7 +245,7 @@ class _SiteForecastState extends State<SiteForecast> {
         ],
       ),
       body: new Column(children: <Widget>[
-        new Text(site.title, style: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4)),
+        new Text(site.title),
         SiteForecastListView.buildTimeRow(context, times, true),
         new Expanded(child: new SiteForecastListView(settings, site))
         ])
