@@ -29,8 +29,8 @@ class Settings {
       String s = _store.readAsStringSync();
       dynamic data = json.decode(s);
 
-      if(data['showPGValues']) showPGValues = data['showPGValues'];
-      if(data['showForecast']) showForecast = data['showForecast'];
+      if(data['showPGValues'] != null) showPGValues = data['showPGValues'];
+      if(data['showForecast'] != null) showForecast = data['showForecast'];
     } on FileSystemException {}
   }
 
