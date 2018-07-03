@@ -39,7 +39,8 @@ class SiteForecastListView extends StatefulWidget {
       list.add(lt);
     }
 
-    if(onlyIfOn && !on)
+    // Sometimes the forecast is not downloaded from the BOM correctly, so there will be no conditions.
+    if((forecast.conditions.length == 0) || (onlyIfOn && !on))
       return null;
 
     return new Row(children: list);
