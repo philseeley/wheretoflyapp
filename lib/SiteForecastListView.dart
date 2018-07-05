@@ -23,20 +23,24 @@ class SiteForecastListView extends StatefulWidget {
 
     list.add(new Expanded(child: forecast.getImage(settings.iconSize)));
 
-    for (Condition c in forecast.conditions){
-      Color colour = settings.showPGValues ? c.pgColour : c.colour;
-      int speed = settings.showPGValues ? c.kmh : c.kts;
+    for (int i=0; i<forecast.conditions.length; ++i){
+      Condition c = forecast.conditions[i];
 
-      if(colour != Colors.black26)
-        on = true;
+      if(!settings.hideExtremes || (i>1 && i<forecast.conditions.length-1)){
+        Color colour = settings.showPGValues ? c.pgColour : c.colour;
+        int speed = settings.showPGValues ? c.kmh : c.kts;
 
-      Widget lt = Expanded(child:
-      new Stack(alignment: AlignmentDirectional.center, children: <Widget>[
-        new Transform.rotate(angle: c.dir == null?0.0:c.dir, child: new Icon(Icons.forward, color: (speed==0)?Theme.of(context).canvasColor:colour, size: settings.iconSize)),
-        new Text((speed==0)?"":speed.toString())
-      ],)
-      );
-      list.add(lt);
+        if(colour != Colors.black26)
+          on = true;
+
+        Widget lt = Expanded(child:
+        new Stack(alignment: AlignmentDirectional.center, children: <Widget>[
+          new Transform.rotate(angle: c.dir == null?0.0:c.dir, child: new Icon(Icons.forward, color: (speed==0)?Theme.of(context).canvasColor:colour, size: settings.iconSize)),
+          new Text((speed==0)?"":speed.toString())
+        ],)
+        );
+        list.add(lt);
+      }
     }
 
     // Sometimes the forecast is not downloaded from the BOM correctly, so there will be no conditions.
@@ -46,7 +50,7 @@ class SiteForecastListView extends StatefulWidget {
     return new Row(children: list);
   }
 
-  static Row buildTimeRow(BuildContext context, List<String> times, bool includeDay) {
+  static Row buildTimeRow(BuildContext context, Settings settings, List<String> times, bool includeDay) {
     List<Widget> dateW = new List<Widget>();
 
     if(includeDay)
@@ -54,8 +58,12 @@ class SiteForecastListView extends StatefulWidget {
 
     dateW.add(new Expanded(child: new Text("", textAlign: TextAlign.center)));
 
-    for(String t in times)
-      dateW.add(new Expanded(child: new Text(t, textAlign: TextAlign.center)));
+    for(int i=0; i<times.length; ++i) {
+      String t = times[i];
+
+      if(!settings.hideExtremes || (i>1 && i<times.length-1))
+        dateW.add(new Expanded(child: new Text(t, textAlign: TextAlign.center)));
+    }
 
     return new Row(children: dateW);
   }

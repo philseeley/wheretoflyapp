@@ -31,6 +31,11 @@ class _SettingsState extends State<SettingsPage> {
             settings.showForecast = value;
           });
         }),
+        new SwitchListTile(title: new Text("Hide Early/Late Values"), value: settings.hideExtremes, onChanged: (bool value){
+          setState(() {
+            settings.hideExtremes = value;
+          });
+        }),
         new ListTile(
           leading: new Text("Icon Size"),
           title: new Slider(min: 30.0, max: 60.0, divisions: 6, value: settings.iconSize, onChanged: (double value){

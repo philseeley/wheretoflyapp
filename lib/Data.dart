@@ -11,6 +11,7 @@ class Settings {
   bool showPGValues = false;
   bool showForecast = false;
   num iconSize = 40.0;
+  bool hideExtremes = false;
   File _store;
 
   Settings(){
@@ -18,7 +19,7 @@ class Settings {
   }
 
   Map toJson(){
-    return { 'showPGValues': showPGValues, 'showForecast': showForecast, 'iconSize': iconSize };
+    return { 'showPGValues': showPGValues, 'showForecast': showForecast, 'iconSize': iconSize, 'hideExtremes': hideExtremes };
   }
 
   load() async {
@@ -32,6 +33,7 @@ class Settings {
       if(data['showPGValues'] != null) showPGValues = data['showPGValues'];
       if(data['showForecast'] != null) showForecast = data['showForecast'];
       if(data['iconSize'    ] != null) iconSize = data['iconSize'];
+      if(data['hideExtremes'] != null) hideExtremes = data['hideExtremes'];
     } on FileSystemException {}
   }
 

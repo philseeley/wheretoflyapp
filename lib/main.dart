@@ -256,7 +256,7 @@ class _SiteForecastState extends State<SiteForecast> {
       ),
       body: new Column(children: <Widget>[
         new Text(site.title),
-        SiteForecastListView.buildTimeRow(context, times, true),
+        SiteForecastListView.buildTimeRow(context, settings, times, true),
         new Expanded(child: new SiteForecastListView(settings, site))
         ])
     );
