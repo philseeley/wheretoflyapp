@@ -163,40 +163,50 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
         }
       }
 
-      Row timeRow = SiteForecastListView.buildTimeRow(context, times, false);
+      // If we're hiding the extreme values we might not have any rows to show.
+      if(list.length > 0) {
+        Row timeRow = SiteForecastListView.buildTimeRow(
+            context, settings, times, false);
 
-      pages.add(new Scaffold(
-          appBar: new AppBar(
-            title: new Text(dayF.format(_sites[0].forecasts[day].date)),
-            actions: <Widget>[
-              new IconButton(icon: new Icon(sortByLocation?Icons.location_off:Icons.location_on), onPressed: (){
-                setState(() {
-                  _sort();
-                });
-              }),
-              new IconButton(icon: new Icon(Icons.power_settings_new, color: onlyShowOn?Colors.red:Colors.white), onPressed: (){
-                setState(() {
-                  onlyShowOn = !onlyShowOn;
-                });
-              }),
-              new IconButton(icon: new Icon(settings.showForecast?Icons.cloud:Icons.cloud_off), onPressed: (){
-                setState(() {
-                  settings.showForecast = !settings.showForecast;
-                });
-              }),
-              new IconButton(icon: new Icon(Icons.settings), onPressed: (){
-                Navigator.push(context, new MaterialPageRoute(builder: (context)
-                {
-                  return new SettingsPage(settings);
-                }));
-              }),
-            ],
-          ),
-          body: new Column(children: <Widget>[
-            timeRow,
-            new Expanded(child: new ListView(children: list))
-          ])
-      ));
+        pages.add(new Scaffold(
+            appBar: new AppBar(
+              title: new Text(dayF.format(_sites[0].forecasts[day].date)),
+              actions: <Widget>[
+                new IconButton(icon: new Icon(
+                    sortByLocation ? Icons.location_off : Icons.location_on),
+                    onPressed: () {
+                      setState(() {
+                        _sort();
+                      });
+                    }),
+                new IconButton(icon: new Icon(Icons.power_settings_new,
+                    color: onlyShowOn ? Colors.red : Colors.white),
+                    onPressed: () {
+                      setState(() {
+                        onlyShowOn = !onlyShowOn;
+                      });
+                    }),
+                new IconButton(icon: new Icon(
+                    settings.showForecast ? Icons.cloud : Icons.cloud_off),
+                    onPressed: () {
+                      setState(() {
+                        settings.showForecast = !settings.showForecast;
+                      });
+                    }),
+                new IconButton(icon: new Icon(Icons.settings), onPressed: () {
+                  Navigator.push(
+                      context, new MaterialPageRoute(builder: (context) {
+                    return new SettingsPage(settings);
+                  }));
+                }),
+              ],
+            ),
+            body: new Column(children: <Widget>[
+              timeRow,
+              new Expanded(child: new ListView(children: list))
+            ])
+        ));
+      }
     }
 
     return new PageView(children: pages);
