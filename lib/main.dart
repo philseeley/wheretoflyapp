@@ -182,7 +182,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text("Where To Fly"),
+          title: Text(showGroup.name == null ? 'ALL' : showGroup.name),
           actions: <Widget>[
             IconButton(icon: Icon(
                 sortByLocation ? Icons.location_off : Icons.location_on),
@@ -200,12 +200,6 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
                 }),
             IconButton(icon: Icon(
               settings.showForecast ? Icons.cloud : Icons.cloud_off),
-              onPressed: () {
-                setState(() {
-                  settings.showForecast = !settings.showForecast;
-                });
-              }),
-            IconButton(icon: Icon(Icons.group),
               onPressed: () {
                 setState(() {
                   settings.showForecast = !settings.showForecast;
