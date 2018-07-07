@@ -1,65 +1,6 @@
 import 'package:flutter/material.dart';
 import 'Data.dart';
 
-class GroupsPage extends StatefulWidget {
-  final Settings settings;
-  final List<Site> sites;
-
-  GroupsPage(this.settings, this.sites);
-
-  @override
-  _GroupsState createState() => new _GroupsState();
-}
-
-class _GroupsState extends State<GroupsPage> {
-
-  @override
-  Widget build(BuildContext context) {
-    Settings settings = widget.settings;
-
-    List<Widget> groupWidgetList = new List<Widget>();
-
-    for (Group group in settings.groups)
-      groupWidgetList.add(
-        new Dismissible(
-          key: new GlobalKey(),
-          secondaryBackground: new ListTile(trailing: new Icon(Icons.delete)),
-          background: new ListTile(leading: new Icon(Icons.delete)),
-          onDismissed: (direction) {
-            settings.groups.remove(group);
-          },
-          direction: DismissDirection.horizontal,
-          child: new ListTile(title: new Text(group.name), onTap: () {
-            Navigator.push(
-              context, new MaterialPageRoute(builder: (context) {
-              return new GroupPage(settings, widget.sites, group, false);
-            })
-            );
-          }
-          )
-        )
-      );
-
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text("Groups"),
-        actions: <Widget>[
-          new IconButton(icon: new Icon(Icons.add),
-              onPressed: () {
-                Group g = Group();
-                g.name = 'new';
-                settings.groups.add(g);
-                Navigator.push(context, new MaterialPageRoute(builder: (context) {
-                  return GroupPage(settings, widget.sites, g, true);
-                }));
-              }),
-        ],
-      ),
-      body: new ListView(children: groupWidgetList)
-    );
-  }
-}
-
 class GroupPage extends StatefulWidget {
   final Settings settings;
   final List<Site> sites;
@@ -78,7 +19,6 @@ class _GroupState extends State<GroupPage> {
 
   @override
   Widget build(BuildContext context) {
-    Settings settings = widget.settings;
     List<Site> sites = widget.sites;
     Group group = widget.group;
 
