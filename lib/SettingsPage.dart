@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'Data.dart';
+import 'GroupsPage.dart';
 
 class SettingsPage extends StatefulWidget {
   final Settings settings;
+  final List<Site> sites;
 
-  SettingsPage(this.settings);
+  SettingsPage(this.settings, this.sites);
 
   @override
   _SettingsState createState() => new _SettingsState();
@@ -42,8 +44,15 @@ class _SettingsState extends State<SettingsPage> {
             setState(() {
               settings.iconSize = value;
             });
-        })
-        )
+          }),
+        ),
+        new IconButton(icon: new Icon(Icons.group), onPressed: () {
+          Navigator.push(
+              context, new MaterialPageRoute(builder: (context) {
+            return new GroupsPage(settings, widget.sites);
+          }));
+        }),
+
       ])
     ));
   }

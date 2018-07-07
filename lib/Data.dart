@@ -7,11 +7,25 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:great_circle_distance/great_circle_distance.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
+class Group {
+  String name;
+  List<String> sites = [];
+
+  Map toJson(){
+    return {
+      'name': name,
+      'sites': sites
+    };
+  }
+}
+
 class Settings {
   bool showPGValues = false;
   bool showForecast = false;
   num iconSize = 40.0;
   bool hideExtremes = false;
+  List<Group> groups = [];
+
   File _store;
 
   Settings(){
@@ -19,7 +33,13 @@ class Settings {
   }
 
   Map toJson(){
-    return { 'showPGValues': showPGValues, 'showForecast': showForecast, 'iconSize': iconSize, 'hideExtremes': hideExtremes };
+    return {
+      'showPGValues': showPGValues,
+      'showForecast': showForecast,
+      'iconSize': iconSize,
+      'hideExtremes': hideExtremes,
+      'groups': groups
+    };
   }
 
   load() async {
@@ -34,6 +54,20 @@ class Settings {
       if(data['showForecast'] != null) showForecast = data['showForecast'];
       if(data['iconSize'    ] != null) iconSize = data['iconSize'];
       if(data['hideExtremes'] != null) hideExtremes = data['hideExtremes'];
+
+      if(data['groups'] != null) {
+        for(var d in data['groups']){
+          Group g = new Group();
+
+          g.name = d['name'];
+
+          for(String s in d['sites'])
+            g.sites.add(s);
+
+          groups.add(g);
+        }
+      }
+
     } on FileSystemException {}
   }
 
@@ -59,7 +93,7 @@ class Forecast {
   CachedNetworkImage _image;
   double _imageSize;
   final String imgTitle;
-  final List<Condition> conditions = new List<Condition>();
+  final List<Condition> conditions = [];
 
   Forecast(this.date, this.imageURL, this.imgTitle);
 
@@ -83,9 +117,16 @@ class Site {
   final String weatherURL;
   final String obsURL;
 
-  final List<Forecast> forecasts = new List<Forecast>();
+  final List<Forecast> forecasts = [];
 
   Site(this.name, this.title, this.lat, this.lon, this.dist, this.url, this.weatherURL, this.obsURL);
+
+  static sort(List<Site> sites, bool byLocation){
+    if(byLocation)
+      sites.sort((a, b){return (a.dist-b.dist).round();});
+    else
+      sites.sort((a, b){return a.title.compareTo(b.title);});
+  }
 }
 
 final _dirs = {'W': 0.0*pi/180.0,

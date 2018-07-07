@@ -41,6 +41,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
   double longitude = 0.0;
   bool sortByLocation = true;
   bool onlyShowOn = true;
+  Group showGroup = Group();
 
   List<Site> _sites;
   List<String> times;
@@ -100,10 +101,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
   }
 
   _sort(){
-    if(sortByLocation)
-      _sites.sort((a, b){return (a.dist-b.dist).round();});
-    else
-      _sites.sort((a, b){return a.title.compareTo(b.title);});
+    Site.sort(_sites, sortByLocation);
 
     sortByLocation = !sortByLocation;
   }
@@ -145,21 +143,27 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
       for (Site s in _sites)
       {
-        Forecast forecast = s.forecasts[day];
+        if(showGroup.name == null || showGroup.sites.contains(s.name)) {
+          Forecast forecast = s.forecasts[day];
 
-        Row forecastRow = SiteForecastListView.buildForecastRow(context, settings, forecast, onlyShowOn, false);
+          Row forecastRow = SiteForecastListView.buildForecastRow(
+            context, settings, forecast, onlyShowOn, false);
 
-        if(forecastRow != null){
-          list.add(new Text(s.title, textAlign: TextAlign.center));
-          list.add(new InkWell(child: forecastRow, onTap: (){
-            Navigator.push(context, new MaterialPageRoute(builder: (context)
-            {
-              return new SiteForecast(settings, s, times);
+          if (forecastRow != null) {
+            list.add(new Text(s.title, textAlign: TextAlign.center));
+            list.add(new InkWell(child: forecastRow, onTap: () {
+              Navigator.push(context, new MaterialPageRoute(builder: (context) {
+                return new SiteForecast(settings, _sites, s, times);
+              }));
             }));
-          }));
 
-          if(settings.showForecast && (forecast.imgTitle.length > 0))
-            list.add(new Text(forecast.imgTitle, textAlign: TextAlign.center, style: Theme.of(context).textTheme.body2));
+            if (settings.showForecast && (forecast.imgTitle.length > 0))
+              list.add(new Text(
+                forecast.imgTitle, textAlign: TextAlign.center, style: Theme
+                .of(context)
+                .textTheme
+                .body2));
+          }
         }
       }
 
@@ -180,33 +184,56 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
         appBar: new AppBar(
           title: new Text("Where To Fly"),
           actions: <Widget>[
-            new IconButton(icon: new Icon(
+            IconButton(icon: new Icon(
                 sortByLocation ? Icons.location_off : Icons.location_on),
                 onPressed: () {
                   setState(() {
                     _sort();
                   });
                 }),
-            new IconButton(icon: new Icon(Icons.power_settings_new,
+            IconButton(icon: new Icon(Icons.power_settings_new,
                 color: onlyShowOn ? Colors.red : Colors.white),
                 onPressed: () {
                   setState(() {
                     onlyShowOn = !onlyShowOn;
                   });
                 }),
-            new IconButton(icon: new Icon(
-                settings.showForecast ? Icons.cloud : Icons.cloud_off),
-                onPressed: () {
-                  setState(() {
-                    settings.showForecast = !settings.showForecast;
-                  });
-                }),
-            new IconButton(icon: new Icon(Icons.settings), onPressed: () {
+            IconButton(icon: new Icon(
+              settings.showForecast ? Icons.cloud : Icons.cloud_off),
+              onPressed: () {
+                setState(() {
+                  settings.showForecast = !settings.showForecast;
+                });
+              }),
+            IconButton(icon: new Icon(Icons.group),
+              onPressed: () {
+                setState(() {
+                  settings.showForecast = !settings.showForecast;
+                });
+              }),
+            IconButton(icon: new Icon(Icons.settings), onPressed: () {
               Navigator.push(
                   context, new MaterialPageRoute(builder: (context) {
-                return new SettingsPage(settings);
+                return new SettingsPage(settings, _sites);
               }));
             }),
+            PopupMenuButton<Group>(
+              onSelected: (group){
+                setState(() {
+                  showGroup = group;
+                });
+              },
+              itemBuilder: (context){
+              List<PopupMenuItem<Group>> l = [];
+
+              l.add(PopupMenuItem<Group>(value: null, child: Text("Groups:")));
+              l.add(PopupMenuItem<Group>(value: Group(), child: Text("ALL")));
+
+              for(Group g in settings.groups)
+                l.add(PopupMenuItem<Group>(value: g, child: Text(g.name)));
+
+              return l;
+            })
           ],
         ),
         body: new PageView(children: pages)
@@ -218,8 +245,10 @@ class SiteForecast extends StatefulWidget {
   final Site site;
   final List<String> times;
   final Settings settings;
+  final List<Site> sites;
 
-  SiteForecast(this.settings, this.site, this.times);
+
+  SiteForecast(this.settings, this.sites, this.site, this.times);
 
   @override
   _SiteForecastState createState() => new _SiteForecastState();
@@ -260,7 +289,7 @@ class _SiteForecastState extends State<SiteForecast> {
           new IconButton(icon: new Icon(Icons.settings), onPressed: (){
             Navigator.push(context, new MaterialPageRoute(builder: (context)
             {
-              return new SettingsPage(settings);
+              return new SettingsPage(settings, widget.sites);
             }));
           }),
         ],
