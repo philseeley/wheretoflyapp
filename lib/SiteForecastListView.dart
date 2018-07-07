@@ -50,13 +50,15 @@ class SiteForecastListView extends StatefulWidget {
     return new Row(children: list);
   }
 
-  static Row buildTimeRow(BuildContext context, Settings settings, List<String> times, bool includeDay) {
+  static Row buildTimeRow(BuildContext context, Settings settings, List<String> times, bool includeDay, DateTime date) {
     List<Widget> dateW = new List<Widget>();
 
     if(includeDay)
       dateW.add(new Expanded(child: new Text("", textAlign: TextAlign.center)));
 
-    dateW.add(new Expanded(child: new Text("", textAlign: TextAlign.center)));
+    String day = (date == null) ? "" : dayF.format(date);
+
+    dateW.add(new Expanded(child: new Text(day, textAlign: TextAlign.center)));
 
     for(int i=0; i<times.length; ++i) {
       String t = times[i];
