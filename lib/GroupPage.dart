@@ -10,11 +10,11 @@ class GroupPage extends StatefulWidget {
   GroupPage(this.settings, this.sites, this.group, this.isNew);
 
   @override
-  _GroupState createState() => new _GroupState();
+  _GroupState createState() => _GroupState();
 }
 
 class _GroupState extends State<GroupPage> {
-  final TextEditingController _nameCtrl = new TextEditingController();
+  final TextEditingController _nameCtrl = TextEditingController();
   bool _sortByLocation = true;
 
   @override
@@ -25,15 +25,15 @@ class _GroupState extends State<GroupPage> {
     _nameCtrl.text = group.name;
     _nameCtrl.selection = TextSelection(baseOffset: 0, extentOffset: 0);
 
-    List<Widget> siteWidgetList = new List<Widget>();
+    List<Widget> siteWidgetList = List<Widget>();
 
     Site.sort(sites, _sortByLocation);
 
     for(Site site in sites)
       siteWidgetList.add(
-          new ListTile(
-            title: new Text(site.title),
-            trailing: new Checkbox(
+          ListTile(
+            title: Text(site.title),
+            trailing: Checkbox(
                 value: group.sites.contains(site.name),
                 onChanged: (bool value) {
                   setState(() {
@@ -46,11 +46,11 @@ class _GroupState extends State<GroupPage> {
             ),
           ));
 
-    return new Scaffold(
-        appBar: new AppBar(
-          title: new Text("Edit Group"),
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Edit Group"),
           actions: <Widget>[
-            new IconButton(icon: new Icon(_sortByLocation ? Icons.location_on : Icons.location_off),
+            IconButton(icon: Icon(_sortByLocation ? Icons.location_on : Icons.location_off),
               onPressed: () {
                 setState(() {
                   Site.sort(sites, _sortByLocation);

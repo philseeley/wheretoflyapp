@@ -44,7 +44,7 @@ class Settings {
 
   load() async {
     Directory directory = await path_provider.getApplicationDocumentsDirectory();
-    _store = new File('${directory.path}/settings.json');
+    _store = File('${directory.path}/settings.json');
 
     try {
       String s = _store.readAsStringSync();
@@ -57,7 +57,7 @@ class Settings {
 
       if(data['groups'] != null) {
         for(var d in data['groups']){
-          Group g = new Group();
+          Group g = Group();
 
           g.name = d['name'];
 
@@ -147,16 +147,16 @@ final _dirs = {'W': 0.0*pi/180.0,
   'WSW': 337.5*pi/180.0};
 
 List<Site> parseSites(dynamic data, double latitude, double longitude) {
-  List<Site> sites = new List<Site>();
+  List<Site> sites = List<Site>();
 
   for (var s in data['sites']) {
     num lat = s['lat'];
     num lon = s['lon'];
-    var gcd = new GreatCircleDistance.fromDegrees(
+    var gcd = GreatCircleDistance.fromDegrees(
         latitude1: latitude, longitude1: longitude, latitude2: lat.toDouble(), longitude2: lon.toDouble());
     double dist =gcd.haversineDistance();
 
-    var site = new Site(
+    var site = Site(
       s['name'],
       s['title'],
       lat.toDouble(),
@@ -169,7 +169,7 @@ List<Site> parseSites(dynamic data, double latitude, double longitude) {
     sites.add(site);
 
     for(var f in s['forecast']){
-      var forecast = new Forecast(DateTime.parse(f['date']), f['img'], f['imgTitle']);
+      var forecast = Forecast(DateTime.parse(f['date']), f['img'], f['imgTitle']);
 
       site.forecasts.add(forecast);
 
@@ -213,7 +213,7 @@ List<Site> parseSites(dynamic data, double latitude, double longitude) {
             break;
         }
 
-        var condition = new Condition(c['dir'], _dirs[c['dir']], kts, kmh, colour, pgColour);
+        var condition = Condition(c['dir'], _dirs[c['dir']], kts, kmh, colour, pgColour);
         forecast.conditions.add(condition);
       }
     }
@@ -223,9 +223,9 @@ List<Site> parseSites(dynamic data, double latitude, double longitude) {
 }
 
 List<String> parseTimes(dynamic data) {
-  List<String> times = new List<String>();
+  List<String> times = List<String>();
 
-  NumberFormat nf = new NumberFormat("00");
+  NumberFormat nf = NumberFormat("00");
 
   for (String s in data['times']) {
     double t = double.parse(s.substring(0, s.length-3));

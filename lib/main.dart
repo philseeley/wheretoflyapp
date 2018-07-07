@@ -8,18 +8,18 @@ import 'Data.dart';
 import 'SiteForecastListView.dart';
 import 'SettingsPage.dart';
 
-void main() => runApp(new WhereToFlyApp());
+void main() => runApp(WhereToFlyApp());
 
 class WhereToFlyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     TextStyle ts = Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4);
 
-    return new MaterialApp(
+    return MaterialApp(
       title: 'Where To Fly',
-      home: new Main(),
+      home: Main(),
       theme: ThemeData(
-        textTheme: new TextTheme(body1: ts, subhead: ts)
+        textTheme: TextTheme(body1: ts, subhead: ts)
       ),
     );
   }
@@ -29,13 +29,13 @@ class Main extends StatefulWidget {
   Main({Key key}) : super(key: key);
 
   @override
-  _MainState createState() => new _MainState();
+  _MainState createState() => _MainState();
 }
 
 class _MainState extends State<Main> with WidgetsBindingObserver {
-  static final dayF = new DateFormat('EEE dd MMMM');
+  static final dayF = DateFormat('EEE dd MMMM');
 
-  final Settings settings = new Settings();
+  final Settings settings = Settings();
 
   double latitude = 0.0;
   double longitude = 0.0;
@@ -54,7 +54,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
     try {
       var loc = <String, double>{};
 
-      loc = await new Location().getLocation;
+      loc = await Location().getLocation;
       latitude = loc["latitude"];
       longitude = loc["longitude"];
 
@@ -67,7 +67,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
     try {
       dynamic data;
 
-      var uri = new Uri.https(
+      var uri = Uri.https(
           'wheretofly.info', '/run/current.json');
 
       http.Response response = await http.get(uri);
@@ -130,16 +130,16 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
 
     if(_sites == null || _sites.length == 0)
-      return new Scaffold(
-        appBar: new AppBar(title: new Text("Where To Fly")),
-        body: new Center(child: new Text("Waiting for Location"))
+      return Scaffold(
+        appBar: AppBar(title: Text("Where To Fly")),
+        body: Center(child: Text("Waiting for Location"))
       );
 
-    List<Widget> pages = new List<Widget>();
+    List<Widget> pages = List<Widget>();
 
     for(int day = 0; day < _sites[0].forecasts.length; ++day)
     {
-      List<Widget> list = new List<Widget>();
+      List<Widget> list = List<Widget>();
 
       for (Site s in _sites)
       {
@@ -150,15 +150,15 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
             context, settings, forecast, onlyShowOn, false);
 
           if (forecastRow != null) {
-            list.add(new Text(s.title, textAlign: TextAlign.center));
-            list.add(new InkWell(child: forecastRow, onTap: () {
-              Navigator.push(context, new MaterialPageRoute(builder: (context) {
-                return new SiteForecast(settings, _sites, s, times);
+            list.add(Text(s.title, textAlign: TextAlign.center));
+            list.add(InkWell(child: forecastRow, onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return SiteForecast(settings, _sites, s, times);
               }));
             }));
 
             if (settings.showForecast && (forecast.imgTitle.length > 0))
-              list.add(new Text(
+              list.add(Text(
                 forecast.imgTitle, textAlign: TextAlign.center, style: Theme
                 .of(context)
                 .textTheme
@@ -172,49 +172,49 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
         Row timeRow = SiteForecastListView.buildTimeRow(
             context, settings, times, false, _sites[0].forecasts[day].date);
 
-        pages.add(new Column(children: <Widget>[
+        pages.add(Column(children: <Widget>[
               timeRow,
-              new Expanded(child: new ListView(children: list))
+              Expanded(child: ListView(children: list))
             ])
         );
       }
     }
 
-    return new Scaffold(
-        appBar: new AppBar(
-          title: new Text("Where To Fly"),
+    return Scaffold(
+        appBar: AppBar(
+          title: Text("Where To Fly"),
           actions: <Widget>[
-            IconButton(icon: new Icon(
+            IconButton(icon: Icon(
                 sortByLocation ? Icons.location_off : Icons.location_on),
                 onPressed: () {
                   setState(() {
                     _sort();
                   });
                 }),
-            IconButton(icon: new Icon(Icons.power_settings_new,
+            IconButton(icon: Icon(Icons.power_settings_new,
                 color: onlyShowOn ? Colors.red : Colors.white),
                 onPressed: () {
                   setState(() {
                     onlyShowOn = !onlyShowOn;
                   });
                 }),
-            IconButton(icon: new Icon(
+            IconButton(icon: Icon(
               settings.showForecast ? Icons.cloud : Icons.cloud_off),
               onPressed: () {
                 setState(() {
                   settings.showForecast = !settings.showForecast;
                 });
               }),
-            IconButton(icon: new Icon(Icons.group),
+            IconButton(icon: Icon(Icons.group),
               onPressed: () {
                 setState(() {
                   settings.showForecast = !settings.showForecast;
                 });
               }),
-            IconButton(icon: new Icon(Icons.settings), onPressed: () {
+            IconButton(icon: Icon(Icons.settings), onPressed: () {
               Navigator.push(
-                  context, new MaterialPageRoute(builder: (context) {
-                return new SettingsPage(settings, _sites);
+                  context, MaterialPageRoute(builder: (context) {
+                return SettingsPage(settings, _sites);
               }));
             }),
             PopupMenuButton<Group>(
@@ -236,7 +236,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
             })
           ],
         ),
-        body: new PageView(children: pages)
+        body: PageView(children: pages)
     );
   }
 }
@@ -247,15 +247,14 @@ class SiteForecast extends StatefulWidget {
   final Settings settings;
   final List<Site> sites;
 
-
   SiteForecast(this.settings, this.sites, this.site, this.times);
 
   @override
-  _SiteForecastState createState() => new _SiteForecastState();
+  _SiteForecastState createState() => _SiteForecastState();
 }
 
 class _SiteForecastState extends State<SiteForecast> {
-  static final dayF = new DateFormat('EEE');
+  static final dayF = DateFormat('EEE');
 
   @override
   Widget build(BuildContext context) {
@@ -263,41 +262,41 @@ class _SiteForecastState extends State<SiteForecast> {
     Site site = widget.site;
     List<String> times = widget.times;
 
-    return new Scaffold(
-      appBar: new AppBar(
+    return Scaffold(
+      appBar: AppBar(
         actions: <Widget>[
-          new IconButton(icon: new Icon(Icons.info), onPressed: (){
+          IconButton(icon: Icon(Icons.info), onPressed: (){
             setState(() {
               launch(site.url);
             });
           }),
-          new IconButton(icon: new Icon(settings.showForecast?Icons.cloud:Icons.cloud_off), onPressed: (){
+          IconButton(icon: Icon(settings.showForecast?Icons.cloud:Icons.cloud_off), onPressed: (){
             setState(() {
               settings.showForecast = !settings.showForecast;
             });
           }),
-          new IconButton(icon: new Icon(Icons.cloud_upload), onPressed: (){
+          IconButton(icon: Icon(Icons.cloud_upload), onPressed: (){
             setState(() {
               launch(site.weatherURL);
             });
           }),
-          (site.obsURL != null)?new IconButton(icon: new Icon(Icons.cloud, color: Colors.red), onPressed: (){
+          (site.obsURL != null)?IconButton(icon: Icon(Icons.cloud, color: Colors.red), onPressed: (){
             setState(() {
               launch(site.obsURL);
             });
-          }):new Container(),
-          new IconButton(icon: new Icon(Icons.settings), onPressed: (){
-            Navigator.push(context, new MaterialPageRoute(builder: (context)
+          }):Container(),
+          IconButton(icon: Icon(Icons.settings), onPressed: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context)
             {
-              return new SettingsPage(settings, widget.sites);
+              return SettingsPage(settings, widget.sites);
             }));
           }),
         ],
       ),
-      body: new Column(children: <Widget>[
-        new Text(site.title),
+      body: Column(children: <Widget>[
+        Text(site.title),
         SiteForecastListView.buildTimeRow(context, settings, times, true, null),
-        new Expanded(child: new SiteForecastListView(settings, site))
+        Expanded(child: SiteForecastListView(settings, site))
         ])
     );
   }
