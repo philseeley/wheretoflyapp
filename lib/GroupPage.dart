@@ -22,8 +22,8 @@ class _GroupState extends State<GroupPage> {
     List<Site> sites = widget.sites;
     Group group = widget.group;
 
-    _nameCtrl.text = group.name;
-    _nameCtrl.selection = TextSelection(baseOffset: 0, extentOffset: 0);
+    if(!widget.isNew)
+      _nameCtrl.text = group.name;
 
     List<Widget> siteWidgetList = List<Widget>();
 
