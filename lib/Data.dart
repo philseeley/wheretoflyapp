@@ -116,10 +116,31 @@ class Site {
   final String url;
   final String weatherURL;
   final String obsURL;
+  final String minDir;
+  final String maxDir;
+  final int minSpeed;
+  final int maxSpeed;
+  final int minPGSpeed;
+  final int maxPGSpeed;
 
   final List<Forecast> forecasts = [];
 
-  Site(this.name, this.title, this.lat, this.lon, this.dist, this.url, this.weatherURL, this.obsURL);
+  Site(
+    this.name,
+    this.title,
+    this.lat,
+    this.lon,
+    this.dist,
+    this.url,
+    this.weatherURL,
+    this.obsURL,
+    this.minDir,
+    this.maxDir,
+    this.minSpeed,
+    this.maxSpeed,
+    this.minPGSpeed,
+    this.maxPGSpeed
+  );
 
   static sort(List<Site> sites, bool byLocation){
     if(byLocation)
@@ -165,6 +186,12 @@ List<Site> parseSites(dynamic data, double latitude, double longitude) {
       s['url'],
       s['weather_url'],
       s['obs_url'],
+      s['minDir'],
+      s['maxDir'],
+      s['minSpeed'],
+      s['maxSpeed'],
+      s['minPGSpeed'],
+      s['maxPGSpeed']
     );
     sites.add(site);
 

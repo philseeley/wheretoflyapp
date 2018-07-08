@@ -69,6 +69,16 @@ class SiteForecastListView extends StatefulWidget {
 
     return Row(children: dateW);
   }
+
+  static Text buildTitleRow(Settings settings, Site site) {
+    String speed;
+    if(settings.showPGValues)
+      speed = site.minPGSpeed.toString()+"-"+site.maxPGSpeed.toString()+" kmh";
+    else
+      speed = site.minSpeed.toString()+"-"+site.maxSpeed.toString()+" kts";
+
+    return Text(site.title+" "+site.minDir+"-"+site.maxDir+" "+speed, textAlign: TextAlign.center);
+  }
 }
 
 class _SiteForecastListViewState extends State<SiteForecastListView> {

@@ -150,7 +150,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
             context, settings, forecast, onlyShowOn, false);
 
           if (forecastRow != null) {
-            list.add(Text(s.title, textAlign: TextAlign.center));
+            list.add(SiteForecastListView.buildTitleRow(settings, s));
             list.add(InkWell(child: forecastRow, onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
                 return SiteForecast(settings, _sites, s, times);
@@ -288,7 +288,7 @@ class _SiteForecastState extends State<SiteForecast> {
         ],
       ),
       body: Column(children: <Widget>[
-        Text(site.title),
+        SiteForecastListView.buildTitleRow(settings, site),
         SiteForecastListView.buildTimeRow(context, settings, times, true, null),
         Expanded(child: SiteForecastListView(settings, site))
         ])
