@@ -70,14 +70,18 @@ class SiteForecastListView extends StatefulWidget {
     return Row(children: dateW);
   }
 
-  static Text buildTitleRow(Settings settings, Site site) {
-    String speed;
+  static Row buildTitleRow(BuildContext context, Settings settings, Site site) {
+    String speed = site.minDir+"-"+site.maxDir+" ";
     if(settings.showPGValues)
-      speed = site.minPGSpeed.toString()+"-"+site.maxPGSpeed.toString()+" kmh";
+      speed += site.minPGSpeed.toString()+"-"+site.maxPGSpeed.toString()+" kmh";
     else
-      speed = site.minSpeed.toString()+"-"+site.maxSpeed.toString()+" kts";
+      speed += site.minSpeed.toString()+"-"+site.maxSpeed.toString()+" kts";
 
-    return Text(site.title+" "+site.minDir+"-"+site.maxDir+" "+speed, textAlign: TextAlign.center);
+//    return Text(site.title+" "+site.minDir+"-"+site.maxDir+" "+speed, textAlign: TextAlign.center);
+    return Row(children: <Widget>[
+      Expanded(child: Text(site.title, textAlign: TextAlign.center)),
+      Expanded(child: Text(speed, textAlign: TextAlign.center, style: Theme.of(context).textTheme.body2))
+    ]);
   }
 }
 
