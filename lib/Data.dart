@@ -22,6 +22,7 @@ class Group {
 class Settings {
   bool showPGValues = false;
   bool showForecast = false;
+  bool showMetric = false;
   num iconSize = 40.0;
   bool hideExtremes = false;
   List<Group> groups = [];
@@ -36,6 +37,7 @@ class Settings {
     return {
       'showPGValues': showPGValues,
       'showForecast': showForecast,
+      'showMetric': showMetric,
       'iconSize': iconSize,
       'hideExtremes': hideExtremes,
       'groups': groups
@@ -52,6 +54,7 @@ class Settings {
 
       if(data['showPGValues'] != null) showPGValues = data['showPGValues'];
       if(data['showForecast'] != null) showForecast = data['showForecast'];
+      if(data['showMetric'  ] != null) showMetric = data['showMetric'];
       if(data['iconSize'    ] != null) iconSize = data['iconSize'];
       if(data['hideExtremes'] != null) hideExtremes = data['hideExtremes'];
 
@@ -80,11 +83,10 @@ class Condition {
   final String dirStr;
   final double dir;
   final int kts;
-  final int kmh;
   final Color colour;
   final Color pgColour;
 
-  Condition(this.dirStr, this.dir, this.kts, this.kmh, this.colour, this.pgColour);
+  Condition(this.dirStr, this.dir, this.kts, this.colour, this.pgColour);
 }
 
 class Forecast {
@@ -206,11 +208,6 @@ List<Site> parseSites(dynamic data, double latitude, double longitude) {
         {
           kts = int.parse(c['kts']);
         } catch(e){}
-        int kmh = 0;
-        try
-        {
-          kmh = int.parse(c['kmh']);
-        } catch(e){}
 
         Color colour = Colors.black26;
         switch(c['colour'])
@@ -240,7 +237,7 @@ List<Site> parseSites(dynamic data, double latitude, double longitude) {
             break;
         }
 
-        var condition = Condition(c['dir'], _dirs[c['dir']], kts, kmh, colour, pgColour);
+        var condition = Condition(c['dir'], _dirs[c['dir']], kts, colour, pgColour);
         forecast.conditions.add(condition);
       }
     }

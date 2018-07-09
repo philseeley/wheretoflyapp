@@ -28,7 +28,9 @@ class SiteForecastListView extends StatefulWidget {
 
       if(!settings.hideExtremes || (i>1 && i<forecast.conditions.length-1)){
         Color colour = settings.showPGValues ? c.pgColour : c.colour;
-        int speed = settings.showPGValues ? c.kmh : c.kts;
+        int speed = c.kts;
+        if(settings.showMetric)
+          speed = (speed*1.85).round();
 
         if(colour != Colors.black26)
           on = true;
@@ -72,12 +74,19 @@ class SiteForecastListView extends StatefulWidget {
 
   static Row buildTitleRow(BuildContext context, Settings settings, Site site) {
     String speed = site.minDir+"-"+site.maxDir+" ";
-    if(settings.showPGValues)
-      speed += site.minPGSpeed.toString()+"-"+site.maxPGSpeed.toString()+" kmh";
-    else
-      speed += site.minSpeed.toString()+"-"+site.maxSpeed.toString()+" kts";
 
-//    return Text(site.title+" "+site.minDir+"-"+site.maxDir+" "+speed, textAlign: TextAlign.center);
+    int minSpeed = (settings.showPGValues) ? site.minPGSpeed : site.minSpeed;
+    int maxSpeed = (settings.showPGValues) ? site.maxPGSpeed : site.maxSpeed;
+
+    if(settings.showMetric)
+    {
+      minSpeed = (minSpeed*1.85).round();
+      maxSpeed = (maxSpeed*1.85).round();
+    }
+
+    speed += minSpeed.toString()+"-"+maxSpeed.toString();
+    speed += (settings.showMetric) ? " kmh" : " kts";
+
     return Row(children: <Widget>[
       Expanded(child: Text(site.title, textAlign: TextAlign.center)),
       Expanded(child: Text(speed, textAlign: TextAlign.center, style: Theme.of(context).textTheme.body2))
