@@ -177,7 +177,7 @@ List<Site> parseSites(dynamic data, double latitude, double longitude) {
     num lon = s['lon'];
     var gcd = GreatCircleDistance.fromDegrees(
         latitude1: latitude, longitude1: longitude, latitude2: lat.toDouble(), longitude2: lon.toDouble());
-    double dist =gcd.haversineDistance();
+    double dist = gcd.haversineDistance();
 
     var site = Site(
       s['name'],

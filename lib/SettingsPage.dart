@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'Data.dart';
 import 'GroupPage.dart';
+import 'HelpPage.dart';
 
 class SettingsPage extends StatefulWidget {
   final Settings settings;
@@ -96,7 +97,14 @@ class _SettingsState extends State<SettingsPage> {
     return(Scaffold(
       appBar: AppBar(
         title: Text("Settings"),
-      ),
+        actions: <Widget>[
+        IconButton(icon: Icon(Icons.help), onPressed: () {
+          Navigator.push(
+            context, MaterialPageRoute(builder: (context) {
+            return HelpPage();
+          }));
+        }),
+      ]),
       body: ListView(children: list)
     ));
   }
