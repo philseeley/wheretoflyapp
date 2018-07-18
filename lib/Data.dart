@@ -198,7 +198,11 @@ List<Site> parseSites(dynamic data, double latitude, double longitude) {
     sites.add(site);
 
     for(var f in s['forecast']){
-      var forecast = Forecast(DateTime.parse(f['date']), f['img'], f['imgTitle']);
+      // Sometimes the BOM returns null for the imgTitle.
+      String imgTitle = f['imgTitle'];
+      if(imgTitle == null) imgTitle = '';
+
+      var forecast = Forecast(DateTime.parse(f['date']), f['img'], imgTitle);
 
       site.forecasts.add(forecast);
 
