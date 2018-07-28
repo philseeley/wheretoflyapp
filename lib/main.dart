@@ -26,8 +26,6 @@ class WhereToFlyApp extends StatelessWidget {
 }
 
 class Main extends StatefulWidget {
-  Main({Key key}) : super(key: key);
-
   @override
   _MainState createState() => _MainState();
 }
@@ -93,10 +91,8 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
           _sort();
         });
-    } catch (e, s) {
-      //TODO something useful to debug
-      print(e);
-      print(s);
+    } catch (e) {
+      getForecast();
     }
   }
 
@@ -132,7 +128,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
     if(_sites == null || _sites.length == 0)
       return Scaffold(
         appBar: AppBar(title: Text("Where To Fly")),
-        body: Center(child: Text("Waiting for Location"))
+        body: Center(child: Stack(children: <Widget>[Text("Waiting for\nLocation and Data", textAlign: TextAlign.center,), CircularProgressIndicator()],alignment: Alignment.center))
       );
 
     List<Widget> pages = List<Widget>();
