@@ -140,25 +140,28 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
       for (Site s in _sites)
       {
         if(showGroup.name == null || showGroup.sites.contains(s.name)) {
-          Forecast forecast = s.forecasts[day];
+          if(day < s.forecasts.length) {
+            Forecast forecast = s.forecasts[day];
 
-          Row forecastRow = SiteForecastListView.buildForecastRow(
-            context, settings, forecast, onlyShowOn, false);
+            Row forecastRow = SiteForecastListView.buildForecastRow(
+              context, settings, forecast, onlyShowOn, false);
 
-          if (forecastRow != null) {
-            list.add(SiteForecastListView.buildTitleRow(context, settings, s));
-            list.add(InkWell(child: forecastRow, onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return SiteForecast(settings, _sites, s, times);
+            if (forecastRow != null) {
+              list.add(
+                SiteForecastListView.buildTitleRow(context, settings, s));
+              list.add(InkWell(child: forecastRow, onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return SiteForecast(settings, _sites, s, times);
+                }));
               }));
-            }));
 
-            if (settings.showForecast && (forecast.imgTitle.length > 0))
-              list.add(Text(
-                forecast.imgTitle, textAlign: TextAlign.center, style: Theme
-                .of(context)
-                .textTheme
-                .body2));
+              if (settings.showForecast && (forecast.imgTitle.length > 0))
+                list.add(Text(
+                  forecast.imgTitle, textAlign: TextAlign.center, style: Theme
+                  .of(context)
+                  .textTheme
+                  .body2));
+            }
           }
         }
       }
