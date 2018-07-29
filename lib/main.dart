@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'Data.dart';
 import 'SiteForecastListView.dart';
 import 'SettingsPage.dart';
@@ -35,6 +36,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
   final Settings settings = Settings();
 
+  bool locationAvailable = false;
   double latitude = 0.0;
   double longitude = 0.0;
   bool sortByLocation = true;
@@ -55,11 +57,9 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
       loc = await Location().getLocation;
       latitude = loc["latitude"];
       longitude = loc["longitude"];
-
-    } catch (e, s) {
-      //TODO something useful to debug
-      print(e);
-      print(s);
+      locationAvailable = true;
+    } catch (e) {
+      Fluttertoast.showToast(msg: "Failed to get location", toastLength: Toast.LENGTH_LONG);
     }
 
     try {
@@ -97,7 +97,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
   }
 
   _sort(){
-    Site.sort(_sites, sortByLocation);
+    Site.sort(_sites, locationAvailable && sortByLocation);
 
     sortByLocation = !sortByLocation;
   }
@@ -179,55 +179,59 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
       }
     }
 
+    List<Widget> actions = [
+      IconButton(icon: Icon(Icons.power_settings_new,
+        color: onlyShowOn ? Colors.red : Colors.white),
+        onPressed: () {
+          setState(() {
+            onlyShowOn = !onlyShowOn;
+          });
+        }),
+      IconButton(icon: Icon(
+        settings.showForecast ? Icons.cloud : Icons.cloud_off),
+        onPressed: () {
+          setState(() {
+            settings.showForecast = !settings.showForecast;
+          });
+        }),
+      IconButton(icon: Icon(Icons.settings), onPressed: () {
+        Navigator.push(
+          context, MaterialPageRoute(builder: (context) {
+          return SettingsPage(settings, _sites);
+        }));
+      }),
+      PopupMenuButton<Group>(
+        onSelected: (group) {
+          setState(() {
+            showGroup = group;
+          });
+        },
+        itemBuilder: (context) {
+          List<PopupMenuItem<Group>> l = [];
+
+          l.add(PopupMenuItem<Group>(value: null, child: Text("Groups:")));
+          l.add(PopupMenuItem<Group>(value: Group(), child: Text("ALL")));
+
+          for (Group g in settings.groups)
+            l.add(PopupMenuItem<Group>(value: g, child: Text(g.name)));
+
+          return l;
+        })
+    ];
+
+    if(locationAvailable)
+      actions.insert(0, IconButton(icon: Icon(
+        sortByLocation ? Icons.location_off : Icons.location_on),
+        onPressed: () {
+          setState(() {
+            _sort();
+          });
+        }));
+
     return Scaffold(
         appBar: AppBar(
           title: Text(showGroup.name == null ? 'ALL' : showGroup.name),
-          actions: <Widget>[
-            IconButton(icon: Icon(
-                sortByLocation ? Icons.location_off : Icons.location_on),
-                onPressed: () {
-                  setState(() {
-                    _sort();
-                  });
-                }),
-            IconButton(icon: Icon(Icons.power_settings_new,
-                color: onlyShowOn ? Colors.red : Colors.white),
-                onPressed: () {
-                  setState(() {
-                    onlyShowOn = !onlyShowOn;
-                  });
-                }),
-            IconButton(icon: Icon(
-              settings.showForecast ? Icons.cloud : Icons.cloud_off),
-              onPressed: () {
-                setState(() {
-                  settings.showForecast = !settings.showForecast;
-                });
-              }),
-            IconButton(icon: Icon(Icons.settings), onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) {
-                return SettingsPage(settings, _sites);
-              }));
-            }),
-            PopupMenuButton<Group>(
-              onSelected: (group){
-                setState(() {
-                  showGroup = group;
-                });
-              },
-              itemBuilder: (context){
-              List<PopupMenuItem<Group>> l = [];
-
-              l.add(PopupMenuItem<Group>(value: null, child: Text("Groups:")));
-              l.add(PopupMenuItem<Group>(value: Group(), child: Text("ALL")));
-
-              for(Group g in settings.groups)
-                l.add(PopupMenuItem<Group>(value: g, child: Text(g.name)));
-
-              return l;
-            })
-          ],
+          actions: actions
         ),
         body: PageView(children: pages)
     );
