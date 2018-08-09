@@ -9,11 +9,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 class Group {
   String name;
+  bool init = false;
   List<String> sites = [];
 
   Map toJson(){
     return {
       'name': name,
+      'init': init,
       'sites': sites
     };
   }
@@ -26,12 +28,9 @@ class Settings {
   num iconSize = 40.0;
   bool hideExtremes = false;
   List<Group> groups = [];
+  Group initGroup;
 
   File _store;
-
-  Settings(){
-    load();
-  }
 
   Map toJson(){
     return {
@@ -63,6 +62,10 @@ class Settings {
           Group g = Group();
 
           g.name = d['name'];
+          if(d['init'] != null) {
+            g.init = d['init'];
+            if(g.init) initGroup = g;
+          }
 
           for(String s in d['sites'])
             g.sites.add(s);

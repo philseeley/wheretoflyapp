@@ -51,6 +51,11 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
   }
 
   getForecast() async {
+    await settings.load();
+
+    if(settings.initGroup != null)
+      showGroup = settings.initGroup;
+
     try {
       var loc = <String, double>{};
 

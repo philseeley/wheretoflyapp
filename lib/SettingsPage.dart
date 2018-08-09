@@ -61,8 +61,9 @@ class _SettingsState extends State<SettingsPage> {
           }),
       ),
       ListTile(
-        title: Text('Groups:'),
-        trailing: IconButton(icon: Icon(Icons.add), onPressed: () {
+        leading: Text('Groups:'),
+        trailing: Text('Default'),
+        title: IconButton(icon: Icon(Icons.add), onPressed: () {
           Group g = Group();
           g.name = 'new';
           settings.groups.add(g);
@@ -83,7 +84,16 @@ class _SettingsState extends State<SettingsPage> {
             settings.groups.remove(group);
           },
           direction: DismissDirection.horizontal,
-          child: ListTile(title: Text(group.name), onTap: () {
+          child: ListTile(title: Text(group.name),
+                          trailing: IconButton(icon: Icon(group.init?Icons.radio_button_checked:Icons.radio_button_unchecked), onPressed: (){
+                            setState(() {
+                              bool init = !group.init;
+                              for (Group g in settings.groups)
+                                g.init = false;
+                              group.init = init;
+                            });
+                          }),
+                          onTap: () {
             Navigator.push(
               context, MaterialPageRoute(builder: (context) {
               return GroupPage(settings, widget.sites, group, false);
