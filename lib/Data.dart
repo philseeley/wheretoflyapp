@@ -78,7 +78,8 @@ class Settings {
   }
 
   save (){
-    _store.writeAsStringSync(json.encode(this));
+    if(_store != null)
+      _store.writeAsStringSync(json.encode(this));
   }
 }
 
