@@ -263,38 +263,44 @@ class _SiteForecastState extends State<SiteForecast> {
     Settings settings = widget.settings;
     Site site = widget.site;
     List<String> times = widget.times;
+    List<Widget> actions = [];
+
+    if(site.url != null)
+      actions.add(
+        IconButton(icon: Icon(Icons.info), onPressed: (){
+          setState(() {
+            launch(site.url);
+          });
+        }));
+    actions.add(
+      IconButton(icon: Icon(settings.showForecast?Icons.cloud:Icons.cloud_off), onPressed: (){
+        setState(() {
+          settings.showForecast = !settings.showForecast;
+        });
+      }));
+    actions.add(
+      IconButton(icon: Icon(Icons.cloud_upload), onPressed: (){
+        setState(() {
+          launch(site.weatherURL);
+        });
+      }));
+    if(site.obsURL != null)
+      actions.add(
+        IconButton(icon: Icon(Icons.cloud, color: Colors.red), onPressed: (){
+          setState(() {
+            launch(site.obsURL);
+          });
+        }));
+    actions.add(
+      IconButton(icon: Icon(Icons.settings), onPressed: (){
+        Navigator.push(context, MaterialPageRoute(builder: (context)
+        {
+          return SettingsPage(settings, widget.sites);
+        }));
+      }));
 
     return Scaffold(
-      appBar: AppBar(
-        actions: <Widget>[
-          IconButton(icon: Icon(Icons.info), onPressed: (){
-            setState(() {
-              launch(site.url);
-            });
-          }),
-          IconButton(icon: Icon(settings.showForecast?Icons.cloud:Icons.cloud_off), onPressed: (){
-            setState(() {
-              settings.showForecast = !settings.showForecast;
-            });
-          }),
-          IconButton(icon: Icon(Icons.cloud_upload), onPressed: (){
-            setState(() {
-              launch(site.weatherURL);
-            });
-          }),
-          (site.obsURL != null)?IconButton(icon: Icon(Icons.cloud, color: Colors.red), onPressed: (){
-            setState(() {
-              launch(site.obsURL);
-            });
-          }):Container(),
-          IconButton(icon: Icon(Icons.settings), onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)
-            {
-              return SettingsPage(settings, widget.sites);
-            }));
-          }),
-        ],
-      ),
+      appBar: AppBar(actions: actions),
       body: Column(children: <Widget>[
         SiteForecastListView.buildTitleRow(context, settings, site),
         SiteForecastListView.buildTimeRow(context, settings, times, true, null),
