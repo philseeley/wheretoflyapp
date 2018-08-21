@@ -30,8 +30,8 @@ android {
         applicationId "name.seeley.phil.wheretoflyapp"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 12
-        versionName "5.6"
+        versionCode 13
+        versionName "5.7"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
