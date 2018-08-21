@@ -59,7 +59,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
     try {
       var loc = <String, double>{};
 
-      loc = await Location().getLocation;
+      loc = await Location().getLocation();
       latitude = loc["latitude"];
       longitude = loc["longitude"];
       locationAvailable = true;
