@@ -127,6 +127,12 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
     }
   }
 
+  _showSite(Site s) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return SiteForecast(settings, _sites, s, times);
+    }));
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -152,13 +158,8 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
               context, settings, forecast, onlyShowOn, false);
 
             if (forecastRow != null) {
-              list.add(
-                SiteForecastListView.buildTitleRow(context, settings, s));
-              list.add(InkWell(child: forecastRow, onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return SiteForecast(settings, _sites, s, times);
-                }));
-              }));
+              list.add(InkWell(child: SiteForecastListView.buildTitleRow(context, settings, s), onTap: () {_showSite(s);}));
+              list.add(InkWell(child: forecastRow, onTap: () {_showSite(s);}));
 
               if (settings.showForecast && (forecast.imgTitle.length > 0))
                 list.add(Text(
