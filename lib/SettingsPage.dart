@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:share/share.dart';
 import 'Data.dart';
 import 'GroupPage.dart';
 import 'HelpPage.dart';
@@ -108,12 +109,15 @@ class _SettingsState extends State<SettingsPage> {
       appBar: AppBar(
         title: Text("Settings"),
         actions: <Widget>[
-        IconButton(icon: Icon(Icons.help), onPressed: () {
-          Navigator.push(
-            context, MaterialPageRoute(builder: (context) {
-            return HelpPage();
-          }));
-        }),
+          IconButton(icon: Icon(Icons.share), onPressed: () {
+            Share.share("https://play.google.com/store/apps/details?id=name.seeley.phil.wheretoflyapp");
+          }),
+          IconButton(icon: Icon(Icons.help), onPressed: () {
+            Navigator.push(
+              context, MaterialPageRoute(builder: (context) {
+              return HelpPage();
+            }));
+          }),
       ]),
       body: ListView(children: list)
     ));

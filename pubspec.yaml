@@ -15,6 +15,7 @@ dependencies:
   path_provider:
   cached_network_image:
   fluttertoast:
+  share:
 
 dev_dependencies:
   flutter_test:
