@@ -6,28 +6,33 @@ PODS:
     - Flutter
   - path_provider (0.0.1):
     - Flutter
+  - share (0.5.2):
+    - Flutter
   - shared_preferences (0.0.1):
     - Flutter
   - url_launcher (0.0.1):
     - Flutter
 
 DEPENDENCIES:
-  - Flutter (from `.symlinks/flutter/ios`)
+  - Flutter (from `.symlinks/flutter/ios-release`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - location (from `.symlinks/plugins/location/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - share (from `.symlinks/plugins/share/ios`)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
 
 EXTERNAL SOURCES:
   Flutter:
-    :path: ".symlinks/flutter/ios"
+    :path: ".symlinks/flutter/ios-release"
   fluttertoast:
     :path: ".symlinks/plugins/fluttertoast/ios"
   location:
     :path: ".symlinks/plugins/location/ios"
   path_provider:
     :path: ".symlinks/plugins/path_provider/ios"
+  share:
+    :path: ".symlinks/plugins/share/ios"
   shared_preferences:
     :path: ".symlinks/plugins/shared_preferences/ios"
   url_launcher:
@@ -38,6 +43,7 @@ SPEC CHECKSUMS:
   fluttertoast: ad0527b15297baf11349f3f581dae4d40f24f340
   location: 26c90953ad5916331d0d1d913898779910416487
   path_provider: 09407919825bfe3c2deae39453b7a5b44f467873
+  share: 222b5dcc8031238af9d7de91149df65bad1aef75
   shared_preferences: 5a1d487c427ee18fcd3ea1f2a131569481834b53
   url_launcher: 92b89c1029a0373879933c21642958c874539095
 
