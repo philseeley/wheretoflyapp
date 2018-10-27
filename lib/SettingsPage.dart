@@ -65,8 +65,7 @@ class _SettingsState extends State<SettingsPage> {
         leading: Text('Groups:'),
         trailing: Text('Default'),
         title: IconButton(icon: Icon(Icons.add), onPressed: () {
-          Group g = Group();
-          g.name = 'new';
+          Group g = Group('new');
           settings.groups.add(g);
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return GroupPage(settings, widget.sites, g, true);

@@ -19,9 +19,7 @@ class WhereToFlyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Where To Fly',
       home: Main(),
-      theme: ThemeData(
-        textTheme: TextTheme(body1: ts, subhead: ts)
-      ),
+      theme: ThemeData(textTheme: TextTheme(body1: ts, subhead: ts))
     );
   }
 }
@@ -41,7 +39,8 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
   double longitude = 0.0;
   bool sortByLocation = true;
   bool onlyShowOn = true;
-  Group showGroup = Group();
+  Group allGroup = Group("ALL");
+  Group showGroup;
 
   List<Site> _sites;
   List<String> times;
@@ -52,6 +51,8 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
   getForecast() async {
     await settings.load();
+
+    showGroup = allGroup;
 
     if(settings.initGroup != null)
       showGroup = settings.initGroup;
@@ -150,7 +151,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
       for (Site s in _sites)
       {
-        if(showGroup.name == null || showGroup.sites.contains(s.name)) {
+        if(showGroup == allGroup || showGroup.sites.contains(s.name)) {
           if(day < s.forecasts.length) {
             Forecast forecast = s.forecasts[day];
 
@@ -205,24 +206,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
           context, MaterialPageRoute(builder: (context) {
           return SettingsPage(settings, _sites);
         }));
-      }),
-      PopupMenuButton<Group>(
-        onSelected: (group) {
-          setState(() {
-            showGroup = group;
-          });
-        },
-        itemBuilder: (context) {
-          List<PopupMenuItem<Group>> l = [];
-
-          l.add(PopupMenuItem<Group>(value: null, child: Text("Groups:")));
-          l.add(PopupMenuItem<Group>(value: Group(), child: Text("ALL")));
-
-          for (Group g in settings.groups)
-            l.add(PopupMenuItem<Group>(value: g, child: Text(g.name)));
-
-          return l;
-        })
+      })
     ];
 
     if(locationAvailable)
@@ -234,9 +218,28 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
           });
         }));
 
+    List<DropdownMenuItem<Group>> groupList = [];
+    groupList.add(DropdownMenuItem<Group>(value: allGroup, child: Text(allGroup.name)));
+
+    for (Group g in settings.groups)
+      groupList.add(DropdownMenuItem<Group>(value: g, child: Text(g.name)));
+
     return Scaffold(
         appBar: AppBar(
-          title: Text(showGroup.name == null ? 'ALL' : showGroup.name),
+          title: Theme(
+            data: ThemeData(
+              canvasColor: Colors.blue,
+              textTheme: TextTheme(subhead: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4, color: Colors.white)),
+            ),
+            child: DropdownButton<Group>(
+            onChanged: (Group group) {
+              setState(() {
+                showGroup = group;
+              });
+            },
+            items: groupList,
+            value: showGroup
+           )),
           actions: actions
         ),
         body: PageView(children: pages)

@@ -12,6 +12,8 @@ class Group {
   bool init = false;
   List<String> sites = [];
 
+  Group(this.name);
+
   Map toJson(){
     return {
       'name': name,
@@ -59,9 +61,8 @@ class Settings {
 
       if(data['groups'] != null) {
         for(var d in data['groups']){
-          Group g = Group();
+          Group g = Group(d['name']);
 
-          g.name = d['name'];
           if(d['init'] != null) {
             g.init = d['init'];
             if(g.init) initGroup = g;
