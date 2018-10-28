@@ -81,6 +81,9 @@ class _SettingsState extends State<SettingsPage> {
           secondaryBackground: ListTile(trailing: Icon(Icons.delete)),
           background: ListTile(leading: Icon(Icons.delete)),
           onDismissed: (direction) {
+            if(group == settings.showGroup)
+              settings.showGroup = Settings.allGroup;
+
             settings.groups.remove(group);
           },
           direction: DismissDirection.horizontal,

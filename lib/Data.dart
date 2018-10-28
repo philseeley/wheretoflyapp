@@ -24,13 +24,15 @@ class Group {
 }
 
 class Settings {
+  static Group allGroup = Group("ALL");
+
   bool showPGValues = false;
   bool showForecast = false;
   bool showMetric = false;
   num iconSize = 40.0;
   bool hideExtremes = false;
-  List<Group> groups = [];
-  Group initGroup;
+  List<Group> groups;
+  Group showGroup = allGroup;
 
   File _store;
 
@@ -59,13 +61,15 @@ class Settings {
       if(data['iconSize'    ] != null) iconSize = data['iconSize'];
       if(data['hideExtremes'] != null) hideExtremes = data['hideExtremes'];
 
+      groups = [];
+
       if(data['groups'] != null) {
         for(var d in data['groups']){
           Group g = Group(d['name']);
 
           if(d['init'] != null) {
             g.init = d['init'];
-            if(g.init) initGroup = g;
+            if(g.init) showGroup = g;
           }
 
           for(String s in d['sites'])

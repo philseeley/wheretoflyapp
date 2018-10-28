@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -39,24 +40,20 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
   double longitude = 0.0;
   bool sortByLocation = true;
   bool onlyShowOn = true;
-  Group allGroup = Group("ALL");
-  Group showGroup;
 
   List<Site> _sites;
   List<String> times;
 
   _MainState() {
+    init();
+  }
+
+  init() async {
+    await settings.load();
     getForecast();
   }
 
   getForecast() async {
-    await settings.load();
-
-    showGroup = allGroup;
-
-    if(settings.initGroup != null)
-      showGroup = settings.initGroup;
-
     try {
       var loc = <String, double>{};
 
@@ -134,6 +131,14 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
     }));
   }
 
+  Future<void> _refreshForecast() async
+  {
+    setState(() {
+      _sites = null;
+    });
+    return getForecast();
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -151,7 +156,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
       for (Site s in _sites)
       {
-        if(showGroup == allGroup || showGroup.sites.contains(s.name)) {
+        if(settings.showGroup == Settings.allGroup || settings.showGroup.sites.contains(s.name)) {
           if(day < s.forecasts.length) {
             Forecast forecast = s.forecasts[day];
 
@@ -180,7 +185,8 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
         pages.add(Column(children: <Widget>[
               timeRow,
-              Expanded(child: ListView(children: list))
+//              Expanded(child: ListView(children: list))
+              Expanded(child: RefreshIndicator(onRefresh: _refreshForecast, child: ListView(children: list)))
             ])
         );
       }
@@ -219,30 +225,30 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
         }));
 
     List<DropdownMenuItem<Group>> groupList = [];
-    groupList.add(DropdownMenuItem<Group>(value: allGroup, child: Text(allGroup.name)));
+    groupList.add(DropdownMenuItem<Group>(value: Settings.allGroup, child: Text(Settings.allGroup.name)));
 
     for (Group g in settings.groups)
       groupList.add(DropdownMenuItem<Group>(value: g, child: Text(g.name)));
 
     return Scaffold(
-        appBar: AppBar(
-          title: Theme(
-            data: ThemeData(
-              canvasColor: Colors.blue,
-              textTheme: TextTheme(subhead: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4, color: Colors.white)),
-            ),
-            child: DropdownButton<Group>(
-            onChanged: (Group group) {
-              setState(() {
-                showGroup = group;
-              });
-            },
-            items: groupList,
-            value: showGroup
-           )),
-          actions: actions
-        ),
-        body: PageView(children: pages)
+      appBar: AppBar(
+        title: Theme(
+          data: ThemeData(
+            canvasColor: Colors.blue,
+            textTheme: TextTheme(subhead: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4, color: Colors.white)),
+          ),
+          child: DropdownButton<Group>(
+          onChanged: (Group group) {
+            setState(() {
+              settings.showGroup = group;
+            });
+          },
+          items: groupList,
+          value: settings.showGroup
+         )),
+        actions: actions
+      ),
+      body: PageView(children: pages)
     );
   }
 }
