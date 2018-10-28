@@ -101,8 +101,6 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
   _sort(){
     Site.sort(_sites, locationAvailable && sortByLocation);
-
-    sortByLocation = !sortByLocation;
   }
 
   @override
@@ -217,9 +215,10 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
     if(locationAvailable)
       actions.insert(0, IconButton(icon: Icon(
-        sortByLocation ? Icons.location_off : Icons.location_on),
+        sortByLocation ? Icons.location_on : Icons.location_off),
         onPressed: () {
           setState(() {
+            sortByLocation = !sortByLocation;
             _sort();
           });
         }));
