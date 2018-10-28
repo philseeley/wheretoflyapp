@@ -31,7 +31,7 @@ class Settings {
   bool showMetric = false;
   num iconSize = 40.0;
   bool hideExtremes = false;
-  List<Group> groups;
+  List<Group> groups = [];
   Group showGroup = allGroup;
 
   File _store;
