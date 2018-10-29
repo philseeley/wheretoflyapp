@@ -18,6 +18,7 @@ class WhereToFlyApp extends StatelessWidget {
     TextStyle ts = Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4);
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Where To Fly',
       home: Main(),
       theme: ThemeData(textTheme: TextTheme(body1: ts, subhead: ts))
