@@ -5,7 +5,7 @@ import 'dart:async';
 import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:url_launcher/url_launcher.dart';
-//import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'Data.dart';
 import 'SiteForecastListView.dart';
 import 'SettingsPage.dart';
@@ -63,7 +63,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
       longitude = loc["longitude"];
       locationAvailable = true;
     } catch (e) {
-      //Fluttertoast.showToast(msg: "Failed to get location", toastLength: Toast.LENGTH_LONG);
+      Fluttertoast.showToast(msg: "Failed to get location", toastLength: Toast.LENGTH_LONG);
     }
 
     try {
