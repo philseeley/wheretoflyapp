@@ -42,8 +42,8 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
   bool sortByLocation = true;
   bool onlyShowOn = true;
 
-  List<Site> _sites;
-  List<String> times;
+  Sites _sites;
+  Data _data;
 
   _MainState() {
     init();
@@ -70,7 +70,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
       dynamic data;
 
       var uri = Uri.https(
-          'wheretofly.info', '/run/current.json');
+        'wheretofly.info:9443', '/run/current.json');
 
       http.Response response = await http.get(uri);
       data = json.decode(response.body);
@@ -86,8 +86,8 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
       if (data != null)
         setState(() {
           try {
-            _sites = parseSites(data, latitude, longitude);
-            times = parseTimes(data);
+            _data = Data.fromJson(data);
+            _sites = Sites.fromJson(data, latitude, longitude);
           } catch (e, s) {
             print(e);
             print(s);
@@ -101,7 +101,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
   }
 
   _sort(){
-    Site.sort(_sites, locationAvailable && sortByLocation);
+    Site.sort(_sites.sites, locationAvailable && sortByLocation);
   }
 
   @override
@@ -126,7 +126,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
   _showSite(Site s) {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return SiteForecast(settings, _sites, s, times);
+      return SiteForecast(settings, _data, _sites.sites, s, _data.times);
     }));
   }
 
@@ -141,7 +141,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
 
-    if(_sites == null || _sites.length == 0)
+    if(_sites == null || _sites.sites.length == 0)
       return Scaffold(
         appBar: AppBar(title: Text("Where To Fly")),
         body: Center(child: Stack(children: <Widget>[Text("Waiting for\nLocation and Data", textAlign: TextAlign.center,), CircularProgressIndicator()],alignment: Alignment.center))
@@ -149,30 +149,28 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
     List<Widget> pages = List<Widget>();
 
-    for(int day = 0; day < _sites[0].forecasts.length; ++day)
+    for(String day in _data.dates)
     {
       List<Widget> list = List<Widget>();
 
-      for (Site s in _sites)
+      for (Site s in _sites.sites)
       {
         if(settings.showGroup == Settings.allGroup || settings.showGroup.sites.contains(s.name)) {
-          if(day < s.forecasts.length) {
-            Forecast forecast = s.forecasts[day];
+          Forecast forecast = s.dates[day];
 
-            Row forecastRow = SiteForecastListView.buildForecastRow(
-              context, settings, forecast, onlyShowOn, false);
+          Row forecastRow = SiteForecastListView.buildForecastRow(
+            context, settings, _data, day, forecast, onlyShowOn, false);
 
-            if (forecastRow != null) {
-              list.add(InkWell(child: SiteForecastListView.buildTitleRow(context, settings, s), onTap: () {_showSite(s);}));
-              list.add(InkWell(child: forecastRow, onTap: () {_showSite(s);}));
+          if (forecastRow != null) {
+            list.add(InkWell(child: SiteForecastListView.buildTitleRow(context, settings, s), onTap: () {_showSite(s);}));
+            list.add(InkWell(child: forecastRow, onTap: () {_showSite(s);}));
 
-              if (settings.showForecast && (forecast.imgTitle.length > 0))
-                list.add(Text(
-                  forecast.imgTitle, textAlign: TextAlign.center, style: Theme
-                  .of(context)
-                  .textTheme
-                  .body2));
-            }
+            if (settings.showForecast && (forecast.imgTitle.length > 0))
+              list.add(Text(
+                forecast.imgTitle, textAlign: TextAlign.center, style: Theme
+                .of(context)
+                .textTheme
+                .body2));
           }
         }
       }
@@ -180,7 +178,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
       // If we're hiding the extreme values we might not have any rows to show.
       if(list.length > 0) {
         Row timeRow = SiteForecastListView.buildTimeRow(
-            context, settings, times, false, _sites[0].forecasts[day].date);
+            context, settings, _data.times, false, day);
 
         pages.add(Column(children: <Widget>[
               timeRow,
@@ -209,7 +207,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
       IconButton(icon: Icon(Icons.settings), onPressed: () {
         Navigator.push(
           context, MaterialPageRoute(builder: (context) {
-          return SettingsPage(settings, _sites);
+          return SettingsPage(settings, _sites.sites);
         }));
       })
     ];
@@ -258,8 +256,9 @@ class SiteForecast extends StatefulWidget {
   final List<String> times;
   final Settings settings;
   final List<Site> sites;
+  final Data data;
 
-  SiteForecast(this.settings, this.sites, this.site, this.times);
+  SiteForecast(this.settings, this.data, this.sites, this.site, this.times);
 
   @override
   _SiteForecastState createState() => _SiteForecastState();
@@ -272,6 +271,7 @@ class _SiteForecastState extends State<SiteForecast> {
   Widget build(BuildContext context) {
     Settings settings = widget.settings;
     Site site = widget.site;
+    Data data = widget.data;
     List<String> times = widget.times;
     List<Widget> actions = [];
 
@@ -314,7 +314,7 @@ class _SiteForecastState extends State<SiteForecast> {
       body: Column(children: <Widget>[
         SiteForecastListView.buildTitleRow(context, settings, site),
         SiteForecastListView.buildTimeRow(context, settings, times, true, null),
-        Expanded(child: SiteForecastListView(settings, site))
+        Expanded(child: SiteForecastListView(settings, data, site))
         ])
     );
   }
