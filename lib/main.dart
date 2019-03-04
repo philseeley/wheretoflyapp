@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
-import 'package:intl/intl.dart';
 import 'package:location/location.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -32,8 +31,6 @@ class Main extends StatefulWidget {
 }
 
 class _MainState extends State<Main> with WidgetsBindingObserver {
-  static final dayF = DateFormat('EEE dd MMMM');
-
   final Settings settings = Settings();
 
   bool locationAvailable = false;
@@ -126,7 +123,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
   _showSite(Site s) {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return SiteForecast(settings, _data, _sites.sites, s, _data.times);
+      return SiteForecast(settings, _data, _sites.sites, s);
     }));
   }
 
@@ -149,7 +146,10 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
     List<Widget> pages = List<Widget>();
 
-    for(String day in _data.dates)
+    List<String> dates = (settings.showRASP) ? _data.raspDates : _data.dates;
+    List<String> times = (settings.showRASP) ? _data.raspTimes : _data.times;
+
+    for(String day in dates)
     {
       List<Widget> list = List<Widget>();
 
@@ -159,7 +159,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
           Forecast forecast = s.dates[day];
 
           Row forecastRow = SiteForecastListView.buildForecastRow(
-            context, settings, _data, day, forecast, onlyShowOn, false);
+            context, settings, times, day, forecast, onlyShowOn, false);
 
           if (forecastRow != null) {
             list.add(InkWell(child: SiteForecastListView.buildTitleRow(context, settings, s), onTap: () {_showSite(s);}));
@@ -178,7 +178,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
       // If we're hiding the extreme values we might not have any rows to show.
       if(list.length > 0) {
         Row timeRow = SiteForecastListView.buildTimeRow(
-            context, settings, _data.times, false, day);
+            context, settings, times, false, day);
 
         pages.add(Column(children: <Widget>[
               timeRow,
@@ -204,6 +204,13 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
             settings.showForecast = !settings.showForecast;
           });
         }),
+      IconButton(icon: Icon(
+        settings.showRASP ? Icons.blur_on: Icons.blur_off),
+        onPressed: () {
+          setState(() {
+            settings.showRASP= !settings.showRASP;
+          });
+        }),
       IconButton(icon: Icon(Icons.settings), onPressed: () {
         Navigator.push(
           context, MaterialPageRoute(builder: (context) {
@@ -214,7 +221,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
     if(locationAvailable)
       actions.insert(0, IconButton(icon: Icon(
-        sortByLocation ? Icons.location_on : Icons.location_off),
+        sortByLocation ? Icons.gps_fixed : Icons.gps_off),
         onPressed: () {
           setState(() {
             sortByLocation = !sortByLocation;
@@ -253,39 +260,32 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
 class SiteForecast extends StatefulWidget {
   final Site site;
-  final List<String> times;
+  final Data data;
   final Settings settings;
   final List<Site> sites;
-  final Data data;
 
-  SiteForecast(this.settings, this.data, this.sites, this.site, this.times);
+  SiteForecast(this.settings, this.data, this.sites, this.site);
 
   @override
   _SiteForecastState createState() => _SiteForecastState();
 }
 
 class _SiteForecastState extends State<SiteForecast> {
-  static final dayF = DateFormat('EEE');
 
   @override
   Widget build(BuildContext context) {
     Settings settings = widget.settings;
     Site site = widget.site;
     Data data = widget.data;
-    List<String> times = widget.times;
     List<Widget> actions = [];
 
-    if(site.url != null)
-      actions.add(
-        IconButton(icon: Icon(Icons.info), onPressed: (){
-          setState(() {
-            launch(site.url);
-          });
-        }));
+    List<String> dates = (settings.showRASP) ? data.raspDates : data.dates;
+    List<String> times = (settings.showRASP) ? data.raspTimes : data.times;
+
     actions.add(
-      IconButton(icon: Icon(settings.showForecast?Icons.cloud:Icons.cloud_off), onPressed: (){
+      IconButton(icon: Icon(Icons.info), onPressed: (){
         setState(() {
-          settings.showForecast = !settings.showForecast;
+          launch(site.url);
         });
       }));
     actions.add(
@@ -301,6 +301,19 @@ class _SiteForecastState extends State<SiteForecast> {
             launch(site.obsURL);
           });
         }));
+    if(site.url != null)
+      actions.add(
+        IconButton(icon: Icon(settings.showForecast?Icons.cloud:Icons.cloud_off), onPressed: (){
+          setState(() {
+            settings.showForecast = !settings.showForecast;
+          });
+        }));
+    actions.add(
+      IconButton(icon: Icon(settings.showRASP?Icons.blur_on:Icons.blur_off), onPressed: (){
+        setState(() {
+          settings.showRASP = !settings.showRASP;
+        });
+      }));
     actions.add(
       IconButton(icon: Icon(Icons.settings), onPressed: (){
         Navigator.push(context, MaterialPageRoute(builder: (context)
@@ -314,7 +327,7 @@ class _SiteForecastState extends State<SiteForecast> {
       body: Column(children: <Widget>[
         SiteForecastListView.buildTitleRow(context, settings, site),
         SiteForecastListView.buildTimeRow(context, settings, times, true, null),
-        Expanded(child: SiteForecastListView(settings, data, site))
+        Expanded(child: SiteForecastListView(settings, dates, times, site))
         ])
     );
   }

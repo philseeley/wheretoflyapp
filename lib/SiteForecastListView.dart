@@ -7,25 +7,26 @@ class SiteForecastListView extends StatefulWidget {
 
   final Site site;
   final Settings settings;
-  final Data data;
+  final List<String> dates;
+  final List<String> times;
 
-  SiteForecastListView(this.settings, this.data, this.site);
+  SiteForecastListView(this.settings, this.dates, this.times, this.site);
 
   @override
   _SiteForecastListViewState createState() => _SiteForecastListViewState();
 
-  static Row buildForecastRow(BuildContext context, Settings settings, Data data, String day, Forecast forecast, bool onlyIfOn, bool showDay) {
+  static Row buildForecastRow(BuildContext context, Settings settings, List<String> times, String day, Forecast forecast, bool onlyIfOn, bool showDay) {
     bool on = false;
 
     List<Widget> list = List<Widget>();
 
     if(showDay)
-      list.add(Expanded(child: Text(dayF.format(DateTime.parse(day)), textAlign: TextAlign.center)));
+      list.add(Expanded(child: Text(dayF.format(DateTime.parse(day)).substring(0, 2), textAlign: TextAlign.center)));
 
     list.add(Expanded(child: forecast.getImage(settings.iconSize)));
 
-    for (int t=0; t<data.times.length; ++t){
-      Condition c = forecast.times[data.times[t]];
+    for (int t=0; t<times.length; ++t){
+      Condition c = forecast.times[times[t]];
 
       if(!settings.hideExtremes || (t>1 && t<forecast.times.length-1)){
         Color colour = settings.showPGValues ? c.rPGColor : c.rColor;
@@ -33,16 +34,24 @@ class SiteForecastListView extends StatefulWidget {
         if(settings.showMetric)
           speed = (speed*1.85).round();
 
-        if(colour == null)
-          colour = Colors.black26;
+        if(colour == null) {
+          if(c.direction != null)
+            colour = Colors.grey;
+          else if(settings.showRASP && c.rRASPColor != null)
+            colour = c.rRASPColor;
+          else
+            colour = Theme.of(context).canvasColor;
+        }
         else
           on = true;
 
+        Widget icon = Transform.rotate(angle: c.direction ?? 0, child: Icon(Icons.forward, color: colour, size: settings.iconSize));
+
         Widget lt = Expanded(child:
-        Stack(alignment: AlignmentDirectional.center, children: <Widget>[
-          Transform.rotate(angle: c.direction ?? 0.0, child: Icon(Icons.forward, color: (speed==0)?Theme.of(context).canvasColor:colour, size: settings.iconSize)),
-          Text((speed==0)?"":speed.toString())
-        ],)
+          Stack(alignment: AlignmentDirectional.center, children: <Widget>[
+            DecoratedBox(decoration: BoxDecoration(color: settings.showRASP ? c.rRASPColor : Theme.of(context).canvasColor), child: icon),
+            Text((speed==0)?"":speed.toString())
+          ],)
         );
         list.add(lt);
       }
@@ -61,7 +70,7 @@ class SiteForecastListView extends StatefulWidget {
     if(includeDay)
       dateW.add(Expanded(child: Text("", textAlign: TextAlign.center)));
 
-    String day = (date == null) ? "" : dayF.format(DateTime.parse(date));
+    String day = (date == null) ? "" : dayF.format(DateTime.parse(date)).substring(0, 2);
 
     dateW.add(Expanded(child: Text(day, textAlign: TextAlign.center)));
 
@@ -103,14 +112,15 @@ class _SiteForecastListViewState extends State<SiteForecastListView> {
   Widget build(BuildContext context) {
     Settings settings = widget.settings;
     Site site = widget.site;
-    Data data = widget.data;
+    final List<String> dates = widget.dates;
+    final List<String> times = widget.times;
 
     List<Widget> list = List<Widget>();
 
-    for(String day in data.dates){
+    for(String day in dates){
       Forecast f = site.dates[day];
 
-      Row forecastRow = SiteForecastListView.buildForecastRow(context, settings, data, day, f, false, true);
+      Row forecastRow = SiteForecastListView.buildForecastRow(context, settings, times, day, f, false, true);
 
       if(forecastRow != null){
         list.add(forecastRow);

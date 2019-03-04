@@ -31,6 +31,7 @@ class Settings {
   bool showPGValues = false;
   bool showForecast = false;
   bool showMetric = false;
+  bool showRASP = false;
   num iconSize = 40.0;
   bool hideExtremes = false;
   List<Group> groups = [];
@@ -110,9 +111,10 @@ class Condition {
   final String colour;
   final String pgColour;
   final String raspColour;
-  double direction = 0;
+  double direction;
   Color rColor;
   Color rPGColor;
+  Color rRASPColor;
 
   static const COLOUR_MAP = {
     "Yellow": Colors.yellow,
@@ -151,6 +153,8 @@ class Condition {
     if(c.pgColour != null)
       c.rPGColor= COLOUR_MAP[c.pgColour];
 
+    if(c.raspColour != null)
+      c.rRASPColor = Color(int.parse("FF"+c.raspColour.substring(1), radix: 16));
     return c;
   }
 }

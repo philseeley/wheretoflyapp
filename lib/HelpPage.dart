@@ -12,7 +12,7 @@ class HelpPage extends StatelessWidget {
       ),
       body: ListView(children: <Widget>[
         ListTile(
-          leading: Icon(Icons.location_on),
+          leading: Icon(Icons.gps_fixed),
           title: Text("Sort sites by location"),
         ),
         ListTile(
@@ -22,6 +22,10 @@ class HelpPage extends StatelessWidget {
         ListTile(
           leading: Icon(Icons.cloud),
           title: Text('Show text forecast'),
+        ),
+        ListTile(
+          leading: Icon(Icons.blur_on),
+          title: Text('Show RASP forecast'),
         ),
         ListTile(
           leading: Icon(Icons.cloud, color: Colors.red),
