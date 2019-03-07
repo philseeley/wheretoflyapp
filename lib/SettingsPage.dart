@@ -35,13 +35,6 @@ class _SettingsState extends State<SettingsPage> {
             settings.showMetric = value;
           });
         }),
-      SwitchListTile(title: Text("Show Forecast"),
-        value: settings.showForecast,
-        onChanged: (bool value) {
-          setState(() {
-            settings.showForecast = value;
-          });
-        }),
       SwitchListTile(title: Text("Hide Early/Late Values"),
         value: settings.hideExtremes,
         onChanged: (bool value) {

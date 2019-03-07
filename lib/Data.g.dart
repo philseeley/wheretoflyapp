@@ -6,6 +6,37 @@ part of 'Data.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+Group _$GroupFromJson(Map<String, dynamic> json) {
+  return Group(json['name'] as String,
+      init: json['init'],
+      sites: (json['sites'] as List)?.map((e) => e as String)?.toList());
+}
+
+Map<String, dynamic> _$GroupToJson(Group instance) => <String, dynamic>{
+      'name': instance.name,
+      'init': instance.init,
+      'sites': instance.sites
+    };
+
+Settings _$SettingsFromJson(Map<String, dynamic> json) {
+  return Settings(
+      showPGValues: json['showPGValues'],
+      showMetric: json['showMetric'],
+      iconSize: json['iconSize'],
+      hideExtremes: json['hideExtremes'],
+      groups: (json['groups'] as List)
+          .map((e) => Group.fromJson(e as Map<String, dynamic>))
+          .toList());
+}
+
+Map<String, dynamic> _$SettingsToJson(Settings instance) => <String, dynamic>{
+      'showPGValues': instance.showPGValues,
+      'showMetric': instance.showMetric,
+      'iconSize': instance.iconSize,
+      'hideExtremes': instance.hideExtremes,
+      'groups': instance.groups
+    };
+
 Data _$DataFromJson(Map<String, dynamic> json) {
   return Data(
       (json['dates'] as List)?.map((e) => e as String)?.toList(),
@@ -68,8 +99,7 @@ Site _$SiteFromJson(Map<String, dynamic> json) {
       json['minPGSpeed'] as int,
       json['maxPGSpeed'] as int,
       (json['dates'] as Map<String, dynamic>)?.map((k, e) => MapEntry(
-          k, e == null ? null : Forecast.fromJson(e as Map<String, dynamic>))))
-    ..dist = (json['dist'] as num)?.toDouble();
+          k, e == null ? null : Forecast.fromJson(e as Map<String, dynamic>))));
 }
 
 Map<String, dynamic> _$SiteToJson(Site instance) => <String, dynamic>{
@@ -86,7 +116,6 @@ Map<String, dynamic> _$SiteToJson(Site instance) => <String, dynamic>{
       'maxSpeed': instance.maxSpeed,
       'minPGSpeed': instance.minPGSpeed,
       'maxPGSpeed': instance.maxPGSpeed,
-      'dist': instance.dist,
       'dates': instance.dates
     };
 

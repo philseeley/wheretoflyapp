@@ -9,85 +9,85 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'Data.g.dart';
 
+@JsonSerializable()
 class Group {
   String name;
   bool init = false;
-  List<String> sites = [];
+  List<String> sites;
 
-  Group(this.name);
+  Group(this.name, {init, List<String> sites}) :
+    init = init ?? false,
+    sites = sites ?? [];
 
-  Map toJson(){
-    return {
-      'name': name,
-      'init': init,
-      'sites': sites
-    };
-  }
+  factory Group.fromJson(Map<String, dynamic> json) =>
+    _$GroupFromJson(json);
+
+  Map<String, dynamic> toJson() => _$GroupToJson(this);
 }
 
+@JsonSerializable(nullable: false)
 class Settings {
-  static Group allGroup = Group("ALL");
+  static final Group allGroup = Group("ALL");
 
-  bool showPGValues = false;
-  bool showForecast = false;
-  bool showMetric = false;
-  bool showRASP = false;
-  num iconSize = 40.0;
-  bool hideExtremes = false;
-  List<Group> groups = [];
-  Group showGroup = allGroup;
+  bool showPGValues;
+  bool showMetric;
+  num iconSize;
+  bool hideExtremes;
+  List<Group> groups;
+  @JsonKey(ignore: true)
+  bool showForecast;
+  @JsonKey(ignore: true)
+  bool showRASP;
+  @JsonKey(ignore: true)
+  Group showGroup;
 
-  File _store;
+  static File _store;
 
-  Map toJson(){
-    return {
-      'showPGValues': showPGValues,
-      'showForecast': showForecast,
-      'showMetric': showMetric,
-      'iconSize': iconSize,
-      'hideExtremes': hideExtremes,
-      'groups': groups
-    };
+  Settings({
+    showPGValues,
+    showMetric,
+    iconSize,
+    hideExtremes,
+    List<Group> groups}) {
+      this.showPGValues = showPGValues ?? false;
+      this.showMetric = showMetric ?? false;
+      this.showRASP = showRASP ?? false;
+      this.iconSize = iconSize ?? 40.0;
+      this.hideExtremes = hideExtremes ?? false;
+      this.groups = groups ?? List<Group>();
+
+      showForecast = false;
+      showRASP = false;
+
+      showGroup = allGroup;
+      for(Group g in this.groups)
+        if(g.init)
+          showGroup = g;
   }
 
-  load() async {
+  factory Settings.fromJson(Map<String, dynamic> json) =>
+    _$SettingsFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SettingsToJson(this);
+
+  static load() async {
     Directory directory = await path_provider.getApplicationDocumentsDirectory();
     _store = File('${directory.path}/settings.json');
 
     try {
       String s = _store.readAsStringSync();
+      print(s);
       dynamic data = json.decode(s);
 
-      if(data['showPGValues'] != null) showPGValues = data['showPGValues'];
-      if(data['showForecast'] != null) showForecast = data['showForecast'];
-      if(data['showMetric'  ] != null) showMetric = data['showMetric'];
-      if(data['iconSize'    ] != null) iconSize = data['iconSize'];
-      if(data['hideExtremes'] != null) hideExtremes = data['hideExtremes'];
-
-      groups = [];
-
-      if(data['groups'] != null) {
-        for(var d in data['groups']){
-          Group g = Group(d['name']);
-
-          if(d['init'] != null) {
-            g.init = d['init'];
-            if(g.init) showGroup = g;
-          }
-
-          for(String s in d['sites'])
-            g.sites.add(s);
-
-          groups.add(g);
-        }
-      }
-
-    } on FileSystemException {}
+      return Settings.fromJson(data);
+    } on FileSystemException {
+      return Settings();
+    }
   }
 
   save (){
     if(_store != null)
-      _store.writeAsStringSync(json.encode(this));
+      _store.writeAsStringSync(json.encode(toJson()));
   }
 }
 
@@ -111,9 +111,13 @@ class Condition {
   final String colour;
   final String pgColour;
   final String raspColour;
+  @JsonKey(ignore: true)
   double direction;
+  @JsonKey(ignore: true)
   Color rColor;
+  @JsonKey(ignore: true)
   Color rPGColor;
+  @JsonKey(ignore: true)
   Color rRASPColor;
 
   static const COLOUR_MAP = {
@@ -197,6 +201,7 @@ class Site {
   final int maxSpeed;
   final int minPGSpeed;
   final int maxPGSpeed;
+  @JsonKey(ignore: true)
   double dist;
 
   final Map<String,Forecast> dates;
@@ -240,7 +245,9 @@ class Site {
 @JsonSerializable()
 class Sites {
   final List<Site> sites;
+  @JsonKey(ignore: true)
   static double latitude;
+  @JsonKey(ignore: true)
   static double longitude;
 
   Sites(this.sites);
