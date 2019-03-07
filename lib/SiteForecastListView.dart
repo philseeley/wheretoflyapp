@@ -28,7 +28,7 @@ class SiteForecastListView extends StatefulWidget {
     for (int t=0; t<times.length; ++t){
       Condition c = forecast.times[times[t]];
 
-      if(!settings.hideExtremes || (t>1 && t<forecast.times.length-1)){
+      if(!settings.hideExtremes || (t>1 && t<times.length-(settings.showRASP?2:1))){
         Color colour = settings.showPGValues ? c.rPGColor : c.rColor;
         int speed = c.kts ?? 0;
         if(settings.showMetric)
@@ -77,7 +77,7 @@ class SiteForecastListView extends StatefulWidget {
     for(int i=0; i<times.length; ++i) {
       String t = times[i];
 
-      if(!settings.hideExtremes || (i>1 && i<times.length-1))
+      if(!settings.hideExtremes || (i>1 && i<times.length-(settings.showRASP?2:1)))
         dateW.add(Expanded(child: Text(t, textAlign: TextAlign.center)));
     }
 
