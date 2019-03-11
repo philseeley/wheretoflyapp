@@ -158,6 +158,12 @@ class Condition {
       c.rPGColor= COLOUR_MAP[c.pgColour];
 
     if(c.raspColour != null)
+      try {
+        c.rRASPColor =
+          Color(int.parse("FF" + c.raspColour.substring(1), radix: 16));
+      } on FormatException {
+        // The image might not have been available and therefore the colour might be "#NaNNaNNaN".
+      }
       c.rRASPColor = Color(int.parse("FF"+c.raspColour.substring(1), radix: 16));
     return c;
   }

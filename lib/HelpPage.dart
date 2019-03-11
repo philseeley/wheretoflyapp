@@ -25,7 +25,7 @@ class HelpPage extends StatelessWidget {
         ),
         ListTile(
           leading: Icon(Icons.blur_on),
-          title: Text('Show RASP forecast'),
+          title: Text('Show RASP Thermal Updraft Velocity'),
         ),
         ListTile(
           leading: Icon(Icons.cloud, color: Colors.red),
