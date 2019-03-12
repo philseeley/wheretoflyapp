@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'ReleaseNotesPage.dart';
 
 class HelpPage extends StatelessWidget {
 
@@ -9,6 +10,13 @@ class HelpPage extends StatelessWidget {
     return(Scaffold(
       appBar: AppBar(
         title: Text("Help"),
+        actions: <Widget>[
+          IconButton(icon: Icon(Icons.change_history), onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return ReleaseNotesPage("Change Log");
+            }));
+          })
+        ],
       ),
       body: ListView(children: <Widget>[
         ListTile(
@@ -40,10 +48,13 @@ class HelpPage extends StatelessWidget {
           title: Text('Open external site information'),
         ),
         ListTile(
+          leading: Icon(Icons.change_history), title: Text("Show change log")
+        ),
+        ListTile(
           title: Text('Note: your location and other settings are only used and stored within the app and never sent to any external server.')
         ),
         ListTile(
-          leading: Icon(Icons.email), title: Text("Send feedback and site updates"), onTap: (){
+          leading: Icon(Icons.email), title: Text("Tap here to send feedback and site updates"), onTap: (){
           launch("mailto:feedback@wheretofly.info?subject=WTF Feedback");
         }),
       ])

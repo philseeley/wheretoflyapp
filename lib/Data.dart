@@ -29,6 +29,7 @@ class Group {
 class Settings {
   static final Group allGroup = Group("ALL");
 
+  String version;
   bool showPGValues;
   bool showMetric;
   num iconSize;
@@ -44,11 +45,13 @@ class Settings {
   static File _store;
 
   Settings({
+    version,
     showPGValues,
     showMetric,
     iconSize,
     hideExtremes,
     List<Group> groups}) {
+      this.version = version ?? "";
       this.showPGValues = showPGValues ?? false;
       this.showMetric = showMetric ?? false;
       this.showRASP = showRASP ?? false;
@@ -80,7 +83,7 @@ class Settings {
       dynamic data = json.decode(s);
 
       return Settings.fromJson(data);
-    } on FileSystemException {
+    } on Exception {
       return Settings();
     }
   }

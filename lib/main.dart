@@ -5,9 +5,11 @@ import 'dart:async';
 import 'package:location/location.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:package_info/package_info.dart';
 import 'Data.dart';
 import 'SiteForecastListView.dart';
 import 'SettingsPage.dart';
+import 'ReleaseNotesPage.dart';
 
 void main() => runApp(WhereToFlyApp());
 
@@ -32,6 +34,7 @@ class Main extends StatefulWidget {
 
 class _MainState extends State<Main> with WidgetsBindingObserver {
   Settings settings;
+  PackageInfo packageInfo;
 
   bool locationAvailable = false;
   double latitude = 0.0;
@@ -48,6 +51,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
   init() async {
     settings = await Settings.load();
+    packageInfo = await PackageInfo.fromPlatform();
     getForecast();
   }
 
@@ -91,6 +95,17 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
           }
 
           _sort();
+
+          String version = packageInfo.version;
+
+          if(settings.version != version) {
+            settings.version = version;
+            Navigator.push(
+              context, MaterialPageRoute(builder: (context) {
+              return ReleaseNotesPage("What's New in Version "+version);
+            }));
+          }
+
         });
     } catch (e) {
       getForecast();
@@ -114,7 +129,8 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
       case AppLifecycleState.paused:
       case AppLifecycleState.inactive:
       case AppLifecycleState.suspending:
-        settings.save();
+        if(settings != null)
+          settings.save();
         break;
       case AppLifecycleState.resumed:
         break;

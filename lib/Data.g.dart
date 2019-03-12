@@ -20,6 +20,7 @@ Map<String, dynamic> _$GroupToJson(Group instance) => <String, dynamic>{
 
 Settings _$SettingsFromJson(Map<String, dynamic> json) {
   return Settings(
+      version: json['version'],
       showPGValues: json['showPGValues'],
       showMetric: json['showMetric'],
       iconSize: json['iconSize'],
@@ -30,6 +31,7 @@ Settings _$SettingsFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$SettingsToJson(Settings instance) => <String, dynamic>{
+      'version': instance.version,
       'showPGValues': instance.showPGValues,
       'showMetric': instance.showMetric,
       'iconSize': instance.iconSize,
