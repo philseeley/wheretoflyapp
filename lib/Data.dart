@@ -164,7 +164,6 @@ class Condition {
       } on FormatException {
         // The image might not have been available and therefore the colour might be "#NaNNaNNaN".
       }
-      c.rRASPColor = Color(int.parse("FF"+c.raspColour.substring(1), radix: 16));
     return c;
   }
 }
