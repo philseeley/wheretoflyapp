@@ -34,6 +34,7 @@ class Settings {
   bool showMetric;
   num iconSize;
   bool hideExtremes;
+  bool showDistance;
   List<Group> groups;
   @JsonKey(ignore: true)
   bool showForecast;
@@ -50,6 +51,7 @@ class Settings {
     showMetric,
     iconSize,
     hideExtremes,
+    showDistance,
     List<Group> groups}) {
       this.version = version ?? "";
       this.showPGValues = showPGValues ?? false;
@@ -57,6 +59,7 @@ class Settings {
       this.showRASP = showRASP ?? false;
       this.iconSize = iconSize ?? 40.0;
       this.hideExtremes = hideExtremes ?? false;
+      this.showDistance= showDistance ?? false;
       this.groups = groups ?? List<Group>();
 
       showForecast = false;

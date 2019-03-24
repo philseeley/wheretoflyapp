@@ -42,6 +42,13 @@ class _SettingsState extends State<SettingsPage> {
             settings.hideExtremes = value;
           });
         }),
+      SwitchListTile(title: Text("Show Distance"),
+        value: settings.showDistance,
+        onChanged: (bool value) {
+          setState(() {
+            settings.showDistance = value;
+          });
+        }),
       ListTile(
         leading: Text("Icon Size"),
         title: Slider(min: 30.0,

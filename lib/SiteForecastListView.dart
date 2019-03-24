@@ -99,6 +99,9 @@ class SiteForecastListView extends StatefulWidget {
     speed += minSpeed.toString()+"-"+maxSpeed.toString();
     speed += (settings.showMetric) ? " kmh" : " kts";
 
+    if(settings.showDistance)
+      speed += " ${site.dist~/1000} km";
+
     return Row(children: <Widget>[
       Expanded(child: Text(site.title, textAlign: TextAlign.center)),
       Expanded(child: Text(speed, textAlign: TextAlign.center, style: Theme.of(context).textTheme.body2))
