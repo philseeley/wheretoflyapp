@@ -49,7 +49,7 @@ class SiteForecastListView extends StatefulWidget {
 
         Widget lt = Expanded(child:
           Stack(alignment: AlignmentDirectional.center, children: <Widget>[
-            DecoratedBox(decoration: BoxDecoration(color: settings.showRASP ? c.rRASPColor : Theme.of(context).canvasColor), child: icon),
+            DecoratedBox(decoration: BoxDecoration(color: settings.showRASP ? c.rRASPColor : null), child: icon),
             Text((speed==0)?"":speed.toString())
           ],)
         );
