@@ -175,7 +175,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
           Forecast forecast = s.dates[day];
 
           Row forecastRow = SiteForecastListView.buildForecastRow(
-            context, settings, times, day, forecast, onlyShowOn, false);
+            context, settings, times, day, s, forecast, onlyShowOn, false);
 
           if (forecastRow != null) {
             list.add(InkWell(child: SiteForecastListView.buildTitleRow(context, settings, s), onTap: () {_showSite(s);}));
@@ -210,6 +210,13 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
         onPressed: () {
           setState(() {
             onlyShowOn = !onlyShowOn;
+          });
+        }),
+      IconButton(icon: Icon(Icons.loupe,
+        color: settings.showBestDirection ? Colors.red : Colors.white),
+        onPressed: () {
+          setState(() {
+            settings.showBestDirection = !settings.showBestDirection;
           });
         }),
       IconButton(icon: Icon(
@@ -324,6 +331,12 @@ class _SiteForecastState extends State<SiteForecast> {
             settings.showForecast = !settings.showForecast;
           });
         }));
+    actions.add(
+      IconButton(icon: Icon(Icons.loupe, color: settings.showBestDirection ? Colors.red : Colors.white), onPressed: (){
+        setState(() {
+          settings.showBestDirection= !settings.showBestDirection;
+        });
+      }));
     actions.add(
       IconButton(icon: Icon(settings.showRASP?Icons.blur_on:Icons.blur_off), onPressed: (){
         setState(() {

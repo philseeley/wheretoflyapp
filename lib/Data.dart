@@ -9,6 +9,25 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'Data.g.dart';
 
+const DIRECTION_MAP = {
+  'W': 0.0*pi/180.0,
+  'WNW': 22.5*pi/180.0,
+  'NW': 45.0*pi/180.0,
+  'NNW': 67.5*pi/180.0,
+  'N': 90.0*pi/180.0,
+  'NNE': 112.5*pi/180.0,
+  'NE': 135.0*pi/180.0,
+  'ENE': 157.5*pi/180.0,
+  'E': 180.0*pi/180.0,
+  'ESE': 202.5*pi/180.0,
+  'SE': 225.0*pi/180.0,
+  'SSE': 247.5*pi/180.0,
+  'S': 270.0*pi/180.0,
+  'SSW': 292.5*pi/180.0,
+  'SW': 315.0*pi/180.0,
+  'WSW': 337.5*pi/180.0};
+
+
 @JsonSerializable()
 class Group {
   String name;
@@ -42,6 +61,8 @@ class Settings {
   bool showRASP;
   @JsonKey(ignore: true)
   Group showGroup;
+  @JsonKey(ignore: true)
+  bool showBestDirection = false;
 
   static File _store;
 
@@ -131,24 +152,6 @@ class Condition {
     "LightGreen": Colors.lightGreen,
     "Orange": Colors.orange};
 
-  static const DIRECTION_MAP = {
-    'W': 0.0*pi/180.0,
-    'WNW': 22.5*pi/180.0,
-    'NW': 45.0*pi/180.0,
-    'NNW': 67.5*pi/180.0,
-    'N': 90.0*pi/180.0,
-    'NNE': 112.5*pi/180.0,
-    'NE': 135.0*pi/180.0,
-    'ENE': 157.5*pi/180.0,
-    'E': 180.0*pi/180.0,
-    'ESE': 202.5*pi/180.0,
-    'SE': 225.0*pi/180.0,
-    'SSE': 247.5*pi/180.0,
-    'S': 270.0*pi/180.0,
-    'SSW': 292.5*pi/180.0,
-    'SW': 315.0*pi/180.0,
-    'WSW': 337.5*pi/180.0};
-
   Condition(this.dir, this.kts, this.colour, this.pgColour, this.raspColour);
 
   factory Condition.fromJson(Map<String, dynamic> json) {
@@ -208,12 +211,15 @@ class Site {
   final String obsURL;
   final String minDir;
   final String maxDir;
+  final String dir;
   final int minSpeed;
   final int maxSpeed;
   final int minPGSpeed;
   final int maxPGSpeed;
   @JsonKey(ignore: true)
   double dist;
+  @JsonKey(ignore: true)
+  double direction;
 
   final Map<String,Forecast> dates;
 
@@ -227,6 +233,7 @@ class Site {
     this.obsURL,
     this.minDir,
     this.maxDir,
+    this.dir,
     this.minSpeed,
     this.maxSpeed,
     this.minPGSpeed,
@@ -248,6 +255,8 @@ class Site {
       latitude1: Sites.latitude, longitude1: Sites.longitude, latitude2: s.lat, longitude2: s.lon);
 
     s.dist = gcd.haversineDistance();
+
+    s.direction = DIRECTION_MAP[s.dir];
 
     return s;
   }

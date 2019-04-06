@@ -15,7 +15,7 @@ class SiteForecastListView extends StatefulWidget {
   @override
   _SiteForecastListViewState createState() => _SiteForecastListViewState();
 
-  static Row buildForecastRow(BuildContext context, Settings settings, List<String> times, String day, Forecast forecast, bool onlyIfOn, bool showDay) {
+  static Row buildForecastRow(BuildContext context, Settings settings, List<String> times, String day, Site s, Forecast forecast, bool onlyIfOn, bool showDay) {
     bool on = false;
 
     List<Widget> list = List<Widget>();
@@ -30,6 +30,7 @@ class SiteForecastListView extends StatefulWidget {
 
       if(!settings.hideExtremes || (t>1 && t<times.length-(settings.showRASP?2:1))){
         Color colour = settings.showPGValues ? c.rPGColor : c.rColor;
+        Color optimal_colour = Colors.red;
         int speed = c.kts ?? 0;
         if(settings.showMetric)
           speed = (speed*1.85).round();
@@ -37,21 +38,32 @@ class SiteForecastListView extends StatefulWidget {
         if(colour == null) {
           if(c.direction != null)
             colour = Colors.grey;
-          else if(settings.showRASP && c.rRASPColor != null)
+          else if(settings.showRASP && c.rRASPColor != null) {
             colour = c.rRASPColor;
-          else
+            optimal_colour = c.rRASPColor;
+          }
+          else {
             colour = Theme.of(context).canvasColor;
+            optimal_colour = Theme.of(context).canvasColor;
+          }
         }
         else
           on = true;
 
-        Widget icon = Transform.rotate(angle: c.direction ?? 0, child: Icon(Icons.forward, color: colour, size: settings.iconSize));
+        List<Widget> icons =  <Widget>[];
+
+        if(settings.showBestDirection)
+          icons.add(Transform.rotate(angle: s.direction != null ? (s.direction-0.75) : 0, child: Icon(Icons.loupe, color: optimal_colour, size: settings.iconSize)));
+
+        icons.add(Transform.rotate(angle: c.direction ?? 0, child: Icon(Icons.forward, color: colour, size: settings.iconSize)));
+
+        if(speed != 0)
+          icons.add(Text(speed.toString()));
 
         Widget lt = Expanded(child:
           Stack(alignment: AlignmentDirectional.center, children: <Widget>[
-            DecoratedBox(decoration: BoxDecoration(color: settings.showRASP ? c.rRASPColor : null), child: icon),
-            Text((speed==0)?"":speed.toString())
-          ],)
+            DecoratedBox(decoration: BoxDecoration(color: settings.showRASP ? c.rRASPColor : null), child: Stack(alignment: AlignmentDirectional.center, children: icons))
+          ])
         );
         list.add(lt);
       }
@@ -123,7 +135,7 @@ class _SiteForecastListViewState extends State<SiteForecastListView> {
     for(String day in dates){
       Forecast f = site.dates[day];
 
-      Row forecastRow = SiteForecastListView.buildForecastRow(context, settings, times, day, f, false, true);
+      Row forecastRow = SiteForecastListView.buildForecastRow(context, settings, times, day, site, f, false, true);
 
       if(forecastRow != null){
         list.add(forecastRow);

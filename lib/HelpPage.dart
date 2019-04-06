@@ -28,6 +28,10 @@ class HelpPage extends StatelessWidget {
           title: Text('Only show sites that are "on"'),
         ),
         ListTile(
+          leading: Icon(Icons.loupe, color: Colors.red),
+          title: Text('Show best direction'),
+        ),
+        ListTile(
           leading: Icon(Icons.cloud),
           title: Text('Show text forecast'),
         ),
