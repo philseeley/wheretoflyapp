@@ -25,47 +25,50 @@ class SiteForecastListView extends StatefulWidget {
 
     list.add(Expanded(child: forecast.getImage(settings.iconSize)));
 
-    for (int t=0; t<times.length; ++t){
+    for (int t=0; t<times.length; ++t) {
       Condition c = forecast.times[times[t]];
 
-      if(!settings.hideExtremes || (t>1 && t<times.length-(settings.showRASP?2:1))){
-        Color colour = settings.showPGValues ? c.rPGColor : c.rColor;
-        Color optimal_colour = Colors.red;
-        int speed = c.kts ?? 0;
-        if(settings.showMetric)
-          speed = (speed*1.85).round();
+      if(c != null){
+        if (!settings.hideExtremes ||
+          (t > 1 && t < times.length - (settings.showRASP ? 2 : 1))) {
+          Color colour = settings.showPGValues ? c.rPGColor : c.rColor;
+          if(colour != null)
+            on = true;
 
-        if(colour == null) {
-          if(c.direction != null)
+          if(colour == null && c.kts != null)
             colour = Colors.grey;
-          else if(settings.showRASP && c.rRASPColor != null) {
-            colour = c.rRASPColor;
-            optimal_colour = c.rRASPColor;
-          }
-          else {
-            colour = Theme.of(context).canvasColor;
-            optimal_colour = Theme.of(context).canvasColor;
-          }
+
+          int speed = c.kts ?? 0;
+          if (settings.showMetric)
+            speed = (speed * 1.85).round();
+
+          Color raspColour = (settings.showRASP && c.rRASPColor != null) ? c.rRASPColor : Theme.of(context).canvasColor;
+
+          List<Widget> icons = <Widget>[];
+
+          icons.add(Icon(Icons.lens, color: raspColour, size: settings.iconSize));
+
+          if(colour != null)
+            icons.add(Transform.rotate(
+              angle: c.direction ?? 0,
+              child: Icon(Icons.forward, color: colour, size: settings.iconSize)
+            ));
+
+          if (settings.showBestDirection && c.kts != null)
+            icons.add(Transform.rotate(
+              angle: s.direction != null ? (s.direction) : 0,
+              child: Icon(
+                Icons.trending_flat, color: Colors.red, size: settings.iconSize
+              )));
+
+          if (speed != 0)
+            icons.add(Text(speed.toString()));
+
+          Widget lt = Expanded(child:
+            Stack(alignment: AlignmentDirectional.center, children: icons));
+
+          list.add(lt);
         }
-        else
-          on = true;
-
-        List<Widget> icons =  <Widget>[];
-
-        if(settings.showBestDirection)
-          icons.add(Transform.rotate(angle: s.direction != null ? (s.direction-0.75) : 0, child: Icon(Icons.loupe, color: optimal_colour, size: settings.iconSize)));
-
-        icons.add(Transform.rotate(angle: c.direction ?? 0, child: Icon(Icons.forward, color: colour, size: settings.iconSize)));
-
-        if(speed != 0)
-          icons.add(Text(speed.toString()));
-
-        Widget lt = Expanded(child:
-          Stack(alignment: AlignmentDirectional.center, children: <Widget>[
-            DecoratedBox(decoration: BoxDecoration(color: settings.showRASP ? c.rRASPColor : null), child: Stack(alignment: AlignmentDirectional.center, children: icons))
-          ])
-        );
-        list.add(lt);
       }
     }
 

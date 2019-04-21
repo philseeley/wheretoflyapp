@@ -212,7 +212,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
             onlyShowOn = !onlyShowOn;
           });
         }),
-      IconButton(icon: Icon(Icons.loupe,
+      IconButton(icon: Icon(Icons.trending_flat,
         color: settings.showBestDirection ? Colors.red : Colors.white),
         onPressed: () {
           setState(() {
@@ -332,7 +332,7 @@ class _SiteForecastState extends State<SiteForecast> {
           });
         }));
     actions.add(
-      IconButton(icon: Icon(Icons.loupe, color: settings.showBestDirection ? Colors.red : Colors.white), onPressed: (){
+      IconButton(icon: Icon(Icons.trending_flat, color: settings.showBestDirection ? Colors.red : Colors.white), onPressed: (){
         setState(() {
           settings.showBestDirection= !settings.showBestDirection;
         });
