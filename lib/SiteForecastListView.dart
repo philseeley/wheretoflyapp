@@ -97,7 +97,7 @@ class SiteForecastListView extends StatefulWidget {
   }
 
   static Row buildTitleRow(BuildContext context, Settings settings, Site site) {
-    String speed = site.minDir+"-"+site.maxDir+" ";
+    String speed = site.dir+" "+site.minDir+"-"+site.maxDir+" ";
 
     int minSpeed = (settings.showPGValues) ? site.minPGSpeed : site.minSpeed;
     int maxSpeed = (settings.showPGValues) ? site.maxPGSpeed : site.maxSpeed;
