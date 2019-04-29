@@ -223,21 +223,21 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
           });
         }),
       IconButton(icon: Icon(
-        settings.showForecast ? Icons.cloud : Icons.cloud_off,
-        semanticLabel: "Forecast",
-      ),
-        onPressed: () {
-          setState(() {
-            settings.showForecast = !settings.showForecast;
-          });
-        }),
-      IconButton(icon: Icon(
         settings.showRASP ? Icons.blur_on: Icons.blur_off,
         semanticLabel: "RASP",
       ),
         onPressed: () {
           setState(() {
             settings.showRASP= !settings.showRASP;
+          });
+        }),
+      IconButton(icon: Icon(
+        settings.showForecast ? Icons.cloud : Icons.cloud_off,
+        semanticLabel: "Forecast",
+      ),
+        onPressed: () {
+          setState(() {
+            settings.showForecast = !settings.showForecast;
           });
         }),
       IconButton(icon: Icon(Icons.settings, semanticLabel: "Settings"), onPressed: () {
@@ -313,12 +313,13 @@ class _SiteForecastState extends State<SiteForecast> {
     List<String> dates = (settings.showRASP) ? data.raspDates : data.dates;
     List<String> times = (settings.showRASP) ? data.raspTimes : data.times;
 
-    actions.add(
-      IconButton(icon: Icon(Icons.info, semanticLabel: "Site Info"), onPressed: (){
-        setState(() {
-          launch(site.url);
-        });
-      }));
+    if(site.url != null)
+      actions.add(
+        IconButton(icon: Icon(Icons.info, semanticLabel: "Site Info"), onPressed: (){
+          setState(() {
+            launch(site.url);
+          });
+        }));
     actions.add(
       IconButton(icon: Icon(Icons.cloud_upload, semanticLabel: "Detailed Forecast"), onPressed: (){
         setState(() {
@@ -332,13 +333,6 @@ class _SiteForecastState extends State<SiteForecast> {
             launch(site.obsURL);
           });
         }));
-    if(site.url != null)
-      actions.add(
-        IconButton(icon: Icon(settings.showForecast?Icons.cloud:Icons.cloud_off, semanticLabel: "Forecast"), onPressed: (){
-          setState(() {
-            settings.showForecast = !settings.showForecast;
-          });
-        }));
     actions.add(
       IconButton(icon: Icon(Icons.trending_flat, color: settings.showBestDirection ? Colors.red : Colors.white, semanticLabel: "Best Direction"), onPressed: (){
         setState(() {
@@ -349,6 +343,12 @@ class _SiteForecastState extends State<SiteForecast> {
       IconButton(icon: Icon(settings.showRASP?Icons.blur_on:Icons.blur_off, semanticLabel: "RASP"), onPressed: (){
         setState(() {
           settings.showRASP = !settings.showRASP;
+        });
+      }));
+    actions.add(
+      IconButton(icon: Icon(settings.showForecast?Icons.cloud:Icons.cloud_off, semanticLabel: "Forecast"), onPressed: (){
+        setState(() {
+          settings.showForecast = !settings.showForecast;
         });
       }));
     actions.add(
