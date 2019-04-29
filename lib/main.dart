@@ -10,6 +10,7 @@ import 'Data.dart';
 import 'SiteForecastListView.dart';
 import 'SettingsPage.dart';
 import 'ReleaseNotesPage.dart';
+import 'DynamicAppBar.dart';
 
 void main() => runApp(WhereToFlyApp());
 
@@ -39,8 +40,6 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
   bool locationAvailable = false;
   double latitude = 0.0;
   double longitude = 0.0;
-  bool sortByLocation = true;
-  bool onlyShowOn = true;
 
   Sites _sites;
   Data _data;
@@ -113,7 +112,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
   }
 
   _sort(){
-    Site.sort(_sites.sites, locationAvailable && sortByLocation);
+    Site.sort(_sites.sites, locationAvailable && settings.sortByLocation);
   }
 
   @override
@@ -175,7 +174,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
           Forecast forecast = s.dates[day];
 
           Row forecastRow = SiteForecastListView.buildForecastRow(
-            context, settings, times, day, s, forecast, onlyShowOn, false);
+            context, settings, times, day, s, forecast, settings.onlyShowOn, false);
 
           if (forecastRow != null) {
             list.add(InkWell(child: SiteForecastListView.buildTitleRow(context, settings, s), onTap: () {_showSite(s);}));
@@ -204,36 +203,44 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
       }
     }
 
-    List<Widget> actions = [
+    List<IconButton> actions = [
       IconButton(icon: Icon(Icons.power_settings_new,
-        color: onlyShowOn ? Colors.red : Colors.white),
+        color: settings.onlyShowOn ? Colors.red : Colors.white,
+        semanticLabel: "Only On",
+      ),
         onPressed: () {
           setState(() {
-            onlyShowOn = !onlyShowOn;
+            settings.onlyShowOn = !settings.onlyShowOn;
           });
         }),
       IconButton(icon: Icon(Icons.trending_flat,
-        color: settings.showBestDirection ? Colors.red : Colors.white),
+        color: settings.showBestDirection ? Colors.red : Colors.white,
+        semanticLabel: "Best Direction",
+      ),
         onPressed: () {
           setState(() {
             settings.showBestDirection = !settings.showBestDirection;
           });
         }),
       IconButton(icon: Icon(
-        settings.showForecast ? Icons.cloud : Icons.cloud_off),
+        settings.showForecast ? Icons.cloud : Icons.cloud_off,
+        semanticLabel: "Forecast",
+      ),
         onPressed: () {
           setState(() {
             settings.showForecast = !settings.showForecast;
           });
         }),
       IconButton(icon: Icon(
-        settings.showRASP ? Icons.blur_on: Icons.blur_off),
+        settings.showRASP ? Icons.blur_on: Icons.blur_off,
+        semanticLabel: "RASP",
+      ),
         onPressed: () {
           setState(() {
             settings.showRASP= !settings.showRASP;
           });
         }),
-      IconButton(icon: Icon(Icons.settings), onPressed: () {
+      IconButton(icon: Icon(Icons.settings, semanticLabel: "Settings"), onPressed: () {
         Navigator.push(
           context, MaterialPageRoute(builder: (context) {
           return SettingsPage(settings, _sites.sites);
@@ -243,10 +250,10 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
     if(locationAvailable)
       actions.insert(0, IconButton(icon: Icon(
-        sortByLocation ? Icons.gps_fixed : Icons.gps_off),
+        settings.sortByLocation ? Icons.gps_fixed : Icons.gps_off, semanticLabel: "Location",),
         onPressed: () {
           setState(() {
-            sortByLocation = !sortByLocation;
+            settings.sortByLocation = !settings.sortByLocation;
             _sort();
           });
         }));
@@ -258,7 +265,8 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
       groupList.add(DropdownMenuItem<Group>(value: g, child: Text(g.name)));
 
     return Scaffold(
-      appBar: AppBar(
+      appBar: DynamicAppBar(
+        context: context,
         title: Theme(
           data: ThemeData(
             canvasColor: Colors.blue,
@@ -272,7 +280,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
             },
             items: groupList,
             value: settings.showGroup
-           )
+          )
         ),
         actions: actions
       ),
@@ -300,51 +308,51 @@ class _SiteForecastState extends State<SiteForecast> {
     Settings settings = widget.settings;
     Site site = widget.site;
     Data data = widget.data;
-    List<Widget> actions = [];
+    List<IconButton> actions = [];
 
     List<String> dates = (settings.showRASP) ? data.raspDates : data.dates;
     List<String> times = (settings.showRASP) ? data.raspTimes : data.times;
 
     actions.add(
-      IconButton(icon: Icon(Icons.info), onPressed: (){
+      IconButton(icon: Icon(Icons.info, semanticLabel: "Site Info"), onPressed: (){
         setState(() {
           launch(site.url);
         });
       }));
     actions.add(
-      IconButton(icon: Icon(Icons.cloud_upload), onPressed: (){
+      IconButton(icon: Icon(Icons.cloud_upload, semanticLabel: "Detailed Forecast"), onPressed: (){
         setState(() {
           launch(site.weatherURL);
         });
       }));
     if(site.obsURL != null)
       actions.add(
-        IconButton(icon: Icon(Icons.cloud, color: Colors.red), onPressed: (){
+        IconButton(icon: Icon(Icons.cloud, color: Colors.red, semanticLabel: "Observations"), onPressed: (){
           setState(() {
             launch(site.obsURL);
           });
         }));
     if(site.url != null)
       actions.add(
-        IconButton(icon: Icon(settings.showForecast?Icons.cloud:Icons.cloud_off), onPressed: (){
+        IconButton(icon: Icon(settings.showForecast?Icons.cloud:Icons.cloud_off, semanticLabel: "Forecast"), onPressed: (){
           setState(() {
             settings.showForecast = !settings.showForecast;
           });
         }));
     actions.add(
-      IconButton(icon: Icon(Icons.trending_flat, color: settings.showBestDirection ? Colors.red : Colors.white), onPressed: (){
+      IconButton(icon: Icon(Icons.trending_flat, color: settings.showBestDirection ? Colors.red : Colors.white, semanticLabel: "Best Direction"), onPressed: (){
         setState(() {
           settings.showBestDirection= !settings.showBestDirection;
         });
       }));
     actions.add(
-      IconButton(icon: Icon(settings.showRASP?Icons.blur_on:Icons.blur_off), onPressed: (){
+      IconButton(icon: Icon(settings.showRASP?Icons.blur_on:Icons.blur_off, semanticLabel: "RASP"), onPressed: (){
         setState(() {
           settings.showRASP = !settings.showRASP;
         });
       }));
     actions.add(
-      IconButton(icon: Icon(Icons.settings), onPressed: (){
+      IconButton(icon: Icon(Icons.settings, semanticLabel: "Settings"), onPressed: (){
         Navigator.push(context, MaterialPageRoute(builder: (context)
         {
           return SettingsPage(settings, widget.sites);
@@ -352,7 +360,7 @@ class _SiteForecastState extends State<SiteForecast> {
       }));
 
     return Scaffold(
-      appBar: AppBar(actions: actions),
+      appBar: DynamicAppBar(context: context, actions: actions),
       body: Column(children: <Widget>[
         SiteForecastListView.buildTitleRow(context, settings, site),
         SiteForecastListView.buildTimeRow(context, settings, times, true, null),

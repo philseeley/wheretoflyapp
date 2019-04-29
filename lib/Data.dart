@@ -49,6 +49,10 @@ class Settings {
   static final Group allGroup = Group("ALL");
 
   String version;
+  @JsonKey(ignore: true)
+  bool onlyShowOn = true;
+  @JsonKey(ignore: true)
+  bool sortByLocation = true;
   bool showPGValues;
   bool showMetric;
   num iconSize;
@@ -56,9 +60,9 @@ class Settings {
   bool showDistance;
   List<Group> groups;
   @JsonKey(ignore: true)
-  bool showForecast;
+  bool showForecast = false;
   @JsonKey(ignore: true)
-  bool showRASP;
+  bool showRASP = false;
   @JsonKey(ignore: true)
   Group showGroup;
   @JsonKey(ignore: true)
@@ -77,14 +81,10 @@ class Settings {
       this.version = version ?? "";
       this.showPGValues = showPGValues ?? false;
       this.showMetric = showMetric ?? false;
-      this.showRASP = showRASP ?? false;
       this.iconSize = iconSize ?? 40.0;
       this.hideExtremes = hideExtremes ?? false;
       this.showDistance= showDistance ?? false;
       this.groups = groups ?? List<Group>();
-
-      showForecast = false;
-      showRASP = false;
 
       showGroup = allGroup;
       for(Group g in this.groups)

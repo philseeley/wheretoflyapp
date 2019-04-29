@@ -28,7 +28,7 @@ class HelpPage extends StatelessWidget {
           title: Text('Only show sites that are "on"'),
         ),
         ListTile(
-          leading: Icon(Icons.loupe, color: Colors.red),
+          leading: Icon(Icons.trending_flat, color: Colors.red),
           title: Text('Show best direction'),
         ),
         ListTile(
