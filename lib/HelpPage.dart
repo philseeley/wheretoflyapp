@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'Common.dart';
 import 'ReleaseNotesPage.dart';
 
 class HelpPage extends StatelessWidget {
@@ -59,7 +60,7 @@ class HelpPage extends StatelessWidget {
         ),
         ListTile(
           leading: Icon(Icons.email), title: Text("Tap here to send feedback and site updates"), onTap: (){
-          launch("mailto:feedback@wheretofly.info?subject=WTF Feedback");
+          launch("mailto:feedback@$wtfSite?subject=WTF Feedback");
         }),
       ])
     ));

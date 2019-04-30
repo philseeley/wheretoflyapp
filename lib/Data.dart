@@ -6,6 +6,7 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:great_circle_distance/great_circle_distance.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'Common.dart';
 
 part 'Data.g.dart';
 
@@ -190,7 +191,7 @@ class Forecast {
   CachedNetworkImage getImage(double imageSize) {
     if(_image == null || (_imageSize != imageSize)){
       _imageSize = imageSize;
-      _image = CachedNetworkImage(imageUrl: "https://wheretofly.info/"+img, width: _imageSize, height: _imageSize);
+      _image = CachedNetworkImage(imageUrl: "$wtfURL/$img", width: _imageSize, height: _imageSize);
     }
 
     return _image;

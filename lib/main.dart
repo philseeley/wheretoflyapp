@@ -6,6 +6,7 @@ import 'package:location/location.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:package_info/package_info.dart';
+import 'Common.dart';
 import 'Data.dart';
 import 'SiteForecastListView.dart';
 import 'SettingsPage.dart';
@@ -70,7 +71,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
       dynamic data;
 
       var uri = Uri.https(
-        'wheretofly.info:9443', '/run/current.json');
+        wtfSitePort, '/run/current.json');
 
       http.Response response = await http.get(uri);
       data = json.decode(response.body);
