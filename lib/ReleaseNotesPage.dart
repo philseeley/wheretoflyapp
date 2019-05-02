@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ReleaseNotesPage extends StatelessWidget {
 
   static const changelog = {
-    "6.0.0": "Added option to display the Thermal Updraft Velocity from RASP.",
+    "6.0.0": "Added options to display the Thermal Updraft Velocity from RASP and show the best direction for each site.",
     "5.10":  "Fixed group loading issue.",
     "5.9":   "Pulling down now refeshes the data. We now show the group list instead of the title.",
     "5.8":   "Added a share button.",
