@@ -178,6 +178,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
             context, settings, times, day, s, forecast, settings.onlyShowOn, false);
 
           if (forecastRow != null) {
+            list.add(Divider(height: 0.0, color: Colors.black));
             list.add(InkWell(child: SiteForecastListView.buildTitleRow(context, settings, s), onTap: () {_showSite(s);}));
             list.add(InkWell(child: forecastRow, onTap: () {_showSite(s);}));
 
