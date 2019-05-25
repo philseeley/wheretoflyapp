@@ -20,6 +20,16 @@ class HelpPage extends StatelessWidget {
         ],
       ),
       body: ListView(children: <Widget>[
+        Row(children: <Widget>[
+          Expanded(child: Icon(Icons.forward, color: Colors.yellow, size: 35.0)),
+          Expanded(child: Icon(Icons.forward, color: Colors.lightGreen, size: 35.0)),
+          Expanded(child: Icon(Icons.forward, color: Colors.orange, size: 35.0)),
+        ]),
+        Row(children: <Widget>[
+          Expanded(child: Text("Too Light", textAlign: TextAlign.center)),
+          Expanded(child: Text("Where To Fly!", textAlign: TextAlign.center)),
+          Expanded(child: Text("Too Strong", textAlign: TextAlign.center)),
+        ]),
         ListTile(
           leading: Icon(Icons.gps_fixed),
           title: Text("Sort sites by location"),
