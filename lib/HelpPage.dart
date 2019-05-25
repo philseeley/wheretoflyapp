@@ -59,10 +59,18 @@ class HelpPage extends StatelessWidget {
           title: Text('Note: your location and other settings are only used and stored within the app and never sent to any external server.')
         ),
         ListTile(
-          leading: Icon(Icons.email), title: Text("Tap here to send feedback and site updates"), onTap: (){
-          launch("mailto:feedback@$wtfSite?subject=WTF Feedback");
-        }),
+          leading: Icon(Icons.email), title: Text("Tap here to send feedback and site updates"), onTap: _support),
       ])
     ));
+  }
+
+  static const mailURL = "xmailto:feedback@${wtfSite}?subject=WTF%20Feedback";
+  static const supportURL = "${wtfURL}/wtf-info.html";
+
+  _support() async {
+    if(await canLaunch(mailURL))
+      await launch(mailURL);
+    else
+      await launch(supportURL);
   }
 }

@@ -104,7 +104,6 @@ class Settings {
 
     try {
       String s = _store.readAsStringSync();
-      print(s);
       dynamic data = json.decode(s);
 
       return Settings.fromJson(data);
