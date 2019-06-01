@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 class ReleaseNotesPage extends StatelessWidget {
 
   static const changelog = {
+    "6.1.0": """Added divider in main list to better show which arrows are for which site - thanks Tushar P for the idea.
+
+Added help for arrow colours - thanks Darryl B for pointing out this was missing.
+
+If the mailto: URL is not supported by the phone, we now open the website info page.""",
     "6.0.0": """Added option to display the Thermal Updraft Velocity from RASP - thanks Dave M for the idea.
 
 Added option to show the best direction for each site - thanks Darryl V for the idea.""",
