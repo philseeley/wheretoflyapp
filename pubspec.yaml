@@ -20,15 +20,15 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
   intl:
-  location: 1.4.1
+  location: # 1.4.1
   great_circle_distance:
-  url_launcher: 4.1.0+1
-  path_provider: 0.4.1
+  url_launcher: # 4.1.0+1
+  path_provider: # 0.4.1
   cached_network_image:
-  fluttertoast: 2.0.9
-  share: 0.5.3
+  fluttertoast: # 2.0.9
+  share: # 0.5.3
   json_annotation:
-  package_info: 0.3.2+1
+  package_info: # 0.3.2+1
 
 dev_dependencies:
   flutter_test:
