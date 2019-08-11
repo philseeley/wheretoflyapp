@@ -162,8 +162,10 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
     List<Widget> pages = List<Widget>();
 
-    List<String> dates = settings.showRASP ? _data.raspDates : _data.dates;
-    List<String> times = settings.showRASP ? _data.raspTimes : _data.times;
+//    List<String> dates = settings.showRASP ? _data.raspDates : _data.dates;
+//    List<String> times = settings.showRASP ? _data.raspTimes : _data.times;
+    List<String> dates = _data.dates;
+    List<String> times = _data.times;
 
     for(String day in dates)
     {
@@ -224,15 +226,15 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
             settings.showBestDirection = !settings.showBestDirection;
           });
         }),
-      IconButton(icon: Icon(
-        settings.showRASP ? Icons.blur_on: Icons.blur_off,
-        semanticLabel: "RASP",
-      ),
-        onPressed: () {
-          setState(() {
-            settings.showRASP= !settings.showRASP;
-          });
-        }),
+//      IconButton(icon: Icon(
+//        settings.showRASP ? Icons.blur_on: Icons.blur_off,
+//        semanticLabel: "RASP",
+//      ),
+//        onPressed: () {
+//          setState(() {
+//            settings.showRASP= !settings.showRASP;
+//          });
+//        }),
       IconButton(icon: Icon(
         settings.showForecast ? Icons.cloud : Icons.cloud_off,
         semanticLabel: "Forecast",
@@ -312,8 +314,10 @@ class _SiteForecastState extends State<SiteForecast> {
     Data data = widget.data;
     List<IconButton> actions = [];
 
-    List<String> dates = (settings.showRASP) ? data.raspDates : data.dates;
-    List<String> times = (settings.showRASP) ? data.raspTimes : data.times;
+//    List<String> dates = (settings.showRASP) ? data.raspDates : data.dates;
+//    List<String> times = (settings.showRASP) ? data.raspTimes : data.times;
+    List<String> dates = data.dates;
+    List<String> times = data.times;
 
     if(site.url != null)
       actions.add(
@@ -341,12 +345,12 @@ class _SiteForecastState extends State<SiteForecast> {
           settings.showBestDirection= !settings.showBestDirection;
         });
       }));
-    actions.add(
-      IconButton(icon: Icon(settings.showRASP?Icons.blur_on:Icons.blur_off, semanticLabel: "RASP"), onPressed: (){
-        setState(() {
-          settings.showRASP = !settings.showRASP;
-        });
-      }));
+//    actions.add(
+//      IconButton(icon: Icon(settings.showRASP?Icons.blur_on:Icons.blur_off, semanticLabel: "RASP"), onPressed: (){
+//        setState(() {
+//          settings.showRASP = !settings.showRASP;
+//        });
+//      }));
     actions.add(
       IconButton(icon: Icon(settings.showForecast?Icons.cloud:Icons.cloud_off, semanticLabel: "Forecast"), onPressed: (){
         setState(() {

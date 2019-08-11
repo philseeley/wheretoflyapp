@@ -7,7 +7,9 @@ class ReleaseNotesPage extends StatelessWidget {
 
 Added help for arrow colours - thanks Darryl B for pointing out this was missing.
 
-If the mailto: URL is not supported by the phone, we now open the website info page.""",
+If the mailto: URL is not supported by the phone, we now open the website info page.
+
+As RASP is nolonger available, this option has been removed. Hopfully an alternative can be found.""",
     "6.0.0": """Added option to display the Thermal Updraft Velocity from RASP - thanks Dave M for the idea.
 
 Added option to show the best direction for each site - thanks Darryl V for the idea.""",

@@ -30,7 +30,8 @@ class SiteForecastListView extends StatefulWidget {
 
       if(c != null){
         if (!settings.hideExtremes ||
-          (t > 1 && t < times.length - (settings.showRASP ? 2 : 1))) {
+//          (t > 1 && t < times.length - (settings.showRASP ? 2 : 1))) {
+          (t > 1 && t < times.length - 1)) {
           Color colour = settings.showPGValues ? c.rPGColor : c.rColor;
           if(colour != null)
             on = true;
@@ -42,7 +43,8 @@ class SiteForecastListView extends StatefulWidget {
           if (settings.showMetric)
             speed = (speed * 1.85).round();
 
-          Color raspColour = (settings.showRASP && c.rRASPColor != null) ? c.rRASPColor : Theme.of(context).canvasColor;
+//          Color raspColour = (settings.showRASP && c.rRASPColor != null) ? c.rRASPColor : Theme.of(context).canvasColor;
+          Color raspColour = Theme.of(context).canvasColor;
 
           List<Widget> icons = <Widget>[];
 
@@ -92,7 +94,8 @@ class SiteForecastListView extends StatefulWidget {
     for(int i=0; i<times.length; ++i) {
       String t = times[i];
 
-      if(!settings.hideExtremes || (i>1 && i<times.length-(settings.showRASP?2:1)))
+//      if(!settings.hideExtremes || (i>1 && i<times.length-(settings.showRASP?2:1)))
+      if(!settings.hideExtremes || (i>1 && i<times.length-1))
         dateW.add(Expanded(child: Text(t, textAlign: TextAlign.center)));
     }
 
