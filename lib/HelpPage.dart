@@ -5,6 +5,12 @@ import 'ReleaseNotesPage.dart';
 
 class HelpPage extends StatelessWidget {
 
+  _showChangelog (BuildContext context) {
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return ReleaseNotesPage("Change Log");
+    }));
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -13,10 +19,9 @@ class HelpPage extends StatelessWidget {
         title: Text("Help"),
         actions: <Widget>[
           IconButton(icon: Icon(Icons.change_history), onPressed: () {
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return ReleaseNotesPage("Change Log");
-            }));
-          })
+            _showChangelog(context);
+            }
+          )
         ],
       ),
       body: ListView(children: <Widget>[
@@ -63,7 +68,9 @@ class HelpPage extends StatelessWidget {
           title: Text('Open external site information'),
         ),
         ListTile(
-          leading: Icon(Icons.change_history), title: Text("Show change log")
+          leading: Icon(Icons.change_history),
+          title: Text("Show change log"),
+          onTap: () { _showChangelog(context); }
         ),
         ListTile(
           title: Text('Note: your location and other settings are only used and stored within the app and never sent to any external server.')
