@@ -50,7 +50,7 @@ class _GroupState extends State<GroupPage> {
         appBar: AppBar(
           title: Text("Edit Group"),
           actions: <Widget>[
-            IconButton(icon: Icon(_sortByLocation ? Icons.location_on : Icons.location_off),
+            IconButton(icon: Icon(_sortByLocation ? Icons.gps_fixed : Icons.gps_off),
               onPressed: () {
                 setState(() {
                   Site.sort(sites, _sortByLocation);
