@@ -137,7 +137,7 @@ class Condition {
   final String dir;
   final int kts;
   final String colour;
-  final String pgColour;
+  final String PGColour;
 //  final String raspColour;
   @JsonKey(ignore: true)
   double direction;
@@ -154,7 +154,7 @@ class Condition {
     "Orange": Colors.orange};
 
 //  Condition(this.dir, this.kts, this.colour, this.pgColour, this.raspColour);
-  Condition(this.dir, this.kts, this.colour, this.pgColour);
+  Condition(this.dir, this.kts, this.colour, this.PGColour);
 
   factory Condition.fromJson(Map<String, dynamic> json) {
     Condition c = _$ConditionFromJson(json);
@@ -165,8 +165,8 @@ class Condition {
     if(c.colour != null)
       c.rColor = COLOUR_MAP[c.colour];
 
-    if(c.pgColour != null)
-      c.rPGColor= COLOUR_MAP[c.pgColour];
+    if(c.PGColour != null)
+      c.rPGColor= COLOUR_MAP[c.PGColour];
 
 //    if(c.raspColour != null)
 //      try {

@@ -61,7 +61,7 @@ Condition _$ConditionFromJson(Map<String, dynamic> json) {
     json['dir'] as String,
     json['kts'] as int,
     json['colour'] as String,
-    json['pgColour'] as String,
+    json['PGColour'] as String,
   );
 }
 
@@ -69,7 +69,7 @@ Map<String, dynamic> _$ConditionToJson(Condition instance) => <String, dynamic>{
       'dir': instance.dir,
       'kts': instance.kts,
       'colour': instance.colour,
-      'pgColour': instance.pgColour,
+      'PGColour': instance.PGColour,
     };
 
 Forecast _$ForecastFromJson(Map<String, dynamic> json) {

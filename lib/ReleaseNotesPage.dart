@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class ReleaseNotesPage extends StatelessWidget {
 
   static const changelog = {
+    "6.1.1": "Fixed a bug where selecting 'Show Paragliding Values' hides all sites - thanks to Greg K for reporting this.",
     "6.1.0": """Added divider in main list to better show which arrows are for which site - thanks Tushar P for the idea.
 
 Added help for arrow colours - thanks Darryl B for pointing out this was missing.
