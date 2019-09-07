@@ -47,13 +47,17 @@ Map<String, dynamic> _$SettingsToJson(Settings instance) => <String, dynamic>{
 Data _$DataFromJson(Map<String, dynamic> json) {
   return Data(
     (json['dates'] as List)?.map((e) => e as String)?.toList(),
+    (json['raspDates'] as List)?.map((e) => e as String)?.toList(),
     (json['times'] as List)?.map((e) => e as String)?.toList(),
+    (json['raspTimes'] as List)?.map((e) => e as String)?.toList(),
   );
 }
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
       'dates': instance.dates,
+      'raspDates': instance.raspDates,
       'times': instance.times,
+      'raspTimes': instance.raspTimes,
     };
 
 Condition _$ConditionFromJson(Map<String, dynamic> json) {
@@ -62,6 +66,7 @@ Condition _$ConditionFromJson(Map<String, dynamic> json) {
     json['kts'] as int,
     json['colour'] as String,
     json['PGColour'] as String,
+    json['raspColour'] as String,
   );
 }
 
@@ -70,6 +75,7 @@ Map<String, dynamic> _$ConditionToJson(Condition instance) => <String, dynamic>{
       'kts': instance.kts,
       'colour': instance.colour,
       'PGColour': instance.PGColour,
+      'raspColour': instance.raspColour,
     };
 
 Forecast _$ForecastFromJson(Map<String, dynamic> json) {

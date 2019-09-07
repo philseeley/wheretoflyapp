@@ -62,8 +62,8 @@ class Settings {
   List<Group> groups;
   @JsonKey(ignore: true)
   bool showForecast = false;
-//  @JsonKey(ignore: true)
-//  bool showRASP = false;
+  @JsonKey(ignore: true)
+  bool showRASP = false;
   @JsonKey(ignore: true)
   Group showGroup;
   @JsonKey(ignore: true)
@@ -121,12 +121,11 @@ class Settings {
 @JsonSerializable()
 class Data {
   final List<String> dates;
-//  final List<String> raspDates;
+  final List<String> raspDates;
   final List<String> times;
-//  final List<String> raspTimes;
+  final List<String> raspTimes;
 
-//  Data(this.dates, this.raspDates, this.times, this.raspTimes);
-  Data(this.dates, this.times);
+  Data(this.dates, this.raspDates, this.times, this.raspTimes);
 
   factory Data.fromJson(Map<String, dynamic> json) =>
     _$DataFromJson(json);
@@ -138,23 +137,22 @@ class Condition {
   final int kts;
   final String colour;
   final String PGColour;
-//  final String raspColour;
+  final String raspColour;
   @JsonKey(ignore: true)
   double direction;
   @JsonKey(ignore: true)
   Color rColor;
   @JsonKey(ignore: true)
   Color rPGColor;
-//  @JsonKey(ignore: true)
-//  Color rRASPColor;
+  @JsonKey(ignore: true)
+  Color rRASPColor;
 
   static const COLOUR_MAP = {
     "Yellow": Colors.yellow,
     "LightGreen": Colors.lightGreen,
     "Orange": Colors.orange};
 
-//  Condition(this.dir, this.kts, this.colour, this.pgColour, this.raspColour);
-  Condition(this.dir, this.kts, this.colour, this.PGColour);
+  Condition(this.dir, this.kts, this.colour, this.PGColour, this.raspColour);
 
   factory Condition.fromJson(Map<String, dynamic> json) {
     Condition c = _$ConditionFromJson(json);
@@ -168,13 +166,13 @@ class Condition {
     if(c.PGColour != null)
       c.rPGColor= COLOUR_MAP[c.PGColour];
 
-//    if(c.raspColour != null)
-//      try {
-//        c.rRASPColor =
-//          Color(int.parse("FF" + c.raspColour.substring(1), radix: 16));
-//      } on FormatException {
-//        // The image might not have been available and therefore the colour might be "#NaNNaNNaN".
-//      }
+    if(c.raspColour != null)
+      try {
+        c.rRASPColor =
+          Color(int.parse("FF" + c.raspColour.substring(1), radix: 16));
+      } on FormatException {
+        // The image might not have been available and therefore the colour might be "#NaNNaNNaN".
+      }
     return c;
   }
 }
