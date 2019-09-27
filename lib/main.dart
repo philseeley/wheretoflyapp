@@ -57,12 +57,17 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
   getForecast() async {
     try {
+      Location location = Location();
       LocationData loc;
 
-      loc = await Location().getLocation();
-      latitude = loc.latitude;
-      longitude = loc.longitude;
-      locationAvailable = true;
+      if(await location.serviceEnabled()) {
+        loc = await location.getLocation();
+        latitude = loc.latitude;
+        longitude = loc.longitude;
+        locationAvailable = true;
+      }
+      else
+        Fluttertoast.showToast(msg: "Location is disabled", toastLength: Toast.LENGTH_LONG);
     } catch (e) {
       Fluttertoast.showToast(msg: "Failed to get location", toastLength: Toast.LENGTH_LONG);
     }
