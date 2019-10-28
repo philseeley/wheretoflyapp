@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class ReleaseNotesPage extends StatelessWidget {
 
   static const changelog = {
+    "6.3.0": "Clicking on the site name now takes you directly to the site guide - thanks to Rob VK for the idea.",
     "6.2.2": "Added RASP scale to the help page - thanks to Mark P for nagging me about this.",
     "6.2.1": "Fixed hang when location is disabled - thanks to Rob VK for reporting this.",
     "6.2.0": "Thanks to Chris D's excellent work getting http://ausrasp.com up and running, RASP is back!",
