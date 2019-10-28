@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'Data.dart';
 
 class SiteForecastListView extends StatefulWidget {
@@ -118,7 +119,7 @@ class SiteForecastListView extends StatefulWidget {
       speed += " ${site.dist~/1000} km";
 
     return Row(children: <Widget>[
-      Expanded(child: Text(site.title, textAlign: TextAlign.center)),
+      Expanded(child: InkWell(child: Text(site.title, textAlign: TextAlign.center), onTap: () {launch(site.url);})),
       Expanded(child: Text(speed, textAlign: TextAlign.center, style: Theme.of(context).textTheme.body2))
     ]);
   }
