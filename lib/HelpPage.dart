@@ -84,8 +84,8 @@ class HelpPage extends StatelessWidget {
       ])));
   }
 
-  static const mailURL = "xmailto:feedback@${wtfSite}?subject=WTF%20Feedback";
-  static const supportURL = "${wtfURL}/wtf-info.html";
+  static const mailURL = "xmailto:feedback@$wtfSite?subject=WTF%20Feedback";
+  static const supportURL = "$wtfURL/wtf-info.html";
 
   _support() async {
     if(await canLaunch(mailURL))
