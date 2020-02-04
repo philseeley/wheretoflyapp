@@ -49,6 +49,13 @@ class _SettingsState extends State<SettingsPage> {
             settings.showDistance = value;
           });
         }),
+      SwitchListTile(title: Text('Only Show "On" Sites at Start'),
+        value: settings.onlyShowOnDefault,
+        onChanged: (bool value) {
+          setState(() {
+            settings.onlyShowOnDefault = value;
+          });
+        }),
       ListTile(
         leading: Text("Icon Size"),
         title: Slider(min: 30.0,

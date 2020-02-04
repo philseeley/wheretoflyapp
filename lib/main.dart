@@ -133,7 +133,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
     {
       case AppLifecycleState.paused:
       case AppLifecycleState.inactive:
-      case AppLifecycleState.suspending:
+      case AppLifecycleState.detached:
         if(settings != null)
           settings.save();
         break;

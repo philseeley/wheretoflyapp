@@ -28,6 +28,7 @@ Settings _$SettingsFromJson(Map<String, dynamic> json) {
     iconSize: json['iconSize'],
     hideExtremes: json['hideExtremes'],
     showDistance: json['showDistance'],
+    showOnDefault: json['showOnDefault'],
     groups: (json['groups'] as List)
         .map((e) => Group.fromJson(e as Map<String, dynamic>))
         .toList(),
@@ -41,6 +42,7 @@ Map<String, dynamic> _$SettingsToJson(Settings instance) => <String, dynamic>{
       'iconSize': instance.iconSize,
       'hideExtremes': instance.hideExtremes,
       'showDistance': instance.showDistance,
+      'showOnDefault': instance.onlyShowOnDefault,
       'groups': instance.groups,
     };
 

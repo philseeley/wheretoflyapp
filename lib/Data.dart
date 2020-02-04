@@ -51,7 +51,7 @@ class Settings {
 
   String version;
   @JsonKey(ignore: true)
-  bool onlyShowOn = true;
+  bool onlyShowOn;
   @JsonKey(ignore: true)
   bool sortByLocation = true;
   bool showPGValues;
@@ -59,6 +59,7 @@ class Settings {
   num iconSize;
   bool hideExtremes;
   bool showDistance;
+  bool onlyShowOnDefault;
   List<Group> groups;
   @JsonKey(ignore: true)
   bool showForecast = false;
@@ -78,6 +79,7 @@ class Settings {
     iconSize,
     hideExtremes,
     showDistance,
+    showOnDefault,
     List<Group> groups}) {
       this.version = version ?? "";
       this.showPGValues = showPGValues ?? false;
@@ -85,7 +87,10 @@ class Settings {
       this.iconSize = iconSize ?? 40.0;
       this.hideExtremes = hideExtremes ?? false;
       this.showDistance= showDistance ?? false;
+      this.onlyShowOnDefault= showOnDefault ?? true;
       this.groups = groups ?? List<Group>();
+
+      this.onlyShowOn = onlyShowOnDefault;
 
       showGroup = allGroup;
       for(Group g in this.groups)
