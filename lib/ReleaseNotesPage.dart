@@ -49,7 +49,7 @@ Added option to show the best direction for each site - thanks Darryl V for the 
       list.add(Text("Version "+k, style: Theme
         .of(context)
         .textTheme
-        .title.apply(color: Colors.blue)));
+        .headline6.apply(color: Colors.blue)));
       list.add(Container(child: Text(v), padding: EdgeInsets.all(4)));
     });
 

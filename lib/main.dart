@@ -18,13 +18,13 @@ void main() => runApp(WhereToFlyApp());
 class WhereToFlyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    TextStyle ts = Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4);
+    TextStyle ts = Theme.of(context).textTheme.subtitle1.apply(fontWeightDelta: 4);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Where To Fly',
       home: Main(),
-      theme: ThemeData(textTheme: TextTheme(body1: ts, subhead: ts))
+      theme: ThemeData(textTheme: TextTheme(bodyText2: ts, subtitle1: ts))
     );
   }
 }
@@ -192,7 +192,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
                 forecast.imgTitle, textAlign: TextAlign.center, style: Theme
                 .of(context)
                 .textTheme
-                .body2));
+                .bodyText1));
           }
         }
       }
@@ -277,7 +277,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
         title: Theme(
           data: ThemeData(
             canvasColor: Colors.blue,
-            textTheme: TextTheme(subhead: Theme.of(context).textTheme.subhead.apply(fontWeightDelta: 4, color: Colors.white)),
+            textTheme: TextTheme(subtitle1: Theme.of(context).textTheme.subtitle1.apply(fontWeightDelta: 4, color: Colors.white)),
           ),
           child: DropdownButton<Group>(
             onChanged: (Group group) {

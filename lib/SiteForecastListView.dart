@@ -121,7 +121,7 @@ class SiteForecastListView extends StatefulWidget {
 
     return Row(children: <Widget>[
       Expanded(child: InkWell(child: Text(site.title, textAlign: TextAlign.center), onTap: () {launch(site.url);})),
-      Expanded(child: Text(speed, textAlign: TextAlign.center, style: Theme.of(context).textTheme.body2))
+      Expanded(child: Text(speed, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText1))
     ]);
   }
 }
@@ -146,7 +146,7 @@ class _SiteForecastListViewState extends State<SiteForecastListView> {
         list.add(forecastRow);
 
         if(settings.showForecast && (f.imgTitle.length > 0))
-          list.add(Text(f.imgTitle, textAlign: TextAlign.center, style: Theme.of(context).textTheme.body2));
+          list.add(Text(f.imgTitle, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText1));
       }
     }
 
