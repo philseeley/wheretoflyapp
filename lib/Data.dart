@@ -79,7 +79,7 @@ class Settings {
     iconSize,
     hideExtremes,
     showDistance,
-    showOnDefault,
+    onlyShowOnDefault,
     List<Group> groups}) {
       this.version = version ?? "";
       this.showPGValues = showPGValues ?? false;
@@ -87,10 +87,10 @@ class Settings {
       this.iconSize = iconSize ?? 40.0;
       this.hideExtremes = hideExtremes ?? false;
       this.showDistance= showDistance ?? false;
-      this.onlyShowOnDefault= showOnDefault ?? true;
+      this.onlyShowOnDefault= onlyShowOnDefault ?? true;
       this.groups = groups ?? List<Group>();
 
-      this.onlyShowOn = onlyShowOnDefault;
+      this.onlyShowOn = this.onlyShowOnDefault;
 
       showGroup = allGroup;
       for(Group g in this.groups)
