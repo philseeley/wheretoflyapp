@@ -247,11 +247,12 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
             settings.showForecast = !settings.showForecast;
           });
         }),
-      IconButton(icon: Icon(Icons.settings, semanticLabel: "Settings"), onPressed: () {
-        Navigator.push(
+      IconButton(icon: Icon(Icons.settings, semanticLabel: "Settings"), onPressed: () async {
+        await Navigator.push(
           context, MaterialPageRoute(builder: (context) {
           return SettingsPage(settings, _sites.sites);
         }));
+        setState(() {});
       })
     ];
 
@@ -359,11 +360,12 @@ class _SiteForecastState extends State<SiteForecast> {
         });
       }));
     actions.add(
-      IconButton(icon: Icon(Icons.settings, semanticLabel: "Settings"), onPressed: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context)
+      IconButton(icon: Icon(Icons.settings, semanticLabel: "Settings"), onPressed: () async {
+        await Navigator.push(context, MaterialPageRoute(builder: (context)
         {
           return SettingsPage(settings, widget.sites);
         }));
+        setState(() {});
       }));
 
     return Scaffold(
