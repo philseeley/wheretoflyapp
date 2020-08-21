@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class ReleaseNotesPage extends StatelessWidget {
 
   static const changelog = {
+    "6.5.0": "Added option to show all days on a single page - thanks to Rob VK for the idea.",
     "6.4.0": "Added a setting to not show 'On' sites on start - thanks to Rob VK for the idea.",
     "6.3.1": "Sites that take all directions are now supported.",
     "6.3.0": "Clicking on the site name now takes you directly to the site guide - thanks to Rob VK for the idea.",
