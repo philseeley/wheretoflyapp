@@ -170,45 +170,10 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
     List<String> dates = settings.showRASP ? _data.raspDates : _data.dates;
     List<String> times = settings.showRASP ? _data.raspTimes : _data.times;
 
-    for(String day in dates)
-    {
-      List<Widget> list = List<Widget>();
-
-      for (Site s in _sites.sites)
-      {
-        if(settings.showGroup == Settings.allGroup || settings.showGroup.sites.contains(s.name)) {
-          Forecast forecast = s.dates[day];
-
-          Row forecastRow = SiteForecastListView.buildForecastRow(
-            context, settings, times, day, s, forecast, settings.onlyShowOn, false);
-
-          if (forecastRow != null) {
-            list.add(Divider(height: 0.0, color: Colors.black));
-            list.add(InkWell(child: SiteForecastListView.buildTitleRow(context, settings, s), onTap: () {_showSite(s);}));
-            list.add(InkWell(child: forecastRow, onTap: () {_showSite(s);}));
-
-            if (settings.showForecast && (forecast.imgTitle.length > 0))
-              list.add(Text(
-                forecast.imgTitle, textAlign: TextAlign.center, style: Theme
-                .of(context)
-                .textTheme
-                .bodyText1));
-          }
-        }
-      }
-
-      // If we're hiding the extreme values we might not have any rows to show.
-      if(list.length > 0) {
-        Row timeRow = SiteForecastListView.buildTimeRow(
-            context, settings, times, false, day);
-
-        pages.add(Column(children: <Widget>[
-              timeRow,
-              Expanded(child: RefreshIndicator(onRefresh: _refreshForecast, child: ListView(children: list)))
-            ])
-        );
-      }
-    }
+    if(settings.singlePageView)
+      singlePage(context, pages, dates, times);
+    else
+      multiDay(context, pages, dates, times);
 
     List<IconButton> actions = [
       IconButton(icon: Icon(Icons.power_settings_new,
@@ -294,6 +259,88 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
       ),
       body: PageView(children: pages)
     );
+  }
+
+  void multiDay(BuildContext context, List<Widget> pages, List<String> dates, List<String> times) {
+    for(String day in dates)
+    {
+      List<Widget> list = List<Widget>();
+
+      for (Site s in _sites.sites)
+      {
+        if(settings.showGroup == Settings.allGroup || settings.showGroup.sites.contains(s.name)) {
+          Forecast forecast = s.dates[day];
+
+          Row forecastRow = SiteForecastListView.buildForecastRow(
+            context, settings, times, day, s, forecast, settings.onlyShowOn, false);
+
+          if (forecastRow != null) {
+            list.add(Divider(height: 0.0, color: Colors.black));
+            list.add(InkWell(child: SiteForecastListView.buildTitleRow(context, settings, s), onTap: () {_showSite(s);}));
+            list.add(InkWell(child: forecastRow, onTap: () {_showSite(s);}));
+
+            if (settings.showForecast && (forecast.imgTitle.length > 0))
+              list.add(Text(
+                forecast.imgTitle, textAlign: TextAlign.center, style: Theme
+                .of(context)
+                .textTheme
+                .bodyText1));
+          }
+        }
+      }
+
+      // If we're hiding the extreme values we might not have any rows to show.
+      if(list.length > 0) {
+        Row timeRow = SiteForecastListView.buildTimeRow(
+            context, settings, times, false, day);
+
+        pages.add(Column(children: <Widget>[
+              timeRow,
+              Expanded(child: RefreshIndicator(onRefresh: _refreshForecast, child: ListView(children: list)))
+            ])
+        );
+      }
+    }
+  }
+
+  void singlePage(BuildContext context, List<Widget> pages, List<String> dates, List<String> times) {
+    List<Widget> list = List<Widget>();
+
+    for (Site s in _sites.sites)
+    {
+      bool first = true;
+
+      if(settings.showGroup == Settings.allGroup || settings.showGroup.sites.contains(s.name)) {
+        for(String day in dates)
+        {
+          Forecast forecast = s.dates[day];
+
+          Row forecastRow = SiteForecastListView.buildForecastRow(
+            context, settings, times, day, s, forecast, settings.onlyShowOn, true);
+
+          if (forecastRow != null) {
+            if(first) {
+              list.add(Divider(height: 0.0, color: Colors.black));
+              list.add(InkWell(child: SiteForecastListView.buildTitleRow(context, settings, s), onTap: () {_showSite(s);}));
+            }
+            first = false;
+            list.add(InkWell(child: forecastRow, onTap: () {_showSite(s);}));
+          }
+        }
+      }
+    }
+
+    // If we're hiding the extreme values we might not have any rows to show.
+    if(list.length > 0) {
+      Row timeRow = SiteForecastListView.buildTimeRow(
+          context, settings, times, true, null);
+
+      pages.add(Column(children: <Widget>[
+            timeRow,
+            Expanded(child: RefreshIndicator(onRefresh: _refreshForecast, child: ListView(children: list)))
+          ])
+      );
+    }
   }
 }
 

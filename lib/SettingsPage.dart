@@ -49,6 +49,13 @@ class _SettingsState extends State<SettingsPage> {
             settings.showDistance = value;
           });
         }),
+      SwitchListTile(title: Text("Single Page View"),
+        value: settings.singlePageView,
+        onChanged: (bool value) {
+          setState(() {
+            settings.singlePageView = value;
+          });
+        }),
       SwitchListTile(title: Text('Only Show "On" Sites at Start'),
         value: settings.onlyShowOnDefault,
         onChanged: (bool value) {

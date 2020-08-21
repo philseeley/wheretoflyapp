@@ -59,6 +59,7 @@ class Settings {
   num iconSize;
   bool hideExtremes;
   bool showDistance;
+  bool singlePageView;
   bool onlyShowOnDefault;
   List<Group> groups;
   @JsonKey(ignore: true)
@@ -79,6 +80,7 @@ class Settings {
     iconSize,
     hideExtremes,
     showDistance,
+    singlePageView,
     onlyShowOnDefault,
     List<Group> groups}) {
       this.version = version ?? "";
@@ -86,8 +88,9 @@ class Settings {
       this.showMetric = showMetric ?? false;
       this.iconSize = iconSize ?? 40.0;
       this.hideExtremes = hideExtremes ?? false;
-      this.showDistance= showDistance ?? false;
-      this.onlyShowOnDefault= onlyShowOnDefault ?? true;
+      this.showDistance = showDistance ?? false;
+      this.singlePageView = singlePageView ?? false;
+      this.onlyShowOnDefault = onlyShowOnDefault ?? true;
       this.groups = groups ?? List<Group>();
 
       this.onlyShowOn = this.onlyShowOnDefault;
