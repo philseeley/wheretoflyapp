@@ -1,9 +1,11 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'Common.dart';
 import 'ReleaseNotesPage.dart';
 
 class HelpPage extends StatelessWidget {
+  final ScrollController _controller = ScrollController();
 
   _showChangelog (BuildContext context) {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -25,8 +27,8 @@ class HelpPage extends StatelessWidget {
         ],
       ),
       body: Row(children: <Widget>[
-        Expanded(child:
-          ListView(children: <Widget>[
+        Expanded(child: Scrollbar(isAlwaysShown: true, controller: _controller, child:
+          ListView(controller: _controller, children: <Widget>[
             Row(children: <Widget>[
               Expanded(child: Icon(Icons.forward, color: Colors.yellow, size: 35.0)),
               Expanded(child: Icon(Icons.forward, color: Colors.lightGreen, size: 35.0)),
@@ -55,7 +57,21 @@ class HelpPage extends StatelessWidget {
             ),
             ListTile(
               leading: Icon(Icons.blur_on),
-              title: Text('Show RASP Thermal Updraft Velocity'),
+              title: RichText(text: TextSpan(
+                style: Theme.of(context).textTheme.subtitle1.apply(fontWeightDelta: 4),
+                children: [
+                  TextSpan(text: 'Show '),
+                  TextSpan(text: 'RASP',
+                    style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () { launch('http://ausrasp.com'); }),
+                  TextSpan(text: ' Thermal Updraft Velocity. '),
+                  TextSpan(text: 'Donate',
+                    style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () { launch('https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=DA88MPHUFMKS4&currency_code=AUD'); }),
+                ]
+              ))
             ),
             ListTile(
               leading: Icon(Icons.cloud, color: Colors.red),
@@ -78,8 +94,8 @@ class HelpPage extends StatelessWidget {
               title: Text('Note: your location and other settings are only used and stored within the app and never sent to any external server.')
             ),
             ListTile(
-              leading: Icon(Icons.email), title: Text("Tap here to send feedback and site updates"), onTap: _support),
-          ])),
+              leading: Icon(Icons.email), title: Text("Send feedback and site updates", style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline)), onTap: _support),
+          ]))),
         Image(image: AssetImage("assets/rasp-scale.png")),
       ])));
   }
@@ -89,8 +105,8 @@ class HelpPage extends StatelessWidget {
 
   _support() async {
     if(await canLaunch(mailURL))
-      await launch(mailURL);
+      launch(mailURL);
     else
-      await launch(supportURL);
+      launch(supportURL);
   }
 }
