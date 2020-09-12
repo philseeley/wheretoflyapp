@@ -325,6 +325,14 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
             }
             first = false;
             list.add(InkWell(child: forecastRow, onTap: () {_showSite(s);}));
+
+            if (settings.showForecast && (forecast.imgTitle.length > 0))
+              list.add(Text(
+                forecast.imgTitle, textAlign: TextAlign.center, style: Theme
+                .of(context)
+                .textTheme
+                .bodyText1));
+
           }
         }
       }
