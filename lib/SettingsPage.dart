@@ -126,7 +126,7 @@ class _SettingsState extends State<SettingsPage> {
         title: Text("Settings"),
         actions: <Widget>[
           IconButton(icon: Icon(Icons.share), onPressed: () {
-            Share.share("https://play.google.com/store/apps/details?id=name.seeley.phil.wheretoflyapp");
+            Share.share("Android: https://play.google.com/store/apps/details?id=name.seeley.phil.wheretoflyapp\niPhone: https://itunes.apple.com/au/app/where-to-fly/id1439721253");
           }),
           IconButton(icon: Icon(Icons.help), onPressed: () {
             Navigator.push(
