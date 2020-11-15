@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class ReleaseNotesPage extends StatelessWidget {
 
   static const changelog = {
+    "6.6.2": "Added iPhone App link to the share details - thanks to Rob VK for reporting this.",
     "6.6.1": "Fixed the bug where the text forecast was missing from the single page view.",
     "6.6.0": "Added links from the help page to RASP. Made scrollbar always visible on the help page.",
     "6.5.0": "Added option to show all days on a single page - thanks to Rob VK for the idea.",
