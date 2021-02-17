@@ -60,6 +60,7 @@ class Settings {
   bool hideExtremes;
   bool showDistance;
   bool singlePageView;
+  int maxRows;
   bool onlyShowOnDefault;
   List<Group> groups;
   @JsonKey(ignore: true)
@@ -81,6 +82,7 @@ class Settings {
     hideExtremes,
     showDistance,
     singlePageView,
+    maxRows,
     onlyShowOnDefault,
     List<Group> groups}) {
       this.version = version ?? "";
@@ -90,6 +92,7 @@ class Settings {
       this.hideExtremes = hideExtremes ?? false;
       this.showDistance = showDistance ?? false;
       this.singlePageView = singlePageView ?? false;
+      this.maxRows = maxRows ?? 7;
       this.onlyShowOnDefault = onlyShowOnDefault ?? true;
       this.groups = groups ?? List<Group>();
 

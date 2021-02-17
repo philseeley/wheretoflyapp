@@ -311,6 +311,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
       bool first = true;
 
       if(settings.showGroup == Settings.allGroup || settings.showGroup.sites.contains(s.name)) {
+        int i = 0;
         for(String day in dates)
         {
           Forecast forecast = s.dates[day];
@@ -333,7 +334,10 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
                 .textTheme
                 .bodyText1));
 
+            ++i;
           }
+
+          if (i >= settings.maxRows) break;
         }
       }
     }

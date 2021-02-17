@@ -56,6 +56,19 @@ class _SettingsState extends State<SettingsPage> {
             settings.singlePageView = value;
           });
         }),
+      ListTile(
+        leading: Text("Rows"),
+        title: Slider(min: 1,
+          max: 7,
+          divisions: 6,
+          value: settings.maxRows.toDouble(),
+          label: settings.maxRows.toString(),
+          onChanged: settings.singlePageView ? (double value) {
+            setState(() {
+              settings.maxRows = value.toInt();
+            });
+          } : null),
+      ),
       SwitchListTile(title: Text('Only Show "On" Sites at Start'),
         value: settings.onlyShowOnDefault,
         onChanged: (bool value) {
