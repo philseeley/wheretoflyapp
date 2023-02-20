@@ -62,7 +62,7 @@ class Settings {
   bool singlePageView;
   int maxRows;
   bool onlyShowOnDefault;
-  List<Group> groups;
+  late List<Group> groups;
   @JsonKey(includeFromJson: false, includeToJson: false)
   bool showForecast = false;
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -84,11 +84,13 @@ class Settings {
     this.singlePageView = false,
     this.maxRows = 7,
     this.onlyShowOnDefault = true,
-    this.groups = const <Group>[]}) {
+    groups}) {
       onlyShowOn = onlyShowOnDefault;
 
+      this.groups = groups ?? <Group>[];
+
       showGroup = allGroup;
-      for(Group g in groups) {
+      for(Group g in this.groups) {
         if (g.init) {
           showGroup = g;
         }
