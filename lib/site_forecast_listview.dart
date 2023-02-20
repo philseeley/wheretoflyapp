@@ -11,18 +11,19 @@ class SiteForecastListView extends StatefulWidget {
   final List<String> dates;
   final List<String> times;
 
-  SiteForecastListView(this.settings, this.dates, this.times, this.site);
+  const SiteForecastListView(this.settings, this.dates, this.times, this.site, {super.key});
 
   @override
-  _SiteForecastListViewState createState() => _SiteForecastListViewState();
+  createState() => _SiteForecastListViewState();
 
   static Row? buildForecastRow(BuildContext context, Settings settings, List<String> times, String day, Site s, Forecast forecast, bool onlyIfOn, bool showDay) {
     bool on = false;
 
     List<Widget> list = <Widget>[];
 
-    if(showDay)
+    if(showDay) {
       list.add(Expanded(child: Text(dayF.format(DateTime.parse(day)).substring(0, 2), textAlign: TextAlign.center)));
+    }
 
     list.add(Expanded(child: forecast.getImage(settings.iconSize) as Widget));
 
@@ -37,8 +38,9 @@ class SiteForecastListView extends StatefulWidget {
             on = true;
           }
 
-          if(colour == null && c.kts != null)
+          if(colour == null && c.kts != null) {
             colour = Colors.grey;
+          }
 
           int speed = c.kts ?? 0;
           if (settings.showMetric) {
@@ -53,14 +55,14 @@ class SiteForecastListView extends StatefulWidget {
 
           if(colour != null) {
             icons.add(Transform.rotate(
-              angle: c.direction ?? 0.0,
+              angle: c.direction!,
               child: Icon(Icons.forward, color: colour, size: settings.iconSize)
             ));
           }
 
-          if (settings.showBestDirection && c.kts != null) {
+          if (settings.showBestDirection && c.kts != null && s.direction != null) {
             icons.add(Transform.rotate(
-              angle: s.direction ?? 0.0,
+              angle: s.direction!,
               child: Icon(
                 Icons.trending_flat, color: Colors.red, size: settings.iconSize
               )));
@@ -89,8 +91,9 @@ class SiteForecastListView extends StatefulWidget {
   static Row buildTimeRow(BuildContext context, Settings settings, List<String> times, bool includeDay, String? date) {
     List<Widget> dateW = <Widget>[];
 
-    if(includeDay)
-      dateW.add(Expanded(child: Text("", textAlign: TextAlign.center)));
+    if(includeDay) {
+      dateW.add(const Expanded(child: Text("", textAlign: TextAlign.center)));
+    }
 
     String day = (date == null) ? "" : dayF.format(DateTime.parse(date)).substring(0, 2);
 
@@ -99,8 +102,9 @@ class SiteForecastListView extends StatefulWidget {
     for(int i=0; i<times.length; ++i) {
       String t = times[i];
 
-      if(!settings.hideExtremes || (i>1 && i<times.length-(settings.showRASP?2:1)))
+      if(!settings.hideExtremes || (i>1 && i<times.length-(settings.showRASP?2:1))) {
         dateW.add(Expanded(child: Text(t, textAlign: TextAlign.center)));
+      }
     }
 
     return Row(children: dateW);
@@ -119,15 +123,16 @@ class SiteForecastListView extends StatefulWidget {
       maxSpeed = (maxSpeed*1.85).round();
     }
 
-    speed += minSpeed.toString()+"-"+maxSpeed.toString();
+    speed += "$minSpeed-$maxSpeed";
     speed += (settings.showMetric) ? " kmh" : " kts";
 
-    if(settings.showDistance)
+    if(settings.showDistance) {
       speed += " ${site.dist~/1000} km";
+    }
 
     return Row(children: <Widget>[
-      Expanded(child: InkWell(child: Text(site.title, textAlign: TextAlign.center), onTap: (site.url == null) ? null : () {launch(site.url!);})),
-      Expanded(child: Text(speed, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText1))
+      Expanded(child: InkWell(onTap: (site.url == null) ? null : () {launchUrl(Uri.parse(site.url!));}, child: Text(site.title, textAlign: TextAlign.center))),
+      Expanded(child: Text(speed, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyLarge))
     ]);
   }
 }
@@ -152,7 +157,7 @@ class _SiteForecastListViewState extends State<SiteForecastListView> {
         list.add(forecastRow);
 
         if(settings.showForecast && (f.imgTitle.isNotEmpty)) {
-          list.add(Text(f.imgTitle, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyText1));
+          list.add(Text(f.imgTitle, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyLarge));
         }
       }
     }

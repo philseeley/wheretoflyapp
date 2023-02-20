@@ -7,9 +7,11 @@ import 'release_notes_page.dart';
 class HelpPage extends StatelessWidget {
   final ScrollController _controller = ScrollController();
 
+  HelpPage({super.key});
+
   _showChangelog (BuildContext context) {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return ReleaseNotesPage("Change Log");
+      return const ReleaseNotesPage("Change Log");
     }));
   }
 
@@ -18,95 +20,96 @@ class HelpPage extends StatelessWidget {
 
     return(Scaffold(
       appBar: AppBar(
-        title: Text("Help"),
+        title: const Text("Help"),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.change_history), onPressed: () {
+          IconButton(icon: const Icon(Icons.change_history), onPressed: () {
             _showChangelog(context);
             }
           )
         ],
       ),
       body: Row(children: <Widget>[
-        Expanded(child: Scrollbar(isAlwaysShown: true, controller: _controller, child:
+        Expanded(child: Scrollbar(thumbVisibility: true, controller: _controller, child:
           ListView(controller: _controller, children: <Widget>[
-            Row(children: <Widget>[
+            Row(children: const <Widget>[
               Expanded(child: Icon(Icons.forward, color: Colors.yellow, size: 35.0)),
               Expanded(child: Icon(Icons.forward, color: Colors.lightGreen, size: 35.0)),
               Expanded(child: Icon(Icons.forward, color: Colors.orange, size: 35.0)),
             ]),
-            Row(children: <Widget>[
+            Row(children: const <Widget>[
               Expanded(child: Text("Too Light", textAlign: TextAlign.center)),
               Expanded(child: Text("Where To Fly!", textAlign: TextAlign.center)),
               Expanded(child: Text("Too Strong", textAlign: TextAlign.center)),
             ]),
-            ListTile(
+            const ListTile(
               leading: Icon(Icons.gps_fixed),
               title: Text("Sort sites by location"),
             ),
-            ListTile(
+            const ListTile(
               leading: Icon(Icons.power_settings_new, color: Colors.red),
               title: Text('Only show sites that are "on"'),
             ),
-            ListTile(
+            const ListTile(
               leading: Icon(Icons.trending_flat, color: Colors.red),
               title: Text('Show best direction'),
             ),
-            ListTile(
+            const ListTile(
               leading: Icon(Icons.cloud),
               title: Text('Show text forecast'),
             ),
             ListTile(
-              leading: Icon(Icons.blur_on),
+              leading: const Icon(Icons.blur_on),
               title: RichText(text: TextSpan(
                 style: Theme.of(context).textTheme.titleMedium!.apply(fontWeightDelta: 4),
                 children: [
-                  TextSpan(text: 'Show '),
+                  const TextSpan(text: 'Show '),
                   TextSpan(text: 'RASP',
-                    style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+                    style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
                     recognizer: TapGestureRecognizer()
-                      ..onTap = () { launch('http://ausrasp.com'); }),
-                  TextSpan(text: ' Thermal Updraft Velocity. '),
+                      ..onTap = () { launchUrl(Uri.parse('http://ausrasp.com')); }),
+                  const TextSpan(text: ' Thermal Updraft Velocity. '),
                   TextSpan(text: 'Donate',
-                    style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+                    style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
                     recognizer: TapGestureRecognizer()
-                      ..onTap = () { launch('https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=DA88MPHUFMKS4&currency_code=AUD'); }),
+                      ..onTap = () { launchUrl(Uri.parse('https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=DA88MPHUFMKS4&currency_code=AUD')); }),
                 ]
               ))
             ),
-            ListTile(
+            const ListTile(
               leading: Icon(Icons.cloud, color: Colors.red),
               title: Text('Open realtime weather information'),
             ),
-            ListTile(
+            const ListTile(
               leading: Icon(Icons.cloud_upload),
               title: Text('Open external weather forecast'),
             ),
-            ListTile(
+            const ListTile(
               leading: Icon(Icons.info),
               title: Text('Open external site information'),
             ),
             ListTile(
-              leading: Icon(Icons.change_history),
-              title: Text("Show change log"),
+              leading: const Icon(Icons.change_history),
+              title: const Text("Show change log"),
               onTap: () { _showChangelog(context); }
             ),
-            ListTile(
+            const ListTile(
               title: Text('Note: your location and other settings are only used and stored within the app and never sent to any external server.')
             ),
             ListTile(
-              leading: Icon(Icons.email), title: Text("Send feedback and site updates", style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline)), onTap: _support),
+              leading: const Icon(Icons.email), title: const Text("Send feedback and site updates", style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline)), onTap: _support),
           ]))),
-        Image(image: AssetImage("assets/rasp-scale.png")),
+        const Image(image: AssetImage("assets/rasp-scale.png")),
       ])));
   }
 
-  static const mailURL = "xmailto:feedback@$wtfSite?subject=WTF%20Feedback";
-  static const supportURL = "$wtfURL/wtf-info.html";
+  static Uri mailURL = Uri.parse("xmailto:feedback@$wtfSite?subject=WTF%20Feedback");
+  static Uri supportURL = Uri.parse("$wtfURL/wtf-info.html");
 
   _support() async {
-    if(await canLaunch(mailURL))
-      launch(mailURL);
-    else
-      launch(supportURL);
+    if(await canLaunchUrl(mailURL)) {
+      launchUrl(mailURL);
+    } else {
+      launchUrl(supportURL);
+    }
   }
 }

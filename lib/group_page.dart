@@ -7,10 +7,10 @@ class GroupPage extends StatefulWidget {
   final Group group;
   final bool isNew;
 
-  GroupPage(this.settings, this.sites, this.group, this.isNew);
+  const GroupPage(this.settings, this.sites, this.group, this.isNew, {super.key});
 
   @override
-  _GroupState createState() => _GroupState();
+  createState() => _GroupState();
 }
 
 class _GroupState extends State<GroupPage> {
@@ -22,8 +22,9 @@ class _GroupState extends State<GroupPage> {
     List<Site> sites = widget.sites;
     Group group = widget.group;
 
-    if(!widget.isNew)
+    if(!widget.isNew) {
       _nameCtrl.text = group.name;
+    }
 
     List<Widget> siteWidgetList = <Widget>[];
 
@@ -50,7 +51,7 @@ class _GroupState extends State<GroupPage> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text("Edit Group"),
+          title: const Text("Edit Group"),
           actions: <Widget>[
             IconButton(icon: Icon(_sortByLocation ? Icons.gps_fixed : Icons.gps_off),
               onPressed: () {
@@ -66,7 +67,7 @@ class _GroupState extends State<GroupPage> {
             title: TextField(
               autofocus: widget.isNew,
               controller: _nameCtrl,
-              decoration: InputDecoration(labelText: "Name"),
+              decoration: const InputDecoration(labelText: "Name"),
               onChanged: (name){
                 group.name = name;
               }

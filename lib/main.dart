@@ -13,9 +13,12 @@ import 'settings_page.dart';
 import 'release_notes_page.dart';
 import 'dynamic_appbar.dart';
 
-void main() => runApp(WhereToFlyApp());
+void main() => runApp(const WhereToFlyApp());
 
 class WhereToFlyApp extends StatelessWidget {
+
+  const WhereToFlyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     TextStyle? ts = Theme.of(context).textTheme.titleMedium!.apply(fontWeightDelta: 4);
@@ -23,15 +26,18 @@ class WhereToFlyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Where To Fly',
-      home: Main(),
+      home: const Main(),
       theme: ThemeData(textTheme: TextTheme(bodyMedium: ts, titleMedium: ts))
     );
   }
 }
 
 class Main extends StatefulWidget {
+
+  const Main({super.key});
+
   @override
-  _MainState createState() => _MainState();
+  createState() => _MainState();
 }
 
 class _MainState extends State<Main> with WidgetsBindingObserver {
@@ -136,8 +142,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
       case AppLifecycleState.paused:
       case AppLifecycleState.inactive:
       case AppLifecycleState.detached:
-        if(settings != null)
-          settings.save();
+        settings.save();
         break;
       case AppLifecycleState.resumed:
         break;
@@ -161,21 +166,23 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
 
-    if(_sites == null || _sites!.sites.isEmpty)
+    if(_sites == null || _sites!.sites.isEmpty) {
       return Scaffold(
-        appBar: AppBar(title: Text("Where To Fly")),
-        body: Center(child: Stack(children: <Widget>[Text("Waiting for\nLocation and Data", textAlign: TextAlign.center,), CircularProgressIndicator()],alignment: Alignment.center))
+        appBar: AppBar(title: const Text("Where To Fly")),
+        body: Center(child: Stack(alignment: Alignment.center, children: const <Widget>[Text("Waiting for\nLocation and Data", textAlign: TextAlign.center,), CircularProgressIndicator()]))
       );
+    }
 
     List<Widget> pages = <Widget>[];
 
     List<String> dates = settings.showRASP ? _data.raspDates : _data.dates;
     List<String> times = settings.showRASP ? _data.raspTimes : _data.times;
 
-    if(settings.singlePageView)
+    if(settings.singlePageView) {
       singlePage(context, pages, dates, times);
-    else
+    } else {
       multiDay(context, pages, dates, times);
+    }
 
     List<IconButton> actions = [
       IconButton(icon: Icon(Icons.power_settings_new,
@@ -214,7 +221,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
             settings.showForecast = !settings.showForecast;
           });
         }),
-      IconButton(icon: Icon(Icons.settings, semanticLabel: "Settings"), onPressed: () async {
+      IconButton(icon: const Icon(Icons.settings, semanticLabel: "Settings"), onPressed: () async {
         await Navigator.push(
           context, MaterialPageRoute(builder: (context) {
           return SettingsPage(settings, _sites!.sites);
@@ -223,7 +230,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
       })
     ];
 
-    if(locationAvailable)
+    if(locationAvailable) {
       actions.insert(0, IconButton(icon: Icon(
         settings.sortByLocation ? Icons.gps_fixed : Icons.gps_off, semanticLabel: "Location",),
         onPressed: () {
@@ -232,12 +239,14 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
             _sort();
           });
         }));
+    }
 
     List<DropdownMenuItem<Group>> groupList = [];
     groupList.add(DropdownMenuItem<Group>(value: Settings.allGroup, child: Text(Settings.allGroup.name)));
 
-    for (Group g in settings.groups)
+    for (Group g in settings.groups) {
       groupList.add(DropdownMenuItem<Group>(value: g, child: Text(g.name)));
+    }
 
     return Scaffold(
       appBar: DynamicAppBar(
@@ -278,22 +287,23 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
             context, settings, times, day, s, forecast, settings.onlyShowOn, false);
 
           if (forecastRow != null) {
-            list.add(Divider(height: 0.0, color: Colors.black));
+            list.add(const Divider(height: 0.0, color: Colors.black));
             list.add(InkWell(child: SiteForecastListView.buildTitleRow(context, settings, s), onTap: () {_showSite(s);}));
             list.add(InkWell(child: forecastRow, onTap: () {_showSite(s);}));
 
-            if (settings.showForecast && (forecast.imgTitle.length > 0))
+            if (settings.showForecast && (forecast.imgTitle.isNotEmpty)) {
               list.add(Text(
                 forecast.imgTitle, textAlign: TextAlign.center, style: Theme
                 .of(context)
                 .textTheme
-                .bodyText1));
+                .bodyLarge));
+            }
           }
         }
       }
 
       // If we're hiding the extreme values we might not have any rows to show.
-      if(list.length > 0) {
+      if(list.isNotEmpty) {
         Row timeRow = SiteForecastListView.buildTimeRow(
             context, settings, times, false, day);
 
@@ -324,18 +334,19 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
           if (forecastRow != null) {
             if(first) {
-              list.add(Divider(height: 0.0, color: Colors.black));
+              list.add(const Divider(height: 0.0, color: Colors.black));
               list.add(InkWell(child: SiteForecastListView.buildTitleRow(context, settings, s), onTap: () {_showSite(s);}));
             }
             first = false;
             list.add(InkWell(child: forecastRow, onTap: () {_showSite(s);}));
 
-            if (settings.showForecast && (forecast.imgTitle.length > 0))
+            if (settings.showForecast && (forecast.imgTitle.isNotEmpty)) {
               list.add(Text(
                 forecast.imgTitle, textAlign: TextAlign.center, style: Theme
                 .of(context)
                 .textTheme
-                .bodyText1));
+                .bodyLarge));
+            }
 
             ++i;
           }
@@ -365,10 +376,10 @@ class SiteForecast extends StatefulWidget {
   final Settings settings;
   final List<Site> sites;
 
-  SiteForecast(this.settings, this.data, this.sites, this.site);
+  const SiteForecast(this.settings, this.data, this.sites, this.site, {super.key});
 
   @override
-  _SiteForecastState createState() => _SiteForecastState();
+  createState() => _SiteForecastState();
 }
 
 class _SiteForecastState extends State<SiteForecast> {
@@ -383,26 +394,28 @@ class _SiteForecastState extends State<SiteForecast> {
     List<String> dates = (settings.showRASP) ? data.raspDates : data.dates;
     List<String> times = (settings.showRASP) ? data.raspTimes : data.times;
 
-    if(site.url != null)
+    if(site.url != null) {
       actions.add(
-        IconButton(icon: Icon(Icons.info, semanticLabel: "Site Info"), onPressed: (){
+        IconButton(icon: const Icon(Icons.info, semanticLabel: "Site Info"), onPressed: (){
           setState(() {
-            launch(site.url!);
+            launchUrl(Uri.parse(site.url!));
           });
         }));
+    }
     actions.add(
-      IconButton(icon: Icon(Icons.cloud_upload, semanticLabel: "Detailed Forecast"), onPressed: (){
+      IconButton(icon: const Icon(Icons.cloud_upload, semanticLabel: "Detailed Forecast"), onPressed: (){
         setState(() {
-          launch(site.weatherURL);
+          launchUrl(Uri.parse(site.weatherURL));
         });
       }));
-    if(site.obsURL != null)
+    if(site.obsURL != null) {
       actions.add(
-        IconButton(icon: Icon(Icons.cloud, color: Colors.red, semanticLabel: "Observations"), onPressed: (){
+        IconButton(icon: const Icon(Icons.cloud, color: Colors.red, semanticLabel: "Observations"), onPressed: (){
           setState(() {
-            launch(site.obsURL!);
+            launchUrl(Uri.parse(site.obsURL!));
           });
         }));
+    }
     actions.add(
       IconButton(icon: Icon(Icons.trending_flat, color: settings.showBestDirection ? Colors.red : Colors.white, semanticLabel: "Best Direction"), onPressed: (){
         setState(() {
@@ -422,7 +435,7 @@ class _SiteForecastState extends State<SiteForecast> {
         });
       }));
     actions.add(
-      IconButton(icon: Icon(Icons.settings, semanticLabel: "Settings"), onPressed: () async {
+      IconButton(icon: const Icon(Icons.settings, semanticLabel: "Settings"), onPressed: () async {
         await Navigator.push(context, MaterialPageRoute(builder: (context)
         {
           return SettingsPage(settings, widget.sites);

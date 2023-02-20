@@ -8,10 +8,10 @@ class SettingsPage extends StatefulWidget {
   final Settings settings;
   final List<Site> sites;
 
-  SettingsPage(this.settings, this.sites);
+  const SettingsPage(this.settings, this.sites, {super.key});
 
   @override
-  _SettingsState createState() => _SettingsState();
+  createState() => _SettingsState();
 }
 
 class _SettingsState extends State<SettingsPage> {
@@ -21,35 +21,35 @@ class _SettingsState extends State<SettingsPage> {
     Settings settings = widget.settings;
 
     List<Widget> list = [
-      SwitchListTile(title: Text("Show Paragliding Values"),
+      SwitchListTile(title: const Text("Show Paragliding Values"),
         value: settings.showPGValues,
         onChanged: (bool value) {
           setState(() {
             settings.showPGValues = value;
           });
         }),
-      SwitchListTile(title: Text("Show Metric Values"),
+      SwitchListTile(title: const Text("Show Metric Values"),
         value: settings.showMetric,
         onChanged: (bool value) {
           setState(() {
             settings.showMetric = value;
           });
         }),
-      SwitchListTile(title: Text("Hide Early/Late Values"),
+      SwitchListTile(title: const Text("Hide Early/Late Values"),
         value: settings.hideExtremes,
         onChanged: (bool value) {
           setState(() {
             settings.hideExtremes = value;
           });
         }),
-      SwitchListTile(title: Text("Show Distance"),
+      SwitchListTile(title: const Text("Show Distance"),
         value: settings.showDistance,
         onChanged: (bool value) {
           setState(() {
             settings.showDistance = value;
           });
         }),
-      SwitchListTile(title: Text("Single Page View"),
+      SwitchListTile(title: const Text("Single Page View"),
         value: settings.singlePageView,
         onChanged: (bool value) {
           setState(() {
@@ -57,7 +57,7 @@ class _SettingsState extends State<SettingsPage> {
           });
         }),
       ListTile(
-        leading: Text("Rows"),
+        leading: const Text("Rows"),
         title: Slider(min: 1,
           max: 7,
           divisions: 6,
@@ -69,7 +69,7 @@ class _SettingsState extends State<SettingsPage> {
             });
           } : null),
       ),
-      SwitchListTile(title: Text('Only Show "On" Sites at Start'),
+      SwitchListTile(title: const Text('Only Show "On" Sites at Start'),
         value: settings.onlyShowOnDefault,
         onChanged: (bool value) {
           setState(() {
@@ -77,7 +77,7 @@ class _SettingsState extends State<SettingsPage> {
           });
         }),
       ListTile(
-        leading: Text("Icon Size"),
+        leading: const Text("Icon Size"),
         title: Slider(min: 30.0,
           max: 60.0,
           divisions: 6,
@@ -89,9 +89,9 @@ class _SettingsState extends State<SettingsPage> {
           }),
       ),
       ListTile(
-        leading: Text('Groups:'),
-        trailing: Text('Default'),
-          title: IconButton(icon: Icon(Icons.add), onPressed: () async {
+        leading: const Text('Groups:'),
+        trailing: const Text('Default'),
+          title: IconButton(icon: const Icon(Icons.add), onPressed: () async {
             Group g = Group('new');
             await Navigator.of(context).push(MaterialPageRoute(builder: (context) => GroupPage(settings, widget.sites, g, true)));
             setState(() {
@@ -101,15 +101,16 @@ class _SettingsState extends State<SettingsPage> {
       )
     ];
 
-    for (Group group in settings.groups)
+    for (Group group in settings.groups) {
       list.add(
         Dismissible(
           key: GlobalKey(),
-          secondaryBackground: ListTile(trailing: Icon(Icons.delete)),
-          background: ListTile(leading: Icon(Icons.delete)),
+          secondaryBackground: const ListTile(trailing: Icon(Icons.delete)),
+          background: const ListTile(leading: Icon(Icons.delete)),
           onDismissed: (direction) {
-            if(group == settings.showGroup)
+            if(group == settings.showGroup) {
               settings.showGroup = Settings.allGroup;
+            }
 
             settings.groups.remove(group);
           },
@@ -118,8 +119,9 @@ class _SettingsState extends State<SettingsPage> {
                           trailing: IconButton(icon: Icon(group.init?Icons.radio_button_checked:Icons.radio_button_unchecked), onPressed: (){
                             setState(() {
                               bool init = !group.init;
-                              for (Group g in settings.groups)
+                              for (Group g in settings.groups) {
                                 g.init = false;
+                              }
                               group.init = init;
                             });
                           }),
@@ -133,15 +135,16 @@ class _SettingsState extends State<SettingsPage> {
           )
         )
       );
+    }
 
     return(Scaffold(
       appBar: AppBar(
-        title: Text("Settings"),
+        title: const Text("Settings"),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.share), onPressed: () {
+          IconButton(icon: const Icon(Icons.share), onPressed: () {
             Share.share("Android: https://play.google.com/store/apps/details?id=name.seeley.phil.wheretoflyapp\niPhone: https://itunes.apple.com/au/app/where-to-fly/id1439721253");
           }),
-          IconButton(icon: Icon(Icons.help), onPressed: () {
+          IconButton(icon: const Icon(Icons.help), onPressed: () {
             Navigator.push(
               context, MaterialPageRoute(builder: (context) {
               return HelpPage();
