@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:share/share.dart';
-import 'Data.dart';
-import 'GroupPage.dart';
-import 'HelpPage.dart';
+import 'data.dart';
+import 'group_page.dart';
+import 'help_page.dart';
 
 class SettingsPage extends StatefulWidget {
   final Settings settings;

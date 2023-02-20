@@ -6,11 +6,11 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:great_circle_distance_calculator/great_circle_distance_calculator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'Common.dart';
+import 'common.dart';
 
-part 'Data.g.dart';
+part 'data.g.dart';
 
-const DIRECTION_MAP = {
+const directionMap = {
   'W': 0.0*pi/180.0,
   'WNW': 22.5*pi/180.0,
   'NW': 45.0*pi/180.0,
@@ -148,7 +148,7 @@ class Condition {
   @JsonKey(includeFromJson: false, includeToJson: false)
   Color? rRASPColor;
 
-  static const COLOUR_MAP = {
+  static const colourMap = {
     "Yellow": Colors.yellow,
     "LightGreen": Colors.lightGreen,
     "Orange": Colors.orange};
@@ -159,9 +159,9 @@ class Condition {
     Condition c = _$ConditionFromJson(json);
 
     // If dir is null, direction becomes null. Same with the others.
-    c.direction = DIRECTION_MAP[c.dir];
-    c.rColor = COLOUR_MAP[c.colour];
-    c.rPGColor= COLOUR_MAP[c.pgColour];
+    c.direction = directionMap[c.dir];
+    c.rColor = colourMap[c.colour];
+    c.rPGColor= colourMap[c.pgColour];
 
     if(c.raspColour != null) {
       try {
@@ -255,7 +255,7 @@ class Site {
 
     s.dist = gcd.haversineDistance();
 
-    s.direction = DIRECTION_MAP[s.dir];
+    s.direction = directionMap[s.dir];
 
     return s;
   }

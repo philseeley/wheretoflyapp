@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'Data.dart';
+import 'data.dart';
 
 class GroupPage extends StatefulWidget {
   final Settings settings;

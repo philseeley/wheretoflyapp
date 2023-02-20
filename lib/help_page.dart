@@ -1,8 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'Common.dart';
-import 'ReleaseNotesPage.dart';
+import 'common.dart';
+import 'release_notes_page.dart';
 
 class HelpPage extends StatelessWidget {
   final ScrollController _controller = ScrollController();

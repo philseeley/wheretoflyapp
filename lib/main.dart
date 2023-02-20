@@ -6,12 +6,12 @@ import 'package:location/location.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:package_info/package_info.dart';
-import 'Common.dart';
-import 'Data.dart';
-import 'SiteForecastListView.dart';
-import 'SettingsPage.dart';
-import 'ReleaseNotesPage.dart';
-import 'DynamicAppBar.dart';
+import 'common.dart';
+import 'data.dart';
+import 'site_forecast_listview.dart';
+import 'settings_page.dart';
+import 'release_notes_page.dart';
+import 'dynamic_appbar.dart';
 
 void main() => runApp(WhereToFlyApp());
 
