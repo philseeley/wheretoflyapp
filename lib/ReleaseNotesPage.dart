@@ -44,23 +44,23 @@ Added option to show the best direction for each site - thanks Darryl V for the 
   };
 
   final String title;
-  ReleaseNotesPage(this.title);
+  const ReleaseNotesPage(this.title, {super.key});
 
   @override
   Widget build(BuildContext context) {
     List<Widget> list = [];
 
     changelog.forEach((k, v) {
-      list.add(Text("Version "+k, style: Theme
+      list.add(Text("Version $k", style: Theme
         .of(context)
         .textTheme
-        .headline6.apply(color: Colors.blue)));
-      list.add(Container(child: Text(v), padding: EdgeInsets.all(4)));
+        .titleLarge!.apply(color: Colors.blue)));
+      list.add(Container(padding: const EdgeInsets.all(4), child: Text(v)));
     });
 
     return(Scaffold(
       appBar: AppBar(title: Text(title)),
-      body: ListView(padding: EdgeInsets.all(4), children: list)
+      body: ListView(padding: const EdgeInsets.all(4), children: list)
     ));
   }
 }

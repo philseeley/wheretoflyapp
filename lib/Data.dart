@@ -3,7 +3,7 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
-import 'package:great_circle_distance/great_circle_distance.dart';
+import 'package:great_circle_distance_calculator/great_circle_distance_calculator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'Common.dart';
@@ -35,7 +35,7 @@ class Group {
   bool init = false;
   List<String> sites;
 
-  Group(this.name, {init, List<String> sites}) :
+  Group(this.name, {init, List<String>? sites}) :
     init = init ?? false,
     sites = sites ?? [];
 
@@ -45,63 +45,54 @@ class Group {
   Map<String, dynamic> toJson() => _$GroupToJson(this);
 }
 
-@JsonSerializable(nullable: false)
+@JsonSerializable()
 class Settings {
   static final Group allGroup = Group("ALL");
 
   String version;
-  @JsonKey(ignore: true)
-  bool onlyShowOn;
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  late bool onlyShowOn;
+  @JsonKey(includeFromJson: false, includeToJson: false)
   bool sortByLocation = true;
   bool showPGValues;
   bool showMetric;
-  num iconSize;
+  double iconSize;
   bool hideExtremes;
   bool showDistance;
   bool singlePageView;
   int maxRows;
   bool onlyShowOnDefault;
   List<Group> groups;
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   bool showForecast = false;
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   bool showRASP = false;
-  @JsonKey(ignore: true)
-  Group showGroup;
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  late Group showGroup;
+  @JsonKey(includeFromJson: false, includeToJson: false)
   bool showBestDirection = false;
 
-  static File _store;
+  static File? _store;
 
   Settings({
-    version,
-    showPGValues,
-    showMetric,
-    iconSize,
-    hideExtremes,
-    showDistance,
-    singlePageView,
-    maxRows,
-    onlyShowOnDefault,
-    List<Group> groups}) {
-      this.version = version ?? "";
-      this.showPGValues = showPGValues ?? false;
-      this.showMetric = showMetric ?? false;
-      this.iconSize = iconSize ?? 40.0;
-      this.hideExtremes = hideExtremes ?? false;
-      this.showDistance = showDistance ?? false;
-      this.singlePageView = singlePageView ?? false;
-      this.maxRows = maxRows ?? 7;
-      this.onlyShowOnDefault = onlyShowOnDefault ?? true;
-      this.groups = groups ?? List<Group>();
-
-      this.onlyShowOn = this.onlyShowOnDefault;
+    this.version = "",
+    this.showPGValues = false,
+    this.showMetric = false,
+    this.iconSize = 40.0,
+    this.hideExtremes = false,
+    this.showDistance = false,
+    this.singlePageView = false,
+    this.maxRows = 7,
+    this.onlyShowOnDefault = true,
+    this.groups = const <Group>[]}) {
+      onlyShowOn = onlyShowOnDefault;
 
       showGroup = allGroup;
-      for(Group g in this.groups)
-        if(g.init)
+      for(Group g in groups) {
+        if (g.init) {
           showGroup = g;
+        }
+      }
   }
 
   factory Settings.fromJson(Map<String, dynamic> json) =>
@@ -114,7 +105,7 @@ class Settings {
     _store = File('${directory.path}/settings.json');
 
     try {
-      String s = _store.readAsStringSync();
+      String s = _store?.readAsStringSync() ?? "";
       dynamic data = json.decode(s);
 
       return Settings.fromJson(data);
@@ -124,8 +115,7 @@ class Settings {
   }
 
   save (){
-    if(_store != null)
-      _store.writeAsStringSync(json.encode(toJson()));
+    _store?.writeAsStringSync(json.encode(toJson()));
   }
 }
 
@@ -144,19 +134,19 @@ class Data {
 
 @JsonSerializable()
 class Condition {
-  final String dir;
-  final int kts;
-  final String colour;
-  final String pgColour;
-  final String raspColour;
-  @JsonKey(ignore: true)
-  double direction;
-  @JsonKey(ignore: true)
-  Color rColor;
-  @JsonKey(ignore: true)
-  Color rPGColor;
-  @JsonKey(ignore: true)
-  Color rRASPColor;
+  final String? dir;
+  final int? kts;
+  final String? colour;
+  final String? pgColour;
+  final String? raspColour;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  double? direction;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  Color? rColor;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  Color? rPGColor;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  Color? rRASPColor;
 
   static const COLOUR_MAP = {
     "Yellow": Colors.yellow,
@@ -168,22 +158,19 @@ class Condition {
   factory Condition.fromJson(Map<String, dynamic> json) {
     Condition c = _$ConditionFromJson(json);
 
+    // If dir is null, direction becomes null. Same with the others.
     c.direction = DIRECTION_MAP[c.dir];
+    c.rColor = COLOUR_MAP[c.colour];
+    c.rPGColor= COLOUR_MAP[c.pgColour];
 
-    //c.rColor = c.rPGColor = Colors.black26;
-    if(c.colour != null)
-      c.rColor = COLOUR_MAP[c.colour];
-
-    if(c.pgColour != null)
-      c.rPGColor= COLOUR_MAP[c.pgColour];
-
-    if(c.raspColour != null)
+    if(c.raspColour != null) {
       try {
         c.rRASPColor =
-          Color(int.parse("FF" + c.raspColour.substring(1), radix: 16));
+          Color(int.parse("FF${c.raspColour?.substring(1) ?? ""}", radix: 16));
       } on FormatException {
         // The image might not have been available and therefore the colour might be "#NaNNaNNaN".
       }
+    }
     return c;
   }
 }
@@ -191,14 +178,14 @@ class Condition {
 @JsonSerializable()
 class Forecast {
   final String img;
-  CachedNetworkImage _image;
-  double _imageSize;
+  CachedNetworkImage? _image;
+  double? _imageSize;
   final String imgTitle;
   final Map<String, Condition> times;
 
   Forecast(this.img, this.imgTitle, this.times);
 
-  CachedNetworkImage getImage(double imageSize) {
+  CachedNetworkImage? getImage(double imageSize) {
     if(_image == null || (_imageSize != imageSize)){
       _imageSize = imageSize;
       _image = CachedNetworkImage(imageUrl: "$wtfURL/$img", width: _imageSize, height: _imageSize);
@@ -217,20 +204,20 @@ class Site {
   final String title;
   final double lat;
   final double lon;
-  final String url;
+  final String? url;
   final String weatherURL;
-  final String obsURL;
-  final String minDir;
-  final String maxDir;
-  final String dir;
+  final String? obsURL;
+  final String? minDir;
+  final String? maxDir;
+  final String? dir;
   final int minSpeed;
   final int maxSpeed;
   final int minPGSpeed;
   final int maxPGSpeed;
-  @JsonKey(ignore: true)
-  double dist;
-  @JsonKey(ignore: true)
-  double direction;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  double dist = 0.0;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  double? direction;
 
   final Map<String,Forecast> dates;
 
@@ -253,10 +240,11 @@ class Site {
     );
 
   static sort(List<Site> sites, bool byLocation){
-    if(byLocation)
+    if(byLocation) {
       sites.sort((a, b){return (a.dist-b.dist).round();});
-    else
+    } else {
       sites.sort((a, b){return a.title.compareTo(b.title);});
+    }
   }
 
   factory Site.fromJson(Map<String, dynamic> json) {
@@ -276,10 +264,10 @@ class Site {
 @JsonSerializable()
 class Sites {
   final List<Site> sites;
-  @JsonKey(ignore: true)
-  static double latitude;
-  @JsonKey(ignore: true)
-  static double longitude;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  static double latitude = 0.0;
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  static double longitude = 0.0;
 
   Sites(this.sites);
 

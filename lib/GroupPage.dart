@@ -25,26 +25,28 @@ class _GroupState extends State<GroupPage> {
     if(!widget.isNew)
       _nameCtrl.text = group.name;
 
-    List<Widget> siteWidgetList = List<Widget>();
+    List<Widget> siteWidgetList = <Widget>[];
 
     Site.sort(sites, _sortByLocation);
 
-    for(Site site in sites)
+    for(Site site in sites) {
       siteWidgetList.add(
           ListTile(
             title: Text(site.title),
             trailing: Checkbox(
-                value: group.sites.contains(site.name),
-                onChanged: (bool value) {
-                  setState(() {
-                    if(value)
-                      group.sites.add(site.name);
-                    else
-                      group.sites.remove(site.name);
-                  });
-                },
+              value: group.sites.contains(site.name),
+              onChanged: (bool? value) {
+                setState(() {
+                  if (value!) {
+                    group.sites.add(site.name);
+                  } else {
+                    group.sites.remove(site.name);
+                  }
+                });
+              },
             ),
           ));
+    }
 
     return Scaffold(
         appBar: AppBar(

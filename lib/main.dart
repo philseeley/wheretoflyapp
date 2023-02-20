@@ -18,13 +18,13 @@ void main() => runApp(WhereToFlyApp());
 class WhereToFlyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    TextStyle ts = Theme.of(context).textTheme.subtitle1.apply(fontWeightDelta: 4);
+    TextStyle? ts = Theme.of(context).textTheme.titleMedium!.apply(fontWeightDelta: 4);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Where To Fly',
       home: Main(),
-      theme: ThemeData(textTheme: TextTheme(bodyText2: ts, subtitle1: ts))
+      theme: ThemeData(textTheme: TextTheme(bodyMedium: ts, titleMedium: ts))
     );
   }
 }
@@ -35,15 +35,15 @@ class Main extends StatefulWidget {
 }
 
 class _MainState extends State<Main> with WidgetsBindingObserver {
-  Settings settings;
-  PackageInfo packageInfo;
+  late Settings settings;
+  late PackageInfo packageInfo;
 
   bool locationAvailable = false;
   double latitude = 0.0;
   double longitude = 0.0;
 
-  Sites _sites;
-  Data _data;
+  Sites? _sites;
+  late Data _data;
 
   _MainState() {
     init();
@@ -62,12 +62,13 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
       if(await location.serviceEnabled()) {
         loc = await location.getLocation();
-        latitude = loc.latitude;
-        longitude = loc.longitude;
+        latitude = loc.latitude ?? 0.0;
+        longitude = loc.longitude  ?? 0.0;
         locationAvailable = true;
       }
-      else
+      else {
         Fluttertoast.showToast(msg: "Location is disabled", toastLength: Toast.LENGTH_LONG);
+      }
     } catch (e) {
       Fluttertoast.showToast(msg: "Failed to get location", toastLength: Toast.LENGTH_LONG);
     }
@@ -89,7 +90,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
       // setState to update our non-existent appearance.
       if (!mounted) return;
 
-      if (data != null)
+      if (data != null) {
         setState(() {
           try {
             _data = Data.fromJson(data);
@@ -107,18 +108,19 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
             settings.version = version;
             Navigator.push(
               context, MaterialPageRoute(builder: (context) {
-              return ReleaseNotesPage("What's New in Version "+version);
+              return ReleaseNotesPage("What's New in Version $version");
             }));
           }
 
         });
+      }
     } catch (e) {
       getForecast();
     }
   }
 
   _sort(){
-    Site.sort(_sites.sites, locationAvailable && settings.sortByLocation);
+    Site.sort(_sites!.sites, locationAvailable && settings.sortByLocation);
   }
 
   @override
@@ -144,7 +146,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
   _showSite(Site s) {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return SiteForecast(settings, _data, _sites.sites, s);
+      return SiteForecast(settings, _data, _sites!.sites, s);
     }));
   }
 
@@ -153,19 +155,19 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
     setState(() {
       _sites = null;
     });
-    return getForecast();
+    getForecast();
   }
 
   @override
   Widget build(BuildContext context) {
 
-    if(_sites == null || _sites.sites.length == 0)
+    if(_sites == null || _sites!.sites.isEmpty)
       return Scaffold(
         appBar: AppBar(title: Text("Where To Fly")),
         body: Center(child: Stack(children: <Widget>[Text("Waiting for\nLocation and Data", textAlign: TextAlign.center,), CircularProgressIndicator()],alignment: Alignment.center))
       );
 
-    List<Widget> pages = List<Widget>();
+    List<Widget> pages = <Widget>[];
 
     List<String> dates = settings.showRASP ? _data.raspDates : _data.dates;
     List<String> times = settings.showRASP ? _data.raspTimes : _data.times;
@@ -215,7 +217,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
       IconButton(icon: Icon(Icons.settings, semanticLabel: "Settings"), onPressed: () async {
         await Navigator.push(
           context, MaterialPageRoute(builder: (context) {
-          return SettingsPage(settings, _sites.sites);
+          return SettingsPage(settings, _sites!.sites);
         }));
         setState(() {});
       })
@@ -239,16 +241,17 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
     return Scaffold(
       appBar: DynamicAppBar(
+        key: UniqueKey(),
         context: context,
         title: Theme(
           data: ThemeData(
             canvasColor: Colors.blue,
-            textTheme: TextTheme(subtitle1: Theme.of(context).textTheme.subtitle1.apply(fontWeightDelta: 4, color: Colors.white)),
+            textTheme: TextTheme(titleMedium: Theme.of(context).textTheme.titleMedium!.apply(fontWeightDelta: 4, color: Colors.white)),
           ),
           child: DropdownButton<Group>(
-            onChanged: (Group group) {
+            onChanged: (Group? group) {
               setState(() {
-                settings.showGroup = group;
+                settings.showGroup = group!;
               });
             },
             items: groupList,
@@ -264,14 +267,14 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
   void multiDay(BuildContext context, List<Widget> pages, List<String> dates, List<String> times) {
     for(String day in dates)
     {
-      List<Widget> list = List<Widget>();
+      List<Widget> list = <Widget>[];
 
-      for (Site s in _sites.sites)
+      for (Site s in _sites!.sites)
       {
         if(settings.showGroup == Settings.allGroup || settings.showGroup.sites.contains(s.name)) {
-          Forecast forecast = s.dates[day];
+          Forecast forecast = s.dates[day]!;
 
-          Row forecastRow = SiteForecastListView.buildForecastRow(
+          Row? forecastRow = SiteForecastListView.buildForecastRow(
             context, settings, times, day, s, forecast, settings.onlyShowOn, false);
 
           if (forecastRow != null) {
@@ -304,9 +307,9 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
   }
 
   void singlePage(BuildContext context, List<Widget> pages, List<String> dates, List<String> times) {
-    List<Widget> list = List<Widget>();
+    List<Widget> list = <Widget>[];
 
-    for (Site s in _sites.sites)
+    for (Site s in _sites!.sites)
     {
       bool first = true;
 
@@ -314,9 +317,9 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
         int i = 0;
         for(String day in dates)
         {
-          Forecast forecast = s.dates[day];
+          Forecast forecast = s.dates[day]!;
 
-          Row forecastRow = SiteForecastListView.buildForecastRow(
+          Row? forecastRow = SiteForecastListView.buildForecastRow(
             context, settings, times, day, s, forecast, settings.onlyShowOn, true);
 
           if (forecastRow != null) {
@@ -343,7 +346,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
     }
 
     // If we're hiding the extreme values we might not have any rows to show.
-    if(list.length > 0) {
+    if(list.isNotEmpty) {
       Row timeRow = SiteForecastListView.buildTimeRow(
           context, settings, times, true, null);
 
@@ -384,7 +387,7 @@ class _SiteForecastState extends State<SiteForecast> {
       actions.add(
         IconButton(icon: Icon(Icons.info, semanticLabel: "Site Info"), onPressed: (){
           setState(() {
-            launch(site.url);
+            launch(site.url!);
           });
         }));
     actions.add(
@@ -397,7 +400,7 @@ class _SiteForecastState extends State<SiteForecast> {
       actions.add(
         IconButton(icon: Icon(Icons.cloud, color: Colors.red, semanticLabel: "Observations"), onPressed: (){
           setState(() {
-            launch(site.obsURL);
+            launch(site.obsURL!);
           });
         }));
     actions.add(
@@ -428,7 +431,7 @@ class _SiteForecastState extends State<SiteForecast> {
       }));
 
     return Scaffold(
-      appBar: DynamicAppBar(context: context, actions: actions),
+      appBar: DynamicAppBar(key: UniqueKey(), context: context, actions: actions),
       body: Column(children: <Widget>[
         SiteForecastListView.buildTitleRow(context, settings, site),
         SiteForecastListView.buildTimeRow(context, settings, times, true, null),

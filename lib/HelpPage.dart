@@ -58,7 +58,7 @@ class HelpPage extends StatelessWidget {
             ListTile(
               leading: Icon(Icons.blur_on),
               title: RichText(text: TextSpan(
-                style: Theme.of(context).textTheme.subtitle1.apply(fontWeightDelta: 4),
+                style: Theme.of(context).textTheme.titleMedium!.apply(fontWeightDelta: 4),
                 children: [
                   TextSpan(text: 'Show '),
                   TextSpan(text: 'RASP',
