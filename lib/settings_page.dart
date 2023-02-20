@@ -91,13 +91,13 @@ class _SettingsState extends State<SettingsPage> {
       ListTile(
         leading: Text('Groups:'),
         trailing: Text('Default'),
-        title: IconButton(icon: Icon(Icons.add), onPressed: () {
-          Group g = Group('new');
-          settings.groups.add(g);
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return GroupPage(settings, widget.sites, g, true);
-          }));
-        }),
+          title: IconButton(icon: Icon(Icons.add), onPressed: () async {
+            Group g = Group('new');
+            await Navigator.of(context).push(MaterialPageRoute(builder: (context) => GroupPage(settings, widget.sites, g, true)));
+            setState(() {
+              settings.groups.add(g);
+            });
+          })
       )
     ];
 
