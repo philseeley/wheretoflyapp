@@ -8,7 +8,7 @@
 PRODUCT_NAME = wheretoflyapp
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = phil.seeley.name.wheretoflyapp
+PRODUCT_BUNDLE_IDENTIFIER = name.seeley.phil.wheretoflyapp
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2023 phil.seeley.name. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2023 Phil Seeley. All rights reserved.

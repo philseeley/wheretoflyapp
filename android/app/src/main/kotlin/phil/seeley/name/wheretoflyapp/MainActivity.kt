@@ -1,4 +1,4 @@
-package phil.seeley.name.wheretoflyapp
+package name.seeley.phil.wheretoflyapp
 
 import io.flutter.embedding.android.FlutterActivity
 
