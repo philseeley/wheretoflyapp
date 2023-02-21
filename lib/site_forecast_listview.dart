@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'common.dart';
 import 'data.dart';
 
 class SiteForecastListView extends StatefulWidget {
@@ -54,9 +55,12 @@ class SiteForecastListView extends StatefulWidget {
           icons.add(Icon(Icons.lens, color: raspColour, size: settings.iconSize));
 
           if(colour != null) {
+            if(settings.enhanceOnSites) {
+              icons.add(Icon(outlineIconMap[colour], size: settings.iconSize));
+            }
             icons.add(Transform.rotate(
-              angle: c.direction!,
-              child: Icon(Icons.forward, color: colour, size: settings.iconSize)
+                angle: c.direction!,
+                child: Icon(Icons.forward, color: colour, size: settings.iconSize)
             ));
           }
 

@@ -70,12 +70,19 @@ class _SettingsState extends State<SettingsPage> {
           } : null),
       ),
       SwitchListTile(title: const Text('Only Show "On" Sites at Start'),
-        value: settings.onlyShowOnDefault,
-        onChanged: (bool value) {
-          setState(() {
-            settings.onlyShowOnDefault = value;
-          });
-        }),
+          value: settings.onlyShowOnDefault,
+          onChanged: (bool value) {
+            setState(() {
+              settings.onlyShowOnDefault = value;
+            });
+          }),
+      SwitchListTile(title: const Text('Enhance "On" Sites'),
+          value: settings.enhanceOnSites,
+          onChanged: (bool value) {
+            setState(() {
+              settings.enhanceOnSites = value;
+            });
+          }),
       ListTile(
         leading: const Text("Icon Size"),
         title: Slider(min: 30.0,
@@ -147,7 +154,7 @@ class _SettingsState extends State<SettingsPage> {
           IconButton(icon: const Icon(Icons.help), onPressed: () {
             Navigator.push(
               context, MaterialPageRoute(builder: (context) {
-              return HelpPage();
+              return HelpPage(settings);
             }));
           }),
       ]),

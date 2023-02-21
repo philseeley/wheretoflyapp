@@ -29,10 +29,10 @@ Settings _$SettingsFromJson(Map<String, dynamic> json) => Settings(
       singlePageView: json['singlePageView'] as bool? ?? false,
       maxRows: json['maxRows'] as int? ?? 7,
       onlyShowOnDefault: json['onlyShowOnDefault'] as bool? ?? true,
+      enhanceOnSites: json['enhanceOnSites'] as bool? ?? false,
       groups: (json['groups'] as List<dynamic>?)
-              ?.map((e) => Group.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const <Group>[],
+          ?.map((e) => Group.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$SettingsToJson(Settings instance) => <String, dynamic>{
@@ -45,6 +45,7 @@ Map<String, dynamic> _$SettingsToJson(Settings instance) => <String, dynamic>{
       'singlePageView': instance.singlePageView,
       'maxRows': instance.maxRows,
       'onlyShowOnDefault': instance.onlyShowOnDefault,
+      'enhanceOnSites': instance.enhanceOnSites,
       'groups': instance.groups,
     };
 

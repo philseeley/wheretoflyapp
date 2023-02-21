@@ -2,12 +2,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'common.dart';
+import 'data.dart';
 import 'release_notes_page.dart';
 
 class HelpPage extends StatelessWidget {
   final ScrollController _controller = ScrollController();
+  final Settings settings;
 
-  HelpPage({super.key});
+  HelpPage(this.settings, {super.key});
 
   _showChangelog (BuildContext context) {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -17,6 +19,19 @@ class HelpPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    List<Widget> iconsTooLight = <Widget>[];
+    List<Widget> iconsOn = <Widget>[];
+    List<Widget> iconsTooStrong = <Widget>[];
+
+    if(settings.enhanceOnSites){
+      iconsTooLight.add(Icon(outlineIconMap[Colors.yellow], size: 35.0));
+      iconsOn.add(Icon(outlineIconMap[Colors.lightGreen], size: 35.0));
+      iconsTooStrong.add(Icon(outlineIconMap[Colors.orange], size: 35.0));
+    }
+    iconsTooLight.add(const Icon(Icons.forward, color: Colors.yellow, size: 35.0));
+    iconsOn.add(const Icon(Icons.forward, color: Colors.lightGreen, size: 35.0));
+    iconsTooStrong.add(const Icon(Icons.forward, color: Colors.orange, size: 35.0));
 
     return(Scaffold(
       appBar: AppBar(
@@ -31,10 +46,10 @@ class HelpPage extends StatelessWidget {
       body: Row(children: <Widget>[
         Expanded(child: Scrollbar(thumbVisibility: true, controller: _controller, child:
           ListView(controller: _controller, children: <Widget>[
-            Row(children: const <Widget>[
-              Expanded(child: Icon(Icons.forward, color: Colors.yellow, size: 35.0)),
-              Expanded(child: Icon(Icons.forward, color: Colors.lightGreen, size: 35.0)),
-              Expanded(child: Icon(Icons.forward, color: Colors.orange, size: 35.0)),
+            Row(children: <Widget>[
+              Expanded(child: Stack(alignment: AlignmentDirectional.center, children: iconsTooLight)),
+              Expanded(child: Stack(alignment: AlignmentDirectional.center, children: iconsOn)),
+              Expanded(child: Stack(alignment: AlignmentDirectional.center, children: iconsTooStrong)),
             ]),
             Row(children: const <Widget>[
               Expanded(child: Text("Too Light", textAlign: TextAlign.center)),
