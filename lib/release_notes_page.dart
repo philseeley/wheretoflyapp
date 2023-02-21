@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 class ReleaseNotesPage extends StatelessWidget {
 
   static const changelog = {
+    "7.0.0": """Added 'Enhance \"On\" Sites' to aid colour blind users - thanks Al H for the idea.
+
+Fixed bug where new groups weren't immediately shown on the Settings Page.
+
+Upgraded code to the latest Flutter/Dart Frameworks.""",
     "6.7.0": "Added Rows setting for single page view - thanks to Rob VK for the idea.",
     "6.6.2": "Added iPhone App link to the share details - thanks to Rob VK for reporting this.",
     "6.6.1": "Fixed the bug where the text forecast was missing from the single page view.",
