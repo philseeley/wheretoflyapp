@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class ReleaseNotesPage extends StatelessWidget {
 
   static const changelog = {
-    "7.0.0": """Added 'Enhance \"On\" Sites' to aid colour blind users - thanks Al H for the idea.
+    "7.0.0": """Added 'Enhance "On" Sites' to aid colour blind users - thanks Al H for the idea.
 
 Fixed bug where new groups weren't immediately shown on the Settings Page.
 
