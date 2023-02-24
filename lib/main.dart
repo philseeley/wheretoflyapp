@@ -3,7 +3,6 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
 import 'package:location/location.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:package_info/package_info.dart';
 import 'common.dart';
@@ -398,21 +397,21 @@ class _SiteForecastState extends State<SiteForecast> {
       actions.add(
         IconButton(icon: const Icon(Icons.info, semanticLabel: "Site Info"), onPressed: (){
           setState(() {
-            launchUrl(Uri.parse(site.url!));
+            openUrl(site.url!);
           });
         }));
     }
     actions.add(
       IconButton(icon: const Icon(Icons.cloud_upload, semanticLabel: "Detailed Forecast"), onPressed: (){
         setState(() {
-          launchUrl(Uri.parse(site.weatherURL));
+          openUrl(site.weatherURL);
         });
       }));
     if(site.obsURL != null) {
       actions.add(
         IconButton(icon: const Icon(Icons.cloud, color: Colors.red, semanticLabel: "Observations"), onPressed: (){
           setState(() {
-            launchUrl(Uri.parse(site.obsURL!));
+            openUrl(site.obsURL!);
           });
         }));
     }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'common.dart';
 import 'data.dart';
 
@@ -135,7 +134,7 @@ class SiteForecastListView extends StatefulWidget {
     }
 
     return Row(children: <Widget>[
-      Expanded(child: InkWell(onTap: (site.url == null) ? null : () {launchUrl(Uri.parse(site.url!));}, child: Text(site.title, textAlign: TextAlign.center))),
+      Expanded(child: InkWell(onTap: (site.url == null) ? null : () {openUrl(site.url!);}, child: Text(site.title, textAlign: TextAlign.center))),
       Expanded(child: Text(speed, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyLarge))
     ]);
   }

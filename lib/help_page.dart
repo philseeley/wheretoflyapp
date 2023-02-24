@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'common.dart';
 import 'data.dart';
@@ -81,12 +82,12 @@ class HelpPage extends StatelessWidget {
                   TextSpan(text: 'RASP',
                     style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
                     recognizer: TapGestureRecognizer()
-                      ..onTap = () { launchUrl(Uri.parse('http://ausrasp.com')); }),
+                      ..onTap = () { openUrl('http://ausrasp.com'); }),
                   const TextSpan(text: ' Thermal Updraft Velocity. '),
                   TextSpan(text: 'Donate',
                     style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
                     recognizer: TapGestureRecognizer()
-                      ..onTap = () { launchUrl(Uri.parse('https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=DA88MPHUFMKS4&currency_code=AUD')); }),
+                      ..onTap = () { openUrl('https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=DA88MPHUFMKS4&currency_code=AUD'); }),
                 ]
               ))
             ),
@@ -118,13 +119,13 @@ class HelpPage extends StatelessWidget {
   }
 
   static Uri mailURL = Uri.parse("xmailto:feedback@$wtfSite?subject=WTF%20Feedback");
-  static Uri supportURL = Uri.parse("$wtfURL/wtf-info.html");
+  static String supportURL = "$wtfURL/wtf-info.html";
 
   _support() async {
-    if(await canLaunchUrl(mailURL)) {
-      launchUrl(mailURL);
-    } else {
-      launchUrl(supportURL);
+    try {
+      await openUrl(mailURL);
+    } on PlatformException catch (_){
+      openUrl(supportURL);
     }
   }
 }
