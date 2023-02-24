@@ -118,7 +118,7 @@ class HelpPage extends StatelessWidget {
       ])));
   }
 
-  static Uri mailURL = Uri.parse("xmailto:feedback@$wtfSite?subject=WTF%20Feedback");
+  static String mailURL = "mailto:feedback@$wtfSite?subject=WTF%20Feedback";
   static String supportURL = "$wtfURL/wtf-info.html";
 
   _support() async {
