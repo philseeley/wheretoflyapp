@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'dart:async';
 import 'package:location/location.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:package_info/package_info.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'common.dart';
 import 'data.dart';
 import 'site_forecast_listview.dart';
@@ -26,7 +26,13 @@ class WhereToFlyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Where To Fly',
       home: const Main(),
-      theme: ThemeData(textTheme: TextTheme(bodyMedium: ts, titleMedium: ts))
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: fg).copyWith(primary: bg),
+        textTheme: TextTheme(bodyMedium: ts, titleMedium: ts),
+        appBarTheme: const AppBarTheme(backgroundColor: bg, foregroundColor: fg),
+        popupMenuTheme: const PopupMenuThemeData(color: bg),
+        listTileTheme: ListTileThemeData(titleTextStyle: ts, subtitleTextStyle: ts, leadingAndTrailingTextStyle: ts),
+      )
     );
   }
 }
@@ -67,8 +73,8 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
       if(await location.serviceEnabled()) {
         loc = await location.getLocation();
-        latitude = loc.latitude ?? 0.0;
-        longitude = loc.longitude  ?? 0.0;
+        latitude = loc.latitude;
+        longitude = loc.longitude;
         locationAvailable = true;
       }
       else {
@@ -141,6 +147,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
       case AppLifecycleState.paused:
       case AppLifecycleState.inactive:
       case AppLifecycleState.detached:
+      case AppLifecycleState.hidden:
         settings.save();
         break;
       case AppLifecycleState.resumed:
@@ -168,7 +175,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
     if(_sites == null || _sites!.sites.isEmpty) {
       return Scaffold(
         appBar: AppBar(title: const Text("Where To Fly")),
-        body: Center(child: Stack(alignment: Alignment.center, children: const <Widget>[Text("Waiting for\nLocation and Data", textAlign: TextAlign.center,), CircularProgressIndicator()]))
+        body: const Center(child: Stack(alignment: Alignment.center, children: <Widget>[Text("Waiting for\nLocation and Data", textAlign: TextAlign.center), CircularProgressIndicator()]))
       );
     }
 
@@ -185,7 +192,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
 
     List<IconButton> actions = [
       IconButton(icon: Icon(Icons.power_settings_new,
-        color: settings.onlyShowOn ? Colors.red : Colors.white,
+        color: settings.onlyShowOn ? Colors.red : null,
         semanticLabel: "Only On",
       ),
         onPressed: () {
@@ -194,7 +201,7 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
           });
         }),
       IconButton(icon: Icon(Icons.trending_flat,
-        color: settings.showBestDirection ? Colors.red : Colors.white,
+        color: settings.showBestDirection ? Colors.red : null,
         semanticLabel: "Best Direction",
       ),
         onPressed: () {
@@ -253,8 +260,8 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
         context: context,
         title: Theme(
           data: ThemeData(
-            canvasColor: Colors.blue,
-            textTheme: TextTheme(titleMedium: Theme.of(context).textTheme.titleMedium!.apply(fontWeightDelta: 4, color: Colors.white)),
+            canvasColor: bg,
+            textTheme: TextTheme(titleMedium: Theme.of(context).textTheme.titleMedium!.apply(fontWeightDelta: 4, color: fg)),
           ),
           child: DropdownButton<Group>(
             onChanged: (Group? group) {
@@ -263,7 +270,8 @@ class _MainState extends State<Main> with WidgetsBindingObserver {
               });
             },
             items: groupList,
-            value: settings.showGroup
+            value: settings.showGroup,
+            iconEnabledColor: fg
           )
         ),
         actions: actions
@@ -416,7 +424,7 @@ class _SiteForecastState extends State<SiteForecast> {
         }));
     }
     actions.add(
-      IconButton(icon: Icon(Icons.trending_flat, color: settings.showBestDirection ? Colors.red : Colors.white, semanticLabel: "Best Direction"), onPressed: (){
+      IconButton(icon: Icon(Icons.trending_flat, color: settings.showBestDirection ? Colors.red : fg, semanticLabel: "Best Direction"), onPressed: (){
         setState(() {
           settings.showBestDirection= !settings.showBestDirection;
         });

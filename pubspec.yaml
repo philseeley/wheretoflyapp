@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 7.1.0+35
 
 environment:
-  sdk: '>=2.19.0 <3.0.0'
+  sdk: '>=3.8.0 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -40,9 +40,9 @@ dependencies:
   path_provider:
   cached_network_image:
   fluttertoast:
-  share:
+  share_plus:
   json_annotation:
-  package_info:
+  package_info_plus:
 
 dev_dependencies:
   flutter_test:

@@ -5,6 +5,9 @@ const String wtfSite = 'wheretofly.info';
 const String wtfSitePort = wtfSite;
 const String wtfURL = 'https://$wtfSitePort';
 
+const Color fg = Colors.white;
+const Color bg = Colors.blue;
+
 Map<Color, IconData> outlineIconMap = {
   Colors.grey: Icons.wifi_1_bar_rounded,
   Colors.yellow: Icons.filter_tilt_shift,

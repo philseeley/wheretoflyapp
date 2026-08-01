@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wheretoflyapp/common.dart';
 
 class DynamicAppBar extends AppBar{
 
@@ -33,13 +34,13 @@ class DynamicAppBar extends AppBar{
       menuActions.add(PopupMenuItem<VoidCallback>(
         value: actions[i].onPressed,
         child: ListTile(
-          leading: Icon(icon.icon, color: icon.color ?? Colors.white),
-          title: Text(icon.semanticLabel ?? ""),
-        ),
+          leading: Icon(icon.icon, color: icon.color ?? fg),
+          title: Text(icon.semanticLabel ?? "", style: const TextStyle(color: fg))
+        )
       ));
     }
 
-    dynamicActions.add(Theme(data: ThemeData(cardColor: Colors.blue, iconTheme: const IconThemeData(color: Colors.white)), child:
+    dynamicActions.add(
       PopupMenuButton<VoidCallback>(
         itemBuilder: (BuildContext context) {
           return menuActions;
@@ -49,7 +50,7 @@ class DynamicAppBar extends AppBar{
             value();
           }
         })
-    ));
+    );
 
     return dynamicActions;
   }

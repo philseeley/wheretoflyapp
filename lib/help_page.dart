@@ -51,7 +51,7 @@ class HelpPage extends StatelessWidget {
               Expanded(child: Stack(alignment: AlignmentDirectional.center, children: iconsOn)),
               Expanded(child: Stack(alignment: AlignmentDirectional.center, children: iconsTooStrong)),
             ]),
-            Row(children: const <Widget>[
+            const Row(children: <Widget>[
               Expanded(child: Text("Too Light", textAlign: TextAlign.center)),
               Expanded(child: Text("Where To Fly!", textAlign: TextAlign.center)),
               Expanded(child: Text("Too Strong", textAlign: TextAlign.center)),
@@ -79,12 +79,12 @@ class HelpPage extends StatelessWidget {
                 children: [
                   const TextSpan(text: 'Show '),
                   TextSpan(text: 'RASP',
-                    style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+                    style: const TextStyle(color: bg, decoration: TextDecoration.underline),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () { openUrl('http://ausrasp.com'); }),
                   const TextSpan(text: ' Thermal Updraft Velocity. '),
                   TextSpan(text: 'Donate',
-                    style: const TextStyle(color: Colors.blue, decoration: TextDecoration.underline),
+                    style: const TextStyle(color: bg, decoration: TextDecoration.underline),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () { openUrl('https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=DA88MPHUFMKS4&currency_code=AUD'); }),
                 ]
@@ -111,7 +111,7 @@ class HelpPage extends StatelessWidget {
               title: Text('Note: your location and other settings are only used and stored within the app and never sent to any external server.')
             ),
             ListTile(
-              leading: const Icon(Icons.email), title: const Text("Send feedback and site updates", style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline)), onTap: _support),
+              leading: const Icon(Icons.email), title: const Text("Send feedback and site updates", style: TextStyle(color: bg, decoration: TextDecoration.underline)), onTap: _support),
           ]))),
         const Image(image: AssetImage("assets/rasp-scale.png")),
       ])));

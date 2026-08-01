@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 import 'data.dart';
 import 'group_page.dart';
 import 'help_page.dart';
@@ -149,7 +149,7 @@ class _SettingsState extends State<SettingsPage> {
         title: const Text("Settings"),
         actions: <Widget>[
           IconButton(icon: const Icon(Icons.share), onPressed: () {
-            Share.share("Android: https://play.google.com/store/apps/details?id=name.seeley.phil.wheretoflyapp\niPhone: https://itunes.apple.com/au/app/where-to-fly/id1439721253");
+            SharePlus.instance.share(ShareParams(text: "Android: https://play.google.com/store/apps/details?id=name.seeley.phil.wheretoflyapp\niPhone: https://itunes.apple.com/au/app/where-to-fly/id1439721253"));
           }),
           IconButton(icon: const Icon(Icons.help), onPressed: () {
             Navigator.push(
