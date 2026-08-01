@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class ReleaseNotesPage extends StatelessWidget {
 
   static const changelog = {
+    "7.1.1": "Updates for newer Android versions - thanks to Rob VK for spotting this.",
     "7.1.0": """We now force URLs to open in an external (Browser) app as the Flutter default had changed.
 
 Fixed bug in support mailto: URL.""",
